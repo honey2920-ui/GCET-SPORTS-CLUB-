@@ -9,8 +9,10 @@ export default function Events() {
     { id: 'ev1', name: 'Inter-College Cricket', date: '2026-03-15', description: 'Annual cricket tournament with neighboring colleges.', img: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=800' }
   ]);
 
-  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'admin_level');
-  const canEdit = isMaster || role === 'core';
+  const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
+  const isMaster = role === 'admin' || power === 'master';
+  // Basic & Classic can edit Events
+  const canEdit = isMaster || power === 'basic' || power === 'classic';
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8 animate-in fade-in duration-500">

@@ -7,11 +7,16 @@ export default function Join() {
   const { role, coreCreds, coreId, expenses, addExpense, deleteExpense, equipment, addEquipment, deleteEquipment } = useAppStore();
   const [activeTab, setActiveTab] = useState<'registration' | 'attendance' | 'budget' | 'equipment'>('registration');
 
-  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'master');
-  const canEdit = isMaster || role === 'core';
+  const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
+  const isMaster = role === 'admin' || power === 'master';
+  
+  // Basic & Classic can edit Registration, Attendance
+  // Only Classic & Master can edit Budget, Equipment
+  const canEditReg = isMaster || power === 'basic' || power === 'classic';
+  const canEditBudget = isMaster || power === 'classic';
   const isStaff = role === 'admin' || role === 'core';
 
-  const excelLink = "https://onedrive.live.com/view.aspx?resid=9876543210!123"; // Mocked OneDrive View link for the path provided
+  const excelLink = "https://onedrive.live.com/view.aspx?resid=9876543210!123";
 
   return (
     <div className="space-y-6 animate-in fade-in zoom-in duration-500">
@@ -24,13 +29,13 @@ export default function Join() {
         </div>
       )}
 
-      {activeTab === 'registration' && <FormView title="Registration Form" actionLabel="Submit Registration" dbTitle="Registration Database" xlsx="gcet sports.xlsx" canEdit={canEdit} excelLink={excelLink} />}
+      {activeTab === 'registration' && <FormView title="Registration Form" actionLabel="Submit Registration" dbTitle="Registration Database" xlsx="gcet sports.xlsx" canEdit={canEditReg} excelLink={excelLink} />}
       
       {isStaff && (
         <>
-          {activeTab === 'attendance' && <FormView title="Attendance Form" actionLabel="Mark Attendance" dbTitle="Attendance Database" xlsx="gcet sports.xlsx" canEdit={canEdit} excelLink={excelLink} />}
-          {activeTab === 'budget' && <BudgetView expenses={expenses} addExpense={addExpense} deleteExpense={deleteExpense} canEdit={canEdit} excelLink={excelLink} />}
-          {activeTab === 'equipment' && <EquipmentView equipment={equipment} addEquipment={addEquipment} deleteEquipment={deleteEquipment} canEdit={canEdit} excelLink={excelLink} />}
+          {activeTab === 'attendance' && <FormView title="Attendance Form" actionLabel="Mark Attendance" dbTitle="Attendance Database" xlsx="gcet sports.xlsx" canEdit={canEditReg} excelLink={excelLink} />}
+          {activeTab === 'budget' && <BudgetView expenses={expenses} addExpense={addExpense} deleteExpense={deleteExpense} canEdit={canEditBudget} excelLink={excelLink} />}
+          {activeTab === 'equipment' && <EquipmentView equipment={equipment} addEquipment={addEquipment} deleteEquipment={deleteEquipment} canEdit={canEditBudget} excelLink={excelLink} />}
         </>
       )}
     </div>
@@ -134,17 +139,19 @@ function BudgetView({ expenses, addExpense, deleteExpense, canEdit, excelLink }:
         <BudgetStat label="Total Expense" amount={totalExpense} color="text-red-400" />
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 backdrop-blur-md">
-        <h4 className="font-bold mb-6 text-white/70 uppercase tracking-widest text-sm">Add Entry</h4>
-        <div className="grid grid-cols-2 gap-4">
-          <button onClick={() => handleAdd('allotted')} className="flex items-center justify-center gap-2 bg-[#10b981]/10 text-[#10b981] py-4 rounded-2xl font-bold border border-[#10b981]/20 hover:bg-[#10b981]/20 transition-all active:scale-95">
-            <Plus size={20} /> Add Allotted
-          </button>
-          <button onClick={() => handleAdd('expense')} className="flex items-center justify-center gap-2 bg-red-500/10 text-red-400 py-4 rounded-2xl font-bold border border-red-500/20 hover:bg-red-500/20 transition-all active:scale-95">
-            <Plus size={20} /> Add Expense
-          </button>
+      {canEdit && (
+        <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 backdrop-blur-md">
+          <h4 className="font-bold mb-6 text-white/70 uppercase tracking-widest text-sm">Add Entry</h4>
+          <div className="grid grid-cols-2 gap-4">
+            <button onClick={() => handleAdd('allotted')} className="flex items-center justify-center gap-2 bg-[#10b981]/10 text-[#10b981] py-4 rounded-2xl font-bold border border-[#10b981]/20 hover:bg-[#10b981]/20 transition-all active:scale-95">
+              <Plus size={20} /> Add Allotted
+            </button>
+            <button onClick={() => handleAdd('expense')} className="flex items-center justify-center gap-2 bg-red-500/10 text-red-400 py-4 rounded-2xl font-bold border border-red-500/20 hover:bg-red-500/20 transition-all active:scale-95">
+              <Plus size={20} /> Add Expense
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="space-y-3">
         <h4 className="font-bold text-white/50 tracking-widest uppercase text-sm px-1">Recent Entries</h4>

@@ -42,8 +42,11 @@ function TabButton({ icon, label, active, onClick }: any) {
 
 function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void, onGoToDept: (dept: string) => void }) {
   const { role, coreId, coreCreds, holidays, addHoliday, updateHoliday, deleteHoliday, bannerMsg, bannerVisible } = useAppStore();
-  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'master');
-  const canEdit = isMaster || role === 'core';
+  
+  const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
+  const isMaster = role === 'admin' || power === 'master';
+  // Basic & Classic can edit Dashboard (Holidays)
+  const canEditHolidays = isMaster || power === 'basic' || power === 'classic';
 
   const depts = [
     { name: "Core Head", icon: "👨‍💼" },
@@ -94,7 +97,7 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
             <span className="w-2 h-2 rounded-full bg-[#fca311]"></span>
             Holidays & Break
           </h3>
-          {canEdit && (
+          {canEditHolidays && (
             <button onClick={handleAddHoliday} className="p-2 bg-white/10 rounded-xl hover:bg-[#6b5cff] transition-colors">
               <Plus size={16} />
             </button>
@@ -105,7 +108,7 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
             <div key={h.id} className="min-w-[180px] p-5 rounded-2xl bg-white/5 border border-white/10 shrink-0 relative group">
               <p className="text-[10px] font-bold text-[#fca311] mb-2 tracking-wider uppercase">{h.dateRange}</p>
               <p className="font-bold text-lg leading-tight">{h.title}</p>
-              {canEdit && (
+              {canEditHolidays && (
                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button onClick={() => handleEditHoliday(h)} className="p-1 bg-black/50 rounded-lg text-white/50 hover:text-white">
                     <Edit2 size={10} />
@@ -158,8 +161,10 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
 
 function MentorsTab() {
   const { role, coreCreds, coreId, mentors, addMentor, updateMentor, deleteMentor } = useAppStore();
-  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'master');
-  const canEdit = isMaster || role === 'core';
+  const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
+  const isMaster = role === 'admin' || power === 'master';
+  // Classic can edit Mentors (Teacher), Basic cannot
+  const canEdit = isMaster || power === 'classic';
 
   const handleAdd = () => {
     const name = prompt("Mentor Name:");
@@ -228,8 +233,10 @@ function MentorsTab() {
 function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void }) {
   const { role, coreCreds, coreId, coreMembers, addCoreMember, updateCoreMember, deleteCoreMember } = useAppStore();
   const depts = ["Core Head", "Equipment Head", "Graphic Head", "Reels & VFX Head", "Treasurer Head", "Volunteer Head", "Documentation Head", "Logistics Head"];
-  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'master');
-  const canEdit = isMaster || role === 'core';
+  const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
+  const isMaster = role === 'admin' || power === 'master';
+  // Classic can edit Core members, Basic cannot
+  const canEdit = isMaster || power === 'classic';
   const members = coreMembers.filter(m => m.department === dept);
 
   const handleAdd = () => {

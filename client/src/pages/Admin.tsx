@@ -14,8 +14,14 @@ export default function Admin() {
     return null;
   }
 
-  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'master');
+  const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
+  const isMaster = role === 'admin' || power === 'master';
   
+  // Classic can edit Announcement Banner
+  const canEditBanner = isMaster || power === 'classic';
+  // Standard can manage credentials if they are Admin or Master Core
+  const canManageIDs = role === 'admin'; // Only Admin can fully manage IDs as per prompt "EDIT OR MODEFI BY ADMIN ONLY"
+
   // Core can ONLY see their own ID if they aren't master
   const visibleCreds = isMaster ? Object.values(coreCreds) : Object.values(coreCreds).filter(c => c.id === coreId);
 
@@ -48,12 +54,12 @@ export default function Admin() {
           </h2>
         </div>
         <p className="text-sm text-white/70 relative z-10 font-medium">
-          {isMaster ? 'You have Master Control access. You can add/delete IDs, grant power levels, and customize themes.' : 'You have standard Core access. You can manage your own credentials.'}
+          {isMaster ? 'You have Master Control access. You can add/delete IDs, grant power levels, and customize themes.' : `You have ${power} Core access. You can manage your own credentials.`}
         </p>
       </div>
 
-      {isMaster && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {isMaster && (
           <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 backdrop-blur-xl">
             <h3 className="text-xl font-bold flex items-center gap-3 mb-6">
               <div className="p-2 bg-[#6b5cff]/20 rounded-xl">
@@ -84,7 +90,9 @@ export default function Admin() {
               </button>
             </div>
           </div>
+        )}
 
+        {canEditBanner && (
           <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 backdrop-blur-xl">
             <h3 className="text-xl font-bold flex items-center gap-3 mb-6">
               <div className="p-2 bg-[#10b981]/20 rounded-xl">
@@ -114,8 +122,8 @@ export default function Admin() {
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 backdrop-blur-xl">
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
@@ -125,7 +133,7 @@ export default function Admin() {
             </div>
             {isMaster ? 'Core Access Management' : 'My Account Credentials'}
           </h3>
-          {isMaster && (
+          {canManageIDs && (
             <button 
               onClick={() => {
                 const id = prompt("Assign new Core ID:");
@@ -168,35 +176,46 @@ export default function Admin() {
               </div>
               
               <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                {isMaster && (
-                  <button 
-                    onClick={() => {
-                      const newId = prompt("New Core ID:", cred.id);
-                      if (newId && newId !== cred.id) updateCoreId(cred.id, newId);
-                    }}
-                    className="p-2 bg-white/5 hover:bg-[#fca311] rounded-xl text-white/70 hover:text-white transition-colors"
-                  >
-                    <Edit3 size={16} />
-                  </button>
+                {canManageIDs && (
+                  <>
+                    <button 
+                      onClick={() => {
+                        const newId = prompt("New Core ID:", cred.id);
+                        if (newId && newId !== cred.id) updateCoreId(cred.id, newId);
+                      }}
+                      className="p-2 bg-white/5 hover:bg-[#fca311] rounded-xl text-white/70 hover:text-white transition-colors"
+                    >
+                      <Edit3 size={16} />
+                    </button>
+                    <button 
+                      onClick={() => {
+                        const newPass = prompt("New Password:", cred.pass);
+                        if(newPass) updateCoreCred(cred.id, { pass: newPass });
+                      }}
+                      className="px-4 py-2 bg-[#6b5cff]/20 hover:bg-[#6b5cff]/40 text-[#6b5cff] hover:text-white rounded-xl text-xs font-bold transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button 
+                      onClick={() => {
+                        if(confirm("Permanently delete this Core ID?")) deleteCoreCred(cred.id);
+                      }}
+                      className="p-2 bg-red-500/10 hover:bg-red-500/30 text-red-400 hover:text-red-300 rounded-xl transition-colors border border-red-500/20"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </>
                 )}
-                <button 
-                  onClick={() => {
-                    const newPass = prompt("New Password:", cred.pass);
-                    if(newPass) updateCoreCred(cred.id, { pass: newPass });
-                  }}
-                  className="px-4 py-2 bg-[#6b5cff]/20 hover:bg-[#6b5cff]/40 text-[#6b5cff] hover:text-white rounded-xl text-xs font-bold transition-colors"
-                >
-                  Change Pass
-                </button>
-                {isMaster && role === 'admin' && (
-                  <button 
-                    onClick={() => {
-                      if(confirm("Permanently delete this Core ID?")) deleteCoreCred(cred.id);
-                    }}
-                    className="p-2 bg-red-500/10 hover:bg-red-500/30 text-red-400 hover:text-red-300 rounded-xl transition-colors border border-red-500/20"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                {!canManageIDs && cred.id === coreId && (
+                   <button 
+                   onClick={() => {
+                     const newPass = prompt("New Password:", cred.pass);
+                     if(newPass) updateCoreCred(cred.id, { pass: newPass });
+                   }}
+                   className="px-4 py-2 bg-[#6b5cff]/20 hover:bg-[#6b5cff]/40 text-[#6b5cff] hover:text-white rounded-xl text-xs font-bold transition-colors"
+                 >
+                   Change Pass
+                 </button>
                 )}
               </div>
             </div>
