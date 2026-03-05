@@ -7,7 +7,7 @@ import { LogOut, Home, Trophy, UserPlus, ShieldAlert } from 'lucide-react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
-  const { role, coreId, logout } = useAppStore();
+  const { role, coreId, logout, bgUrl } = useAppStore();
 
   useEffect(() => {
     const container = document.getElementById('falling-container');
@@ -29,7 +29,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const isStaff = role === 'admin' || role === 'core';
 
   return (
-    <div className="min-h-screen pb-24 relative overflow-hidden font-sans">
+    <div 
+      className="min-h-screen pb-24 relative overflow-hidden font-sans bg-[#0b102a]"
+      style={bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : {}}
+    >
       <div id="falling-container" className="fixed inset-0 pointer-events-none z-0 opacity-[0.03]" />
       <DynamicIsland />
       <LoginModal />

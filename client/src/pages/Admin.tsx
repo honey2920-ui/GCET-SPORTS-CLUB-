@@ -1,42 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { useAppStore } from '@/lib/store';
-import { Shield, KeyRound, Trash2, Plus, AlertCircle, Edit3, Image as ImageIcon, MessageSquare, Palette } from 'lucide-react';
+import { Shield, KeyRound, Trash2, Plus, AlertCircle, Edit3, Image as ImageIcon, MessageSquare, Palette, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
 export default function Admin() {
-  const { role, coreId, coreCreds, updateCoreCred, updateCoreId, addCoreCred, deleteCoreCred, setIslandMessage } = useAppStore();
+  const { role, coreId, coreCreds, updateCoreCred, updateCoreId, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, bannerMsg, setBanner } = useAppStore();
   const [, setLoc] = useLocation();
-
-  const [bgUrl, setBgUrl] = useState('');
-  const [bannerMsg, setBannerMsg] = useState('');
-
-  useEffect(() => {
-    setBgUrl(localStorage.getItem('g_bg') || '');
-    setBannerMsg(localStorage.getItem('g_msg') || '');
-  }, []);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (role !== 'admin' && role !== 'core') {
     setLoc('/');
     return null;
   }
 
-  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'admin_level');
+  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'master');
+  
+  // Core can ONLY see their own ID if they aren't master
+  const visibleCreds = isMaster ? Object.values(coreCreds) : Object.values(coreCreds).filter(c => c.id === coreId);
 
-  const saveTheme = () => {
-    localStorage.setItem('g_bg', bgUrl);
-    setIslandMessage('Theme updated. Please refresh.');
-  };
-
-  const saveBanner = () => {
-    localStorage.setItem('g_msg', bannerMsg);
-    localStorage.setItem('g_msg_s', 'Y');
-    setIslandMessage('Banner active. Please refresh.');
-  };
-
-  const hideBanner = () => {
-    localStorage.setItem('g_msg_s', 'N');
-    setIslandMessage('Banner hidden. Please refresh.');
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const result = ev.target?.result as string;
+        setBgUrl(result);
+        setIslandMessage('Background updated from gallery');
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -55,7 +48,7 @@ export default function Admin() {
           </h2>
         </div>
         <p className="text-sm text-white/70 relative z-10 font-medium">
-          {isMaster ? 'You have Master Control access. You can add/delete IDs, grant admin powers, and customize themes.' : 'You have standard Core access. You can manage contents and edit your own password.'}
+          {isMaster ? 'You have Master Control access. You can add/delete IDs, grant power levels, and customize themes.' : 'You have standard Core access. You can manage your own credentials.'}
         </p>
       </div>
 
@@ -71,17 +64,23 @@ export default function Admin() {
             
             <div className="space-y-4">
               <div>
-                <label className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2 block">Background Image URL</label>
-                <input 
-                  type="text" 
-                  value={bgUrl}
-                  onChange={e => setBgUrl(e.target.value)}
-                  placeholder="https://..." 
-                  className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#6b5cff] outline-none transition-colors"
-                />
+                <label className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2 block">Background Source</label>
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    value={bgUrl.startsWith('data:') ? 'Local Image' : bgUrl}
+                    onChange={e => setBgUrl(e.target.value)}
+                    placeholder="https://..." 
+                    className="flex-1 bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#6b5cff] outline-none transition-colors"
+                  />
+                  <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
+                  <button onClick={() => fileInputRef.current?.click()} className="p-3 bg-white/5 hover:bg-[#6b5cff] rounded-xl transition-colors border border-white/10">
+                    <Upload size={18} />
+                  </button>
+                </div>
               </div>
-              <button onClick={saveTheme} className="w-full py-3 bg-white/10 hover:bg-[#6b5cff] rounded-xl text-sm font-bold transition-colors">
-                Save Theme
+              <button onClick={() => setIslandMessage('Theme applied!')} className="w-full py-3 bg-white/10 hover:bg-[#6b5cff] rounded-xl text-sm font-bold transition-colors">
+                Apply Theme
               </button>
             </div>
           </div>
@@ -100,16 +99,16 @@ export default function Admin() {
                 <input 
                   type="text" 
                   value={bannerMsg}
-                  onChange={e => setBannerMsg(e.target.value)}
+                  onChange={e => setBanner(e.target.value, true)}
                   placeholder="Welcome to..." 
                   className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#10b981] outline-none transition-colors"
                 />
               </div>
               <div className="flex gap-2">
-                <button onClick={saveBanner} className="flex-1 py-3 bg-[#10b981]/20 hover:bg-[#10b981] text-[#10b981] hover:text-white rounded-xl text-sm font-bold transition-colors border border-[#10b981]/30">
+                <button onClick={() => setBanner(bannerMsg, true)} className="flex-1 py-3 bg-[#10b981]/20 hover:bg-[#10b981] text-[#10b981] hover:text-white rounded-xl text-sm font-bold transition-colors border border-[#10b981]/30">
                   Update & Show
                 </button>
-                <button onClick={hideBanner} className="flex-1 py-3 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-xl text-sm font-bold transition-colors border border-red-500/30">
+                <button onClick={() => setBanner(bannerMsg, false)} className="flex-1 py-3 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-xl text-sm font-bold transition-colors border border-red-500/30">
                   Hide Banner
                 </button>
               </div>
@@ -124,7 +123,7 @@ export default function Admin() {
             <div className="p-2 bg-[#fca311]/20 rounded-xl">
               <KeyRound size={20} className="text-[#fca311]" /> 
             </div>
-            Core Access Management
+            {isMaster ? 'Core Access Management' : 'My Account Credentials'}
           </h3>
           {isMaster && (
             <button 
@@ -133,8 +132,8 @@ export default function Admin() {
                 if(!id) return;
                 const pass = prompt("Set Password:");
                 if(!pass) return;
-                const isAd = confirm("Grant Admin Level Power? (OK for Yes, Cancel for No)");
-                addCoreCred(id, pass, isAd ? 'admin_level' : 'normal');
+                const pwr = prompt("Power Level (master/basic/classic):", "basic");
+                addCoreCred(id, pass, (pwr as any) || 'basic');
               }}
               className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-colors text-sm"
             >
@@ -144,24 +143,27 @@ export default function Admin() {
         </div>
         
         <div className="space-y-3">
-          {Object.values(coreCreds).map(cred => (
+          {visibleCreds.map(cred => (
             <div key={cred.id} className="flex items-center justify-between bg-black/40 p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-colors group">
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg ${
-                  cred.power === 'admin_level' ? 'bg-red-500/20 text-red-400' : 'bg-[#6b5cff]/20 text-[#6b5cff]'
+                  cred.power === 'master' ? 'bg-red-500/20 text-red-400' : 
+                  cred.power === 'basic' ? 'bg-blue-500/20 text-blue-400' : 'bg-white/10 text-white/50'
                 }`}>
                   {cred.id.charAt(0).toUpperCase()}
                 </div>
                 <div>
                   <p className="font-bold text-lg flex items-center gap-3">
                     {cred.id}
-                    {cred.power === 'admin_level' && (
-                      <span className="flex items-center gap-1 px-2.5 py-1 bg-red-500/20 text-red-400 text-[10px] rounded-lg font-bold tracking-wider uppercase border border-red-500/20">
-                        <AlertCircle size={10} /> Master Lvl
-                      </span>
-                    )}
+                    <span className={`px-2.5 py-1 text-[10px] rounded-lg font-bold uppercase tracking-wider border ${
+                      cred.power === 'master' ? 'bg-red-500/20 text-red-400 border-red-500/20' : 
+                      cred.power === 'basic' ? 'bg-blue-500/20 text-blue-400 border-blue-500/20' : 
+                      'bg-white/5 text-white/30 border-white/10'
+                    }`}>
+                      {cred.power} Lvl
+                    </span>
                   </p>
-                  {isMaster && <p className="text-xs text-white/40 font-mono mt-1 tracking-widest">PWD: <span className="text-white/80">{cred.pass}</span></p>}
+                  {(isMaster || cred.id === coreId) && <p className="text-xs text-white/40 font-mono mt-1 tracking-widest">PWD: <span className="text-white/80">{cred.pass}</span></p>}
                 </div>
               </div>
               
@@ -177,17 +179,15 @@ export default function Admin() {
                     <Edit3 size={16} />
                   </button>
                 )}
-                {(isMaster || (role === 'core' && coreId === cred.id)) && (
-                  <button 
-                    onClick={() => {
-                      const newPass = prompt("New Password:", cred.pass);
-                      if(newPass) updateCoreCred(cred.id, { pass: newPass });
-                    }}
-                    className="px-4 py-2 bg-[#6b5cff]/20 hover:bg-[#6b5cff]/40 text-[#6b5cff] hover:text-white rounded-xl text-xs font-bold transition-colors"
-                  >
-                    Change Pass
-                  </button>
-                )}
+                <button 
+                  onClick={() => {
+                    const newPass = prompt("New Password:", cred.pass);
+                    if(newPass) updateCoreCred(cred.id, { pass: newPass });
+                  }}
+                  className="px-4 py-2 bg-[#6b5cff]/20 hover:bg-[#6b5cff]/40 text-[#6b5cff] hover:text-white rounded-xl text-xs font-bold transition-colors"
+                >
+                  Change Pass
+                </button>
                 {isMaster && role === 'admin' && (
                   <button 
                     onClick={() => {

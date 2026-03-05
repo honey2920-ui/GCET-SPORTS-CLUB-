@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Role = 'student' | 'core' | 'admin' | null;
+export type PowerLevel = 'classic' | 'basic' | 'master';
 
 export interface Mentor {
   id: string;
@@ -24,7 +25,7 @@ export interface CoreMember {
 export interface CoreCreds {
   id: string;
   pass: string;
-  power: 'normal' | 'admin_level';
+  power: PowerLevel;
 }
 
 export interface Expense {
@@ -42,19 +43,30 @@ export interface Equipment {
   type: 'available' | 'wanted';
 }
 
+export interface Holiday {
+  id: string;
+  title: string;
+  dateRange: string;
+}
+
 interface AppState {
   role: Role;
   coreId: string | null;
   coreCreds: Record<string, CoreCreds>;
   mentors: Mentor[];
   coreMembers: CoreMember[];
-  holidays: any[];
+  holidays: Holiday[];
   expenses: Expense[];
   equipment: Equipment[];
   islandMessage: string | null;
+  bgUrl: string;
+  bannerMsg: string;
+  bannerVisible: boolean;
   login: (role: Role, id?: string) => void;
   logout: () => void;
   setIslandMessage: (msg: string | null) => void;
+  setBgUrl: (url: string) => void;
+  setBanner: (msg: string, visible: boolean) => void;
   addMentor: (m: Omit<Mentor, 'id'>) => void;
   updateMentor: (id: string, m: Partial<Mentor>) => void;
   deleteMentor: (id: string) => void;
@@ -63,17 +75,20 @@ interface AppState {
   deleteCoreMember: (id: string) => void;
   updateCoreCred: (id: string, cred: Partial<CoreCreds>) => void;
   updateCoreId: (oldId: string, newId: string) => void;
-  addCoreCred: (id: string, pass: string, power?: 'normal' | 'admin_level') => void;
+  addCoreCred: (id: string, pass: string, power: PowerLevel) => void;
   deleteCoreCred: (id: string) => void;
   addExpense: (e: Omit<Expense, 'id'>) => void;
   deleteExpense: (id: string) => void;
   addEquipment: (e: Omit<Equipment, 'id'>) => void;
   deleteEquipment: (id: string) => void;
+  addHoliday: (h: Omit<Holiday, 'id'>) => void;
+  updateHoliday: (id: string, h: Partial<Holiday>) => void;
+  deleteHoliday: (id: string) => void;
 }
 
 const defaultCreds: Record<string, CoreCreds> = {
-  '1111': { id: '1111', pass: 'CORE2026', power: 'normal' },
-  'balli': { id: 'balli', pass: 'BALLI123', power: 'admin_level' }
+  '1111': { id: '1111', pass: 'CORE2026', power: 'basic' },
+  'balli': { id: 'balli', pass: 'BALLI123', power: 'master' }
 };
 
 const MockContext = createContext<AppState | null>(null);
@@ -82,29 +97,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [role, setRole] = useState<Role>(null);
   const [coreId, setCoreId] = useState<string | null>(null);
   const [islandMessage, setIslandMessage] = useState<string | null>(null);
-  
   const [coreCreds, setCoreCreds] = useState<Record<string, CoreCreds>>(defaultCreds);
-  
   const [mentors, setMentors] = useState<Mentor[]>([
     { id: 'm1', name: 'Dr. Sarah Jenkins', designation: 'Chief Mentor', description: 'Oversees all sports operations', dateAdded: '2026-01-01' }
   ]);
-  
   const [coreMembers, setCoreMembers] = useState<CoreMember[]>([
-    { id: 'c1', department: 'Core Head', name: 'Alice', branch: 'Computer Science', description: 'Overall coordinator', dateAdded: '2026-01-01' },
-    { id: 'c2', department: 'Equipment Head', name: 'Bob', branch: 'Mechanical', description: 'Manages inventory', dateAdded: '2026-01-01' }
+    { id: 'c1', department: 'Core Head', name: 'Alice', branch: 'Computer Science', description: 'Overall coordinator', dateAdded: '2026-01-01' }
   ]);
-
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([
     { id: 'e1', name: 'Football', qty: 5, type: 'available' },
     { id: 'e2', name: 'Cricket Bat', qty: 2, type: 'wanted' }
   ]);
+  const [holidays, setHolidays] = useState<Holiday[]>([
+    { id: 'h1', title: 'Winter Break', dateRange: 'DEC 25 - JAN 1' }
+  ]);
+  const [bgUrl, setBgUrlState] = useState(localStorage.getItem('g_bg') || '');
+  const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || '');
+  const [bannerVisible, setBannerVisible] = useState(localStorage.getItem('g_msg_s') === 'Y');
 
-  const [holidays, setHolidays] = useState<any[]>([]);
-
-  const showIsland = (msg: string) => {
-    setIslandMessage(msg);
-  };
+  const showIsland = (msg: string) => setIslandMessage(msg);
 
   const login = (r: Role, id?: string) => {
     setRole(r);
@@ -116,6 +128,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setRole(null);
     setCoreId(null);
     showIsland('Logged out successfully');
+  };
+
+  const setBgUrl = (url: string) => {
+    setBgUrlState(url);
+    localStorage.setItem('g_bg', url);
+  };
+
+  const setBanner = (msg: string, visible: boolean) => {
+    setBannerMsg(msg);
+    setBannerVisible(visible);
+    localStorage.setItem('g_msg', msg);
+    localStorage.setItem('g_msg_s', visible ? 'Y' : 'N');
   };
 
   const addMentor = (m: Omit<Mentor, 'id'>) => {
@@ -163,13 +187,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
       return newCreds;
     });
-    if (coreId === oldId) {
-      setCoreId(newId);
-    }
+    if (coreId === oldId) setCoreId(newId);
     showIsland('Core ID renamed');
   };
 
-  const addCoreCred = (id: string, pass: string, power: 'normal'|'admin_level' = 'normal') => {
+  const addCoreCred = (id: string, pass: string, power: PowerLevel) => {
     setCoreCreds(prev => ({...prev, [id]: { id, pass, power }}));
     showIsland('New Core ID issued');
   };
@@ -203,14 +225,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     showIsland('Equipment removed');
   };
 
+  const addHoliday = (h: Omit<Holiday, 'id'>) => {
+    setHolidays([...holidays, { ...h, id: Math.random().toString(36).substr(2, 9) }]);
+    showIsland('Holiday added');
+  };
+
+  const updateHoliday = (id: string, h: Partial<Holiday>) => {
+    setHolidays(holidays.map(x => x.id === id ? { ...x, ...h } : x));
+    showIsland('Holiday updated');
+  };
+
+  const deleteHoliday = (id: string) => {
+    setHolidays(holidays.filter(x => x.id !== id));
+    showIsland('Holiday removed');
+  };
+
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, holidays, expenses, equipment, islandMessage,
-      setIslandMessage, login, logout, 
+      role, coreId, coreCreds, mentors, coreMembers, holidays, expenses, equipment, islandMessage, bgUrl, bannerMsg, bannerVisible,
+      setIslandMessage, login, logout, setBgUrl, setBanner,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       updateCoreCred, updateCoreId, addCoreCred, deleteCoreCred,
-      addExpense, deleteExpense, addEquipment, deleteEquipment
+      addExpense, deleteExpense, addEquipment, deleteEquipment,
+      addHoliday, updateHoliday, deleteHoliday
     }}>
       {children}
     </MockContext.Provider>

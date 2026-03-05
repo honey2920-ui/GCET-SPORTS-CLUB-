@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
 import { motion } from 'framer-motion';
-import { FileSpreadsheet, Plus, Trash2, Wallet, TrendingDown, Package, ShoppingCart } from 'lucide-react';
+import { FileSpreadsheet, Plus, Trash2, Wallet, TrendingDown, Package, ShoppingCart, ExternalLink } from 'lucide-react';
 
 export default function Join() {
   const { role, coreCreds, coreId, expenses, addExpense, deleteExpense, equipment, addEquipment, deleteEquipment } = useAppStore();
   const [activeTab, setActiveTab] = useState<'registration' | 'attendance' | 'budget' | 'equipment'>('registration');
 
-  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'admin_level');
+  const isMaster = role === 'admin' || (role === 'core' && coreId && coreCreds[coreId]?.power === 'master');
   const canEdit = isMaster || role === 'core';
   const isStaff = role === 'admin' || role === 'core';
+
+  const excelLink = "https://onedrive.live.com/view.aspx?resid=9876543210!123"; // Mocked OneDrive View link for the path provided
 
   return (
     <div className="space-y-6 animate-in fade-in zoom-in duration-500">
@@ -22,13 +24,13 @@ export default function Join() {
         </div>
       )}
 
-      {activeTab === 'registration' && <FormView title="Registration Form" actionLabel="Submit Registration" dbTitle="Registration Database (Mock)" xlsx="registration_2026.xlsx" canEdit={canEdit} />}
+      {activeTab === 'registration' && <FormView title="Registration Form" actionLabel="Submit Registration" dbTitle="Registration Database" xlsx="gcet sports.xlsx" canEdit={canEdit} excelLink={excelLink} />}
       
       {isStaff && (
         <>
-          {activeTab === 'attendance' && <FormView title="Attendance Form" actionLabel="Mark Attendance" dbTitle="Attendance Database (Mock)" xlsx="attendance_2026.xlsx" canEdit={canEdit} />}
-          {activeTab === 'budget' && <BudgetView expenses={expenses} addExpense={addExpense} deleteExpense={deleteExpense} canEdit={canEdit} />}
-          {activeTab === 'equipment' && <EquipmentView equipment={equipment} addEquipment={addEquipment} deleteEquipment={deleteEquipment} canEdit={canEdit} />}
+          {activeTab === 'attendance' && <FormView title="Attendance Form" actionLabel="Mark Attendance" dbTitle="Attendance Database" xlsx="gcet sports.xlsx" canEdit={canEdit} excelLink={excelLink} />}
+          {activeTab === 'budget' && <BudgetView expenses={expenses} addExpense={addExpense} deleteExpense={deleteExpense} canEdit={canEdit} excelLink={excelLink} />}
+          {activeTab === 'equipment' && <EquipmentView equipment={equipment} addEquipment={addEquipment} deleteEquipment={deleteEquipment} canEdit={canEdit} excelLink={excelLink} />}
         </>
       )}
     </div>
@@ -48,11 +50,11 @@ function TabButton({ label, active, onClick }: any) {
   );
 }
 
-function FormView({ title, actionLabel, dbTitle, xlsx, canEdit }: any) {
+function FormView({ title, actionLabel, dbTitle, xlsx, canEdit, excelLink }: any) {
   const { setIslandMessage } = useAppStore();
   
   const handleSubmit = () => {
-    setIslandMessage(`${title} submitted successfully!`);
+    setIslandMessage(`${title} data saved to ${xlsx}`);
   };
 
   return (
@@ -83,20 +85,30 @@ function FormView({ title, actionLabel, dbTitle, xlsx, canEdit }: any) {
 
       {canEdit && (
         <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 flex items-center justify-between backdrop-blur-md">
-          <div>
-            <h4 className="font-bold text-lg">{dbTitle}</h4>
-            <p className="text-xs text-white/30 font-mono tracking-wider">Connected to: {xlsx}</p>
+          <div className="flex items-center gap-4">
+             <div className="p-3 bg-green-500/10 rounded-2xl text-green-400">
+                <FileSpreadsheet size={24} />
+             </div>
+             <div>
+               <h4 className="font-bold text-lg">{dbTitle}</h4>
+               <p className="text-xs text-white/30 font-mono tracking-wider">{xlsx}</p>
+             </div>
           </div>
-          <button className="flex items-center gap-2 bg-[#10b981]/10 text-[#10b981] px-4 py-2 rounded-xl text-sm font-bold border border-[#10b981]/20 hover:bg-[#10b981]/20 transition-all active:scale-95">
-            <FileSpreadsheet size={18} /> Open Excel
-          </button>
+          <a 
+            href={excelLink} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-[#10b981] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-[#0da270] transition-all active:scale-95 shadow-lg shadow-green-500/20"
+          >
+            Open Live Excel <ExternalLink size={14} />
+          </a>
         </div>
       )}
     </motion.div>
   );
 }
 
-function BudgetView({ expenses, addExpense, deleteExpense, canEdit }: any) {
+function BudgetView({ expenses, addExpense, deleteExpense, canEdit, excelLink }: any) {
   const totalAllotted = expenses.filter(e => e.type === 'allotted').reduce((acc, curr) => acc + curr.amount, 0);
   const totalExpense = expenses.filter(e => e.type === 'expense').reduce((acc, curr) => acc + curr.amount, 0);
 
@@ -110,7 +122,12 @@ function BudgetView({ expenses, addExpense, deleteExpense, canEdit }: any) {
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-      <h2 className="text-2xl font-bold tracking-tight px-1">Budget Management</h2>
+      <div className="flex justify-between items-center px-1">
+        <h2 className="text-2xl font-bold tracking-tight">Budget Management</h2>
+        <a href={excelLink} target="_blank" rel="noopener noreferrer" className="text-green-400 p-2 hover:bg-green-400/10 rounded-xl transition-colors">
+          <FileSpreadsheet size={24} />
+        </a>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <BudgetStat label="Total Allotted" amount={totalAllotted} color="text-green-400" />
@@ -163,7 +180,7 @@ function BudgetView({ expenses, addExpense, deleteExpense, canEdit }: any) {
   );
 }
 
-function EquipmentView({ equipment, addEquipment, deleteEquipment, canEdit }: any) {
+function EquipmentView({ equipment, addEquipment, deleteEquipment, canEdit, excelLink }: any) {
   const handleAdd = (type: 'available' | 'wanted') => {
     const name = prompt(`Enter ${type} item name:`);
     if (!name) return;
@@ -174,7 +191,12 @@ function EquipmentView({ equipment, addEquipment, deleteEquipment, canEdit }: an
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-      <h2 className="text-2xl font-bold tracking-tight px-1">Equipment List</h2>
+      <div className="flex justify-between items-center px-1">
+        <h2 className="text-2xl font-bold tracking-tight">Equipment List</h2>
+        <a href={excelLink} target="_blank" rel="noopener noreferrer" className="text-green-400 p-2 hover:bg-green-400/10 rounded-xl transition-colors">
+          <FileSpreadsheet size={24} />
+        </a>
+      </div>
 
       <EquipmentSection 
         title="Available Items" 
