@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '@/lib/store';
 import { motion } from 'framer-motion';
-import { FileSpreadsheet, Plus, Trash2, Wallet, TrendingDown, Package, ShoppingCart, ExternalLink, Upload, Image as ImageIcon } from 'lucide-react';
+import { FileSpreadsheet, Plus, Trash2, Wallet, TrendingDown, Package, ShoppingCart, ExternalLink, Upload } from 'lucide-react';
 
 export default function Join() {
   const { role, coreCreds, coreId, expenses, addExpense, deleteExpense, equipment, addEquipment, deleteEquipment } = useAppStore();
@@ -10,7 +10,9 @@ export default function Join() {
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
   
+  // BASIC, CLASSIC, MASTER, and ADMIN can edit Registration, Attendance
   const canEditReg = isMaster || power === 'basic' || power === 'classic';
+  // ONLY CLASSIC, MASTER, and ADMIN can edit Budget, Equipment
   const canEditBudget = isMaster || power === 'classic';
   const isStaff = role === 'admin' || role === 'core';
 

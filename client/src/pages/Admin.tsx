@@ -17,10 +17,10 @@ export default function Admin() {
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
   
-  // Classic can edit Announcement Banner
+  // Classic, Master, and Admin can edit Announcement Banner
   const canEditBanner = isMaster || power === 'classic';
-  // Standard can manage credentials if they are Admin or Master Core
-  const canManageIDs = role === 'admin'; // Only Admin can fully manage IDs as per prompt "EDIT OR MODEFI BY ADMIN ONLY"
+  // IT CAN BE EDIT OR MODEFI BY ADMIN ONLY (Core ID management)
+  const canManageIDs = role === 'admin';
 
   // Core can ONLY see their own ID if they aren't master
   const visibleCreds = isMaster ? Object.values(coreCreds) : Object.values(coreCreds).filter(c => c.id === coreId);

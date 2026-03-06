@@ -11,7 +11,7 @@ export default function Events() {
 
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
-  // Basic & Classic can edit Events
+  // BASIC, CLASSIC, MASTER, and ADMIN can edit Events
   const canEdit = isMaster || power === 'basic' || power === 'classic';
 
   return (

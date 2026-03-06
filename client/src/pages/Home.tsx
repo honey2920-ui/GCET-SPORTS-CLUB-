@@ -45,7 +45,7 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
   
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
-  // Basic & Classic can edit Dashboard (Holidays)
+  // BASIC, CLASSIC, MASTER, and ADMIN can edit Dashboard (Holidays)
   const canEditHolidays = isMaster || power === 'basic' || power === 'classic';
 
   const depts = [
@@ -163,7 +163,7 @@ function MentorsTab() {
   const { role, coreCreds, coreId, mentors, addMentor, updateMentor, deleteMentor } = useAppStore();
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
-  // Classic can edit Mentors (Teacher), Basic cannot
+  // CLASSIC, MASTER, and ADMIN can edit Mentors (Teachers)
   const canEdit = isMaster || power === 'classic';
 
   const handleAdd = () => {
@@ -235,7 +235,7 @@ function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void
   const depts = ["Core Head", "Equipment Head", "Graphic Head", "Reels & VFX Head", "Treasurer Head", "Volunteer Head", "Documentation Head", "Logistics Head"];
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
-  // Classic can edit Core members, Basic cannot
+  // CLASSIC, MASTER, and ADMIN can edit Core members
   const canEdit = isMaster || power === 'classic';
   const members = coreMembers.filter(m => m.department === dept);
 
