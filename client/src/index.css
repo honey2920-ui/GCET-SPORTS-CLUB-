@@ -65,14 +65,49 @@
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* Make print formatting apply to the whole page properly */
+@page {
+  margin: 1cm;
+}
+
 @media print {
   body {
     background: white !important;
     color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
+  
+  /* Hide the root div layout constraints that might clip content */
+  #root, .min-h-screen, .w-full {
+    display: block !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+  
+  /* Make sure flex and other layout containers don't break page flow */
+  .pb-20, .pt-20, .space-y-8, .space-y-6 {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
   .no-print, .no-print * {
     display: none !important;
   }
+  
+  /* ID Cards Grid Print layout */
+  .print\:grid-cols-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    page-break-inside: auto !important;
+  }
+  
+  .print\:block {
+    display: block !important;
+  }
+  
   .id-card-print {
     break-inside: avoid;
     page-break-inside: avoid;
@@ -80,13 +115,80 @@
     border: 2px solid #000 !important;
     color: black !important;
     box-shadow: none !important;
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+    display: inline-block !important; /* Forces block layout instead of flex for printing if needed */
+    width: 100% !important;
   }
+  
+  /* Tables for print (budget, attendance, equipment) */
+  .print-table-container {
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  .print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 20px !important;
+    color: black !important;
+    page-break-inside: auto !important;
+  }
+  
+  .print-table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  
+  .print-table th, .print-table td {
+    border: 1px solid #000 !important;
+    padding: 8px !important;
+    text-align: left !important;
+  }
+  
+  .print-table th {
+    background-color: #eee !important;
+    font-weight: bold !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .print-header {
+    display: block !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    margin-bottom: 20px !important;
+    color: black !important;
+    text-align: center !important;
+  }
+  
+  /* For elements hidden normally but shown in print */
+  .print-only {
+    display: block !important;
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
   .id-card-text {
     color: black !important;
   }
+  
   .id-card-label {
     color: #666 !important;
   }
+  
+  /* Force background colors to print for id cards if needed */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+.print-only {
+  display: none;
 }
 
 @keyframes shimmer {

@@ -104,6 +104,7 @@ interface AppState {
   bannerMsg: string;
   bannerVisible: boolean;
   formPublished: boolean;
+  attendanceFormPublished: boolean;
   adminPass: string;
   login: (role: Role, id?: string) => void;
   logout: () => void;
@@ -111,6 +112,7 @@ interface AppState {
   setBgUrl: (url: string) => void;
   setBanner: (msg: string, visible: boolean) => void;
   setFormPublished: (pub: boolean) => void;
+  setAttendanceFormPublished: (pub: boolean) => void;
   setAdminPass: (pass: string) => void;
   addMentor: (m: Omit<Mentor, 'id'>) => void;
   updateMentor: (id: string, m: Partial<Mentor>) => void;
@@ -190,6 +192,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || '');
   const [bannerVisible, setBannerVisible] = useState(localStorage.getItem('g_msg_s') === 'Y');
   const [formPublished, setFormPublishedState] = useState(localStorage.getItem('g_form_pub') !== 'N');
+  const [attendanceFormPublished, setAttendanceFormPublishedState] = useState(localStorage.getItem('g_att_form_pub') !== 'N');
   const [adminPass, setAdminPassState] = useState(localStorage.getItem('g_admin_pass') || 'GCET2351');
 
   const showIsland = (msg: string) => setIslandMessage(msg);
@@ -221,7 +224,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setFormPublished = (pub: boolean) => {
     setFormPublishedState(pub);
     localStorage.setItem('g_form_pub', pub ? 'Y' : 'N');
-    showIsland(pub ? 'Form Published' : 'Form Unpublished');
+    showIsland(pub ? 'Registration Form Published' : 'Registration Form Unpublished');
+  };
+
+  const setAttendanceFormPublished = (pub: boolean) => {
+    setAttendanceFormPublishedState(pub);
+    localStorage.setItem('g_att_form_pub', pub ? 'Y' : 'N');
+    showIsland(pub ? 'Attendance Form Published' : 'Attendance Form Unpublished');
   };
 
   const setAdminPass = (pass: string) => {
@@ -381,8 +390,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, expenses, equipment, portals, events, registrations, islandMessage, bgUrl, bannerMsg, bannerVisible, formPublished, adminPass,
-      setIslandMessage, login, logout, setBgUrl, setBanner, setFormPublished, setAdminPass,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, expenses, equipment, portals, events, registrations, islandMessage, bgUrl, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass,
+      setIslandMessage, login, logout, setBgUrl, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       addCoreDept, updateCoreDept, deleteCoreDept,
