@@ -270,7 +270,7 @@ export default function Admin() {
                 </div>
 
                 <div className="col-span-2 flex justify-end items-center gap-3">
-                  {!canManageIDs && cred.id === coreId && (
+                  {(canManageIDs || cred.id === coreId) && (
                      <button 
                      onClick={() => {
                        const newPass = prompt("New Password:", cred.pass);

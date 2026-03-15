@@ -22,6 +22,12 @@ export interface CoreMember {
   img?: string;
 }
 
+export interface CoreDept {
+  id: string;
+  name: string;
+  icon?: string;
+}
+
 export interface CoreCreds {
   id: string;
   pass: string;
@@ -66,17 +72,33 @@ export interface EventItem {
   img: string;
 }
 
+export interface Registration {
+  id: string;
+  name: string;
+  email: string;
+  rollNo: string;
+  mobile: string;
+  engType: string;
+  year: string;
+  event: string;
+  sem: string;
+  photo: string | null;
+  date: string;
+}
+
 interface AppState {
   role: Role;
   coreId: string | null;
   coreCreds: Record<string, CoreCreds>;
   mentors: Mentor[];
   coreMembers: CoreMember[];
+  coreDepts: CoreDept[];
   holidays: Holiday[];
   expenses: Expense[];
   equipment: Equipment[];
   portals: Portal[];
   events: EventItem[];
+  registrations: Registration[];
   islandMessage: string | null;
   bgUrl: string;
   bannerMsg: string;
@@ -96,6 +118,9 @@ interface AppState {
   addCoreMember: (m: Omit<CoreMember, 'id'>) => void;
   updateCoreMember: (id: string, m: Partial<CoreMember>) => void;
   deleteCoreMember: (id: string) => void;
+  addCoreDept: (name: string, icon: string) => void;
+  updateCoreDept: (id: string, name: string, icon: string) => void;
+  deleteCoreDept: (id: string) => void;
   updateCoreCred: (id: string, cred: Partial<CoreCreds>) => void;
   updateCoreId: (oldId: string, newId: string) => void;
   addCoreCred: (id: string, pass: string, power: PowerLevel, name?: string, post?: string) => void;
@@ -113,6 +138,8 @@ interface AppState {
   addEvent: (e: Omit<EventItem, 'id'>) => void;
   updateEvent: (id: string, e: Partial<EventItem>) => void;
   deleteEvent: (id: string) => void;
+  addRegistration: (r: Omit<Registration, 'id' | 'date'>) => void;
+  deleteRegistration: (id: string) => void;
 }
 
 const defaultCreds: Record<string, CoreCreds> = {
@@ -133,6 +160,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [coreMembers, setCoreMembers] = useState<CoreMember[]>([
     { id: 'c1', department: 'Core Head', name: 'Alice', branch: 'Computer Science', description: 'Overall coordinator', dateAdded: '2026-01-01' }
   ]);
+  const [coreDepts, setCoreDepts] = useState<CoreDept[]>([
+    { id: 'd1', name: 'Core Head', icon: '👨‍💼' },
+    { id: 'd2', name: 'Equipment Head', icon: '🏀' },
+    { id: 'd3', name: 'Graphic Head', icon: '🎨' },
+    { id: 'd4', name: 'Reels & VFX Head', icon: '🎬' },
+    { id: 'd5', name: 'Treasurer Head', icon: '🤑' },
+    { id: 'd6', name: 'Volunteer Head', icon: '🫂' },
+    { id: 'd7', name: 'Documentation Head', icon: '📝' },
+    { id: 'd8', name: 'Logistics Head', icon: '💰' }
+  ]);
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([
     { id: 'e1', name: 'Football', qty: 5, type: 'available' },
@@ -220,6 +258,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const deleteCoreMember = (id: string) => {
     setCoreMembers(coreMembers.filter(x => x.id !== id));
     showIsland('Core member removed');
+  };
+
+  const addCoreDept = (name: string, icon: string) => {
+    setCoreDepts([...coreDepts, { id: Math.random().toString(36).substr(2, 9), name, icon }]);
+    showIsland('Department added');
+  };
+
+  const updateCoreDept = (id: string, name: string, icon: string) => {
+    setCoreDepts(coreDepts.map(d => d.id === id ? { ...d, name, icon } : d));
+    showIsland('Department updated');
+  };
+
+  const deleteCoreDept = (id: string) => {
+    setCoreDepts(coreDepts.filter(d => d.id !== id));
+    showIsland('Department deleted');
   };
 
   const updateCoreCred = (id: string, cred: Partial<CoreCreds>) => {
@@ -316,17 +369,29 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     showIsland('Event deleted');
   };
 
+  const addRegistration = (r: Omit<Registration, 'id' | 'date'>) => {
+    setRegistrations([{ ...r, id: Math.random().toString(36).substr(2, 9), date: new Date().toLocaleDateString() }, ...registrations]);
+    showIsland('Registration submitted');
+  };
+
+  const deleteRegistration = (id: string) => {
+    setRegistrations(registrations.filter(x => x.id !== id));
+    showIsland('Registration removed');
+  };
+
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, holidays, expenses, equipment, portals, events, islandMessage, bgUrl, bannerMsg, bannerVisible, formPublished, adminPass,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, expenses, equipment, portals, events, registrations, islandMessage, bgUrl, bannerMsg, bannerVisible, formPublished, adminPass,
       setIslandMessage, login, logout, setBgUrl, setBanner, setFormPublished, setAdminPass,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
+      addCoreDept, updateCoreDept, deleteCoreDept,
       updateCoreCred, updateCoreId, addCoreCred, deleteCoreCred,
       addExpense, deleteExpense, addEquipment, deleteEquipment,
       addHoliday, updateHoliday, deleteHoliday,
       addPortal, updatePortal, deletePortal,
-      addEvent, updateEvent, deleteEvent
+      addEvent, updateEvent, deleteEvent,
+      addRegistration, deleteRegistration
     }}>
       {children}
     </MockContext.Provider>

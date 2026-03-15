@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAppStore } from '@/lib/store';
 import { motion } from 'framer-motion';
-import { FileSpreadsheet, Plus, Trash2, Wallet, TrendingDown, Package, ShoppingCart, ExternalLink, Upload } from 'lucide-react';
+import { FileSpreadsheet, Plus, Trash2, Wallet, TrendingDown, Package, ShoppingCart, ExternalLink, Upload, Download, CreditCard } from 'lucide-react';
 
 export default function Join() {
   const { role, coreCreds, coreId, expenses, addExpense, deleteExpense, equipment, addEquipment, deleteEquipment } = useAppStore();
@@ -21,7 +21,7 @@ export default function Join() {
   return (
     <div className="space-y-6 animate-in fade-in zoom-in duration-500 pb-20">
       {isStaff && (
-        <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-md overflow-x-auto scrollbar-hide">
+        <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-md overflow-x-auto scrollbar-hide no-print">
           <TabButton label="Registration" active={activeTab === 'registration'} onClick={() => setActiveTab('registration')} />
           <TabButton label="Attendance" active={activeTab === 'attendance'} onClick={() => setActiveTab('attendance')} />
           <TabButton label="Budget" active={activeTab === 'budget'} onClick={() => setActiveTab('budget')} />
@@ -29,11 +29,11 @@ export default function Join() {
         </div>
       )}
 
-      {activeTab === 'registration' && <FormView title="Registration Form" actionLabel="Submit Registration" dbTitle="Registration Database" xlsx="gcet sports.xlsx" canEdit={canEditReg} excelLink={excelLink} showUpload={true} />}
+      {activeTab === 'registration' && <FormView title="Registration Form" actionLabel="Submit Registration" canEdit={canEditReg} showUpload={true} isRegistration={true} />}
       
       {isStaff && (
         <>
-          {activeTab === 'attendance' && <FormView title="Attendance Form" actionLabel="Mark Attendance" dbTitle="Attendance Database" xlsx="gcet sports.xlsx" canEdit={canEditReg} excelLink={excelLink} />}
+          {activeTab === 'attendance' && <FormView title="Attendance Form" actionLabel="Mark Attendance" canEdit={canEditReg} showUpload={false} isRegistration={false} />}
           {activeTab === 'budget' && <BudgetView expenses={expenses} addExpense={addExpense} deleteExpense={deleteExpense} canEdit={canEditBudget} excelLink={excelLink} />}
           {activeTab === 'equipment' && <EquipmentView equipment={equipment} addEquipment={addEquipment} deleteEquipment={deleteEquipment} canEdit={canEditBudget} excelLink={excelLink} />}
         </>
@@ -55,13 +55,33 @@ function TabButton({ label, active, onClick }: any) {
   );
 }
 
-function FormView({ title, actionLabel, dbTitle, xlsx, canEdit, excelLink, showUpload }: any) {
-  const { setIslandMessage, formPublished, setFormPublished, events } = useAppStore();
+function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: any) {
+  const { setIslandMessage, formPublished, setFormPublished, events, addRegistration, registrations, deleteRegistration } = useAppStore();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Form states
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [rollNo, setRollNo] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [engType, setEngType] = useState('');
+  const [year, setYear] = useState('');
+  const [event, setEvent] = useState('');
+  const [sem, setSem] = useState('');
+  
   const handleSubmit = () => {
-    setIslandMessage(`${title} data saved to ${xlsx}`);
+    if (!name || !rollNo || !event) {
+      alert("Name, Roll Number and Event are required");
+      return;
+    }
+    
+    if (isRegistration) {
+      addRegistration({ name, email, rollNo, mobile, engType, year, event, sem, photo: previewUrl });
+      setName(''); setEmail(''); setRollNo(''); setMobile(''); setEngType(''); setYear(''); setEvent(''); setSem(''); setPreviewUrl(null);
+    } else {
+      setIslandMessage(`${title} data saved`);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,9 +95,13 @@ function FormView({ title, actionLabel, dbTitle, xlsx, canEdit, excelLink, showU
     }
   };
 
+  const printIDCards = () => {
+    window.print();
+  };
+
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-      <div className="flex justify-between items-center px-1">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+      <div className="flex justify-between items-center px-1 no-print">
         <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
         {canEdit && (
           <button 
@@ -89,6 +113,7 @@ function FormView({ title, actionLabel, dbTitle, xlsx, canEdit, excelLink, showU
         )}
       </div>
 
+      <div className="no-print">
       {!formPublished ? (
         <div className="bg-[#1e1e3f]/50 backdrop-blur-xl border border-white/10 rounded-[32px] p-12 text-center shadow-2xl">
           <div className="text-6xl mb-6">⏳</div>
@@ -127,14 +152,14 @@ function FormView({ title, actionLabel, dbTitle, xlsx, canEdit, excelLink, showU
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input placeholder="Full Name" />
-            <Input placeholder="Email ID" />
-            <Input placeholder="Roll Number" />
-            <Input placeholder="Mobile Number" />
-            <Select options={["B.Tech", "Diploma"]} placeholder="Engineering Type" />
-            <Select options={["1", "2", "3", "4"]} placeholder="Year" />
-            <Select options={events.map(e => e.name)} placeholder="Select Event" />
-            <Select options={["1", "2", "3", "4", "5", "6", "7", "8"]} placeholder="Select Semester" />
+            <Input placeholder="Full Name" value={name} onChange={(e: any) => setName(e.target.value)} />
+            <Input placeholder="Email ID" value={email} onChange={(e: any) => setEmail(e.target.value)} />
+            <Input placeholder="Roll Number" value={rollNo} onChange={(e: any) => setRollNo(e.target.value)} />
+            <Input placeholder="Mobile Number" value={mobile} onChange={(e: any) => setMobile(e.target.value)} />
+            <Select options={["B.Tech", "Diploma"]} placeholder="Engineering Type" value={engType} onChange={(e: any) => setEngType(e.target.value)} />
+            <Select options={["1", "2", "3", "4"]} placeholder="Year" value={year} onChange={(e: any) => setYear(e.target.value)} />
+            <Select options={events.map(e => e.name)} placeholder="Select Event" value={event} onChange={(e: any) => setEvent(e.target.value)} />
+            <Select options={["1", "2", "3", "4", "5", "6", "7", "8"]} placeholder="Select Semester" value={sem} onChange={(e: any) => setSem(e.target.value)} />
           </div>
           <button 
             onClick={handleSubmit}
@@ -144,26 +169,85 @@ function FormView({ title, actionLabel, dbTitle, xlsx, canEdit, excelLink, showU
           </button>
         </div>
       )}
+      </div>
 
-      {canEdit && (
-        <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 flex items-center justify-between backdrop-blur-md">
-          <div className="flex items-center gap-4">
-             <div className="p-3 bg-green-500/10 rounded-2xl text-green-400">
-                <FileSpreadsheet size={24} />
-             </div>
-             <div>
-               <h4 className="font-bold text-lg">{dbTitle}</h4>
-               <p className="text-xs text-white/30 font-mono tracking-wider">{xlsx}</p>
-             </div>
+      {isRegistration && canEdit && (
+        <div className="mt-12 space-y-6">
+          <div className="flex justify-between items-center px-1 no-print">
+            <h3 className="text-2xl font-bold flex items-center gap-3">
+              <CreditCard className="text-[#fca311]" /> Registrations & ID Cards
+            </h3>
+            {registrations.length > 0 && (
+              <button 
+                onClick={printIDCards}
+                className="flex items-center gap-2 bg-[#6b5cff] text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#8073ff] transition-all shadow-lg active:scale-95"
+              >
+                <Download size={16} /> Download All ID Cards as PDF
+              </button>
+            )}
           </div>
-          <a 
-            href={excelLink} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-[#10b981] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-[#0da270] transition-all active:scale-95 shadow-lg shadow-green-500/20"
-          >
-            Open Live Excel <ExternalLink size={14} />
-          </a>
+          
+          {registrations.length === 0 ? (
+            <div className="bg-white/5 border border-white/10 rounded-2xl py-12 text-center text-white/40 font-medium no-print">
+              No registrations yet.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {registrations.map(r => (
+                <div key={r.id} className="id-card-print bg-white/5 border border-white/20 p-6 rounded-[24px] relative group overflow-hidden">
+                  {/* ID Card Design */}
+                  <div className="absolute top-0 right-0 p-4 opacity-10">
+                    <span className="text-6xl">⚽</span>
+                  </div>
+                  
+                  <div className="flex gap-5 relative z-10">
+                    <div className="w-24 h-32 rounded-xl bg-black/40 border border-white/10 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                      {r.photo ? (
+                        <img src={r.photo} alt={r.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-4xl text-white/20">👤</span>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-extrabold text-xl mb-1 text-[#6b5cff] uppercase tracking-wide id-card-text">{r.name}</h4>
+                      <p className="text-xs font-bold text-[#fca311] mb-3 tracking-widest uppercase id-card-text">{r.event}</p>
+                      
+                      <div className="grid grid-cols-2 gap-y-2 text-xs">
+                        <div>
+                          <span className="text-white/40 uppercase tracking-wider text-[9px] block id-card-label">Roll No</span>
+                          <span className="font-mono font-bold id-card-text">{r.rollNo}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/40 uppercase tracking-wider text-[9px] block id-card-label">Mobile</span>
+                          <span className="font-mono font-bold id-card-text">{r.mobile}</span>
+                        </div>
+                        <div>
+                          <span className="text-white/40 uppercase tracking-wider text-[9px] block id-card-label">Year/Sem</span>
+                          <span className="font-bold id-card-text">{r.year} Yr / {r.sem} Sem</span>
+                        </div>
+                        <div>
+                          <span className="text-white/40 uppercase tracking-wider text-[9px] block id-card-label">Type</span>
+                          <span className="font-bold id-card-text">{r.engType}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
+                    <span className="text-[10px] font-mono text-white/30 id-card-label">ID: {r.id.toUpperCase()}</span>
+                    <span className="text-[10px] font-bold text-white/50 tracking-widest id-card-label">GCET SPORTS CLUB</span>
+                  </div>
+
+                  <button 
+                    onClick={() => deleteRegistration(r.id)}
+                    className="no-print absolute top-4 right-4 p-2 bg-red-500/20 text-red-400 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </motion.div>
@@ -343,13 +427,13 @@ function BudgetStat({ label, amount, color }: any) {
   );
 }
 
-function Input({ placeholder }: any) {
-  return <input type="text" placeholder={placeholder} className="w-full bg-black/30 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-[#6b5cff] outline-none transition-colors placeholder:text-white/20" />;
+function Input({ placeholder, value, onChange }: any) {
+  return <input type="text" placeholder={placeholder} value={value} onChange={onChange} className="w-full bg-black/30 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-[#6b5cff] outline-none transition-colors placeholder:text-white/20" />;
 }
 
-function Select({ options, placeholder }: any) {
+function Select({ options, placeholder, value, onChange }: any) {
   return (
-    <select className="w-full bg-black/30 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-[#6b5cff] outline-none appearance-none transition-colors">
+    <select value={value} onChange={onChange} className="w-full bg-black/30 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-[#6b5cff] outline-none appearance-none transition-colors">
       <option value="" className="bg-[#1e1e3f]">{placeholder}</option>
       {options.map((o: any) => <option key={o} value={o} className="bg-[#1e1e3f]">{o}</option>)}
     </select>
@@ -409,5 +493,5 @@ function getEmoji(name: string) {
   if (n.includes('pump')) return '⛽';
   if (n.includes('kit') || n.includes('med')) return '🧰';
 
-  return '🏆'; // Default sports emoji instead of face
+  return '🏆'; 
 }

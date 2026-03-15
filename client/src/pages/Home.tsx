@@ -4,8 +4,9 @@ import { Edit2, Trash2, PlusCircle, LayoutDashboard, Users, UserCog, ArrowRight,
 import { motion } from 'framer-motion';
 
 export default function Home() {
+  const { coreDepts } = useAppStore();
   const [activeTab, setActiveTab] = useState<'overview' | 'mentors' | 'core'>('overview');
-  const [coreDept, setCoreDept] = useState('Core Head');
+  const [coreDept, setCoreDept] = useState(coreDepts[0]?.name || 'Core Head');
 
   const goToDept = (dept: string) => {
     setCoreDept(dept);
@@ -41,23 +42,12 @@ function TabButton({ icon, label, active, onClick }: any) {
 }
 
 function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void, onGoToDept: (dept: string) => void }) {
-  const { role, coreId, coreCreds, holidays, addHoliday, updateHoliday, deleteHoliday, bannerMsg, bannerVisible, events, coreMembers } = useAppStore();
+  const { role, coreId, coreCreds, holidays, addHoliday, updateHoliday, deleteHoliday, bannerMsg, bannerVisible, events, coreMembers, coreDepts, addCoreDept, updateCoreDept, deleteCoreDept } = useAppStore();
   
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
   // BASIC, CLASSIC, MASTER, and ADMIN can edit Dashboard (Holidays)
   const canEditHolidays = isMaster || power === 'basic' || power === 'classic';
-
-  const depts = [
-    { name: "Core Head", icon: "👨‍💼" },
-    { name: "Equipment Head", icon: "🏀" },
-    { name: "Graphic Head", icon: "🎨" },
-    { name: "Reels & VFX Head", icon: "🎬" },
-    { name: "Treasurer Head", icon: "🤑" },
-    { name: "Volunteer Head", icon: "🫂" },
-    { name: "Documentation Head", icon: "📝" },
-    { name: "Logistics Head", icon: "💰" }
-  ];
 
   const handleAddHoliday = () => {
     const title = prompt("Holiday Title:");
@@ -70,6 +60,28 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
     const title = prompt("New Title:", h.title);
     const range = prompt("New Range:", h.dateRange);
     updateHoliday(h.id, { title: title || h.title, dateRange: range || h.dateRange });
+  };
+
+  const handleAddDept = () => {
+    const name = prompt("Department/Head Name:");
+    if (!name) return;
+    const icon = prompt("Emoji Icon:", "💼") || "💼";
+    addCoreDept(name, icon);
+  };
+
+  const handleEditDept = (d: any, e: any) => {
+    e.stopPropagation();
+    const name = prompt("New Name:", d.name);
+    if (!name) return;
+    const icon = prompt("New Icon:", d.icon);
+    updateCoreDept(d.id, name, icon || d.icon);
+  };
+
+  const handleDeleteDept = (d: any, e: any) => {
+    e.stopPropagation();
+    if (confirm(`Delete department ${d.name}?`)) {
+      deleteCoreDept(d.id);
+    }
   };
 
   return (
@@ -145,15 +157,32 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
           <ArrowRight className="text-white/50" size={20} />
         </div>
 
-        <h4 className="text-sm font-bold text-white/50 tracking-widest uppercase mb-4 mt-6">Core Committee</h4>
+        <div className="flex justify-between items-center mb-4 mt-6">
+          <h4 className="text-sm font-bold text-white/50 tracking-widest uppercase">Core Committee</h4>
+          {canEditHolidays && (
+            <button onClick={handleAddDept} className="text-xs flex items-center gap-1 bg-white/10 hover:bg-[#6b5cff] px-3 py-1.5 rounded-lg transition-colors font-bold text-white/80 hover:text-white">
+              <Plus size={12} /> Add Dept
+            </button>
+          )}
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {depts.map(d => (
+          {coreDepts.map(d => (
             <div 
-              key={d.name}
+              key={d.id}
               onClick={() => onGoToDept(d.name)}
-              className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:bg-[#6b5cff]/20 hover:border-[#6b5cff]/50 transition-all group"
+              className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:bg-[#6b5cff]/20 hover:border-[#6b5cff]/50 transition-all group relative"
             >
-              <div className="text-2xl group-hover:scale-110 transition-transform">{d.icon}</div>
+              {canEditHolidays && (
+                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={(e) => handleEditDept(d, e)} className="p-1 bg-black/50 rounded hover:bg-[#6b5cff] text-white/50 hover:text-white transition-colors">
+                    <Edit2 size={10} />
+                  </button>
+                  <button onClick={(e) => handleDeleteDept(d, e)} className="p-1 bg-black/50 rounded hover:bg-red-500 text-white/50 hover:text-white transition-colors">
+                    <Trash2 size={10} />
+                  </button>
+                </div>
+              )}
+              <div className="text-2xl group-hover:scale-110 transition-transform">{d.icon || '💼'}</div>
               <span className="text-xs font-bold">{d.name}</span>
             </div>
           ))}
@@ -236,8 +265,7 @@ function MentorsTab() {
 }
 
 function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void }) {
-  const { role, coreCreds, coreId, coreMembers, addCoreMember, updateCoreMember, deleteCoreMember, addCoreCred } = useAppStore();
-  const depts = ["Core Head", "Equipment Head", "Graphic Head", "Reels & VFX Head", "Treasurer Head", "Volunteer Head", "Documentation Head", "Logistics Head"];
+  const { role, coreCreds, coreId, coreMembers, coreDepts, addCoreMember, updateCoreMember, deleteCoreMember, addCoreCred } = useAppStore();
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
   // CLASSIC, MASTER, and ADMIN can edit Core members
@@ -269,17 +297,17 @@ function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       <div className="flex overflow-x-auto scrollbar-hide gap-3 pb-2 px-1">
-        {depts.map(d => (
+        {coreDepts.map(d => (
           <button 
-            key={d} 
-            onClick={() => setDept(d)}
+            key={d.id} 
+            onClick={() => setDept(d.name)}
             className={`whitespace-nowrap px-5 py-3 rounded-[16px] text-sm font-bold transition-all duration-300 border ${
-              dept === d 
+              dept === d.name 
               ? 'bg-[#6b5cff]/20 text-[#6b5cff] border-[#6b5cff]/50 shadow-[0_0_15px_rgba(107,92,255,0.2)]' 
               : 'bg-white/5 text-white/50 border-white/5 hover:bg-white/10 hover:text-white/80'
             }`}
           >
-            {d}
+            {d.name}
           </button>
         ))}
       </div>
