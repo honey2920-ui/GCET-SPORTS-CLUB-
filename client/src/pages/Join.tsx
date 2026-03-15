@@ -301,17 +301,32 @@ function EquipmentSection({ title, items, onAdd, onDelete, canEdit, dotColor }: 
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {items.map((item: any) => (
-          <div key={item.id} className="bg-black/40 border border-white/5 p-5 rounded-[24px] flex items-center justify-between group hover:border-[#6b5cff]/30 transition-all backdrop-blur-sm">
-            <div className="flex items-center gap-4">
-              <div className="text-3xl grayscale group-hover:grayscale-0 transition-all duration-300 transform group-hover:scale-110">
+          <div key={item.id} className={`bg-gradient-to-br from-black/60 to-black/40 border border-white/10 p-5 rounded-[24px] flex items-center justify-between group transition-all backdrop-blur-md shadow-lg ${
+            dotColor === 'bg-green-400' ? 'hover:border-green-500/50 hover:shadow-[0_0_20px_rgba(74,222,128,0.15)]' : 'hover:border-[#fca311]/50 hover:shadow-[0_0_20px_rgba(252,163,17,0.15)]'
+          }`}>
+            <div className="flex items-center gap-5">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-inner border border-white/5 ${
+                dotColor === 'bg-green-400' ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/10' : 'bg-gradient-to-br from-[#fca311]/20 to-orange-500/10'
+              } group-hover:scale-110 transition-transform duration-300`}>
                 {getEmoji(item.name)}
               </div>
               <div>
-                <p className="font-bold text-lg">{item.name}</p>
-                <p className="text-xs text-white/40 font-bold uppercase tracking-wider">Qty: {item.qty}</p>
+                <p className="font-bold text-lg text-white mb-1">{item.name}</p>
+                <div className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+                  dotColor === 'bg-green-400' ? 'bg-green-500/10 text-green-400' : 'bg-[#fca311]/10 text-[#fca311]'
+                }`}>
+                  Qty: {item.qty}
+                </div>
               </div>
             </div>
-            {canEdit && <button onClick={() => onDelete(item.id)} className="text-red-400/50 hover:text-red-400 text-xs font-bold transition-colors active:scale-90">Delete</button>}
+            {canEdit && (
+              <button 
+                onClick={() => onDelete(item.id)} 
+                className="p-2.5 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white rounded-xl transition-all active:scale-90 opacity-0 group-hover:opacity-100 border border-red-500/20"
+              >
+                <Trash2 size={16} />
+              </button>
+            )}
           </div>
         ))}
       </div>
@@ -394,6 +409,5 @@ function getEmoji(name: string) {
   if (n.includes('pump')) return '⛽';
   if (n.includes('kit') || n.includes('med')) return '🧰';
 
-  const randomFaces = ['😎', '🤠', '😎', '🤩', '🤓', '🧐'];
-  return randomFaces[Math.floor(Math.random() * randomFaces.length)];
+  return '🏆'; // Default sports emoji instead of face
 }

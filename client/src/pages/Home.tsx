@@ -75,8 +75,13 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
       {bannerVisible && (
-        <div className="bg-[#6b5cff] text-white p-3 rounded-2xl font-bold text-center animate-pulse shadow-[0_0_20px_rgba(107,92,255,0.4)]">
-          📢 {bannerMsg}
+        <div className="bg-gradient-to-r from-[#10b981] via-[#0da06f] to-[#10b981] text-white p-4 rounded-2xl font-bold text-center animate-pulse shadow-[0_0_30px_rgba(16,185,129,0.4)] border border-[#10b981]/50 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%)] bg-[length:250%_250%] animate-[shimmer_2s_infinite]"></div>
+          <span className="relative z-10 flex items-center justify-center gap-3 text-lg">
+            <span className="text-2xl animate-bounce">📢</span>
+            <span className="tracking-wide">{bannerMsg}</span>
+            <span className="text-2xl animate-bounce" style={{ animationDelay: '0.2s' }}>✨</span>
+          </span>
         </div>
       )}
 
@@ -248,7 +253,7 @@ function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void
     
     // Auto-generate Core ID
     const generatedId = name.toLowerCase().replace(/\s+/g, '.') + Math.floor(Math.random()*100);
-    const generatedPass = name.toLowerCase().replace(/\s+/g, '') + '123';
+    const generatedPass = "CORE2026";
     addCoreCred(generatedId, generatedPass, 'basic', name, dept);
     alert(`Member added!\nAuto-generated Core ID: ${generatedId}\nPassword: ${generatedPass}`);
   };

@@ -12,12 +12,34 @@ export default function Events() {
   const canEdit = isMaster || power === 'basic' || power === 'classic';
 
   const handleAddEvent = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const imgUrl = ev.target?.result as string;
+          promptEventDetails(imgUrl);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    
+    if (confirm("Do you want to upload an image for the event? (Cancel to use default image)")) {
+      fileInput.click();
+    } else {
+      promptEventDetails("https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=800");
+    }
+  };
+
+  const promptEventDetails = (imgUrl: string) => {
     const name = prompt("Event Name:");
     if (!name) return;
     const date = prompt("Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
     const desc = prompt("Description:");
-    const img = prompt("Image URL (leave blank for default):") || "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=800";
-    addEvent({ name, date: date || '', description: desc || '', img });
+    addEvent({ name, date: date || '', description: desc || '', img: imgUrl });
   };
 
   const handleEditEvent = (e: any) => {

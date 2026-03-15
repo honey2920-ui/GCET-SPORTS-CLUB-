@@ -65,7 +65,7 @@ export default function Admin() {
     } else {
       id += '.' + Math.floor(Math.random()*100);
     }
-    const pass = id.replace('.', '') + "123";
+    const pass = "CORE2026";
     addCoreCred(id, pass, 'basic', newName.trim(), 'Member');
     setNewName('');
     setIslandMessage(`ID Generated: ${id}`);
@@ -99,7 +99,7 @@ export default function Admin() {
             </div>
             Admin Security
           </h3>
-          <p className="text-sm text-white/60 mb-4">Change the primary admin password. (The master override code cannot be changed).</p>
+          <p className="text-sm text-white/60 mb-4">Change the primary admin password.</p>
           <div className="flex gap-4">
             <button 
               onClick={() => {
@@ -149,32 +149,35 @@ export default function Admin() {
         )}
 
         {canEditBanner && (
-          <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 backdrop-blur-xl">
-            <h3 className="text-xl font-bold flex items-center gap-3 mb-6">
-              <div className="p-2 bg-[#10b981]/20 rounded-xl">
-                <MessageSquare size={20} className="text-[#10b981]" /> 
-              </div>
-              Announcement Banner
-            </h3>
+          <div className="bg-gradient-to-br from-[#10b981]/20 to-[#0da06f]/10 border border-[#10b981]/30 rounded-[28px] p-8 backdrop-blur-xl relative overflow-hidden group shadow-[0_0_30px_rgba(16,185,129,0.1)]">
+            <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:scale-110 transition-transform duration-500 group-hover:opacity-30">
+              <MessageSquare size={120} className="text-[#10b981]" />
+            </div>
             
-            <div className="space-y-4">
-              <div>
-                <label className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2 block">Banner Message</label>
-                <input 
-                  type="text" 
-                  value={bannerMsg}
-                  onChange={e => setBanner(e.target.value, true)}
-                  placeholder="Welcome to..." 
-                  className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#10b981] outline-none transition-colors"
-                />
-              </div>
-              <div className="flex gap-2">
-                <button onClick={() => setBanner(bannerMsg, true)} className="flex-1 py-3 bg-[#10b981]/20 hover:bg-[#10b981] text-[#10b981] hover:text-white rounded-xl text-sm font-bold transition-colors border border-[#10b981]/30">
-                  Update & Show
-                </button>
-                <button onClick={() => setBanner(bannerMsg, false)} className="flex-1 py-3 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-xl text-sm font-bold transition-colors border border-red-500/30">
-                  Hide Banner
-                </button>
+            <div className="relative z-10">
+              <h3 className="text-2xl font-extrabold flex items-center gap-3 mb-2 text-white tracking-wide">
+                Announcement Banner
+              </h3>
+              <p className="text-[#10b981] text-sm font-bold tracking-wider uppercase mb-8">Broadcast message to all users</p>
+              
+              <div className="space-y-6">
+                <div>
+                  <textarea 
+                    value={bannerMsg}
+                    onChange={e => setBanner(e.target.value, true)}
+                    placeholder="Enter announcement message..." 
+                    rows={3}
+                    className="w-full bg-black/40 border border-[#10b981]/30 rounded-2xl px-5 py-4 text-white focus:border-[#10b981] outline-none transition-all placeholder:text-white/20 shadow-inner resize-none font-medium"
+                  />
+                </div>
+                <div className="flex gap-4">
+                  <button onClick={() => setBanner(bannerMsg, true)} className="flex-[2] py-4 bg-gradient-to-r from-[#10b981] to-[#0da06f] hover:from-[#0da06f] hover:to-[#098058] text-white rounded-xl font-bold transition-all shadow-lg active:scale-95 text-lg">
+                    Update & Show Banner
+                  </button>
+                  <button onClick={() => setBanner(bannerMsg, false)} className="flex-1 py-4 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-xl font-bold transition-all border border-red-500/30 active:scale-95">
+                    Hide Banner
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -216,15 +219,29 @@ export default function Admin() {
 
           <div className="divide-y divide-white/5">
             {visibleCreds.map(cred => (
-              <div key={cred.id} className="grid grid-cols-12 gap-4 p-5 items-center hover:bg-white/5 transition-colors group">
-                <div className="col-span-5 flex items-center gap-3">
-                  <div>
-                    <p className="font-bold text-[15px] text-white leading-tight">{cred.name || cred.id}</p>
-                    <p className="text-[13px] text-white/40 mt-0.5">{cred.id}</p>
-                    {(isMaster || cred.id === coreId) && (
-                       <p className="text-[10px] text-white/20 mt-1 font-mono hover:text-[#fca311] transition-colors">PWD: {cred.pass}</p>
-                    )}
+              <div key={cred.id} className="grid grid-cols-12 gap-4 p-5 items-center hover:bg-white/5 transition-colors group border-b border-white/5 last:border-0">
+                <div className="col-span-5 flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <input 
+                      disabled={!canManageIDs}
+                      type="text"
+                      value={cred.name || cred.id}
+                      onChange={(e) => updateCoreCred(cred.id, { name: e.target.value })}
+                      className="font-bold text-[15px] text-white leading-tight bg-transparent border-none outline-none focus:border-b focus:border-[#6b5cff]/50 w-full"
+                    />
                   </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      disabled={!canManageIDs}
+                      type="text"
+                      value={cred.id}
+                      onChange={(e) => updateCoreId(cred.id, e.target.value)}
+                      className="text-[13px] text-white/40 mt-0.5 bg-transparent border-none outline-none focus:border-b focus:border-[#6b5cff]/50 w-full"
+                    />
+                  </div>
+                  {(isMaster || cred.id === coreId) && (
+                     <p className="text-[10px] text-white/20 mt-1 font-mono hover:text-[#fca311] transition-colors">PWD: {cred.pass}</p>
+                  )}
                 </div>
                 
                 <div className="col-span-5 flex flex-col gap-2">
