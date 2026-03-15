@@ -71,11 +71,46 @@
 }
 
 @media print {
-  body {
+  body, html, #root {
     background: white !important;
+    background-image: none !important;
+    background-color: white !important;
     color: black !important;
     margin: 0 !important;
     padding: 0 !important;
+  }
+  
+  /* Force all elements to have white background and black text */
+  * {
+    color: black !important;
+    background-color: white !important;
+    background-image: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    border-color: #ccc !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Remove Tailwind dark mode gradients and background colors */
+  [class*="bg-gradient"], 
+  [class*="from-"], 
+  [class*="to-"], 
+  [class*="via-"], 
+  [class*="bg-black"], 
+  [class*="bg-white"], 
+  [class*="bg-[#"], 
+  .bg-black, 
+  .bg-[#1e1e3f], 
+  .bg-[#0b102a] {
+    background: white !important;
+    background-color: white !important;
+    background-image: none !important;
+  }
+
+  /* Ensure text is clearly visible */
+  .text-white, .text-white\/50, .text-white\/70, .text-white\/40, .text-white\/30, .text-white\/20, .text-gray-400, span, div, h1, h2, h3, h4, h5, h6, p, td, th, strong {
+    color: black !important;
   }
   
   /* Hide the root div layout constraints that might clip content */
@@ -92,7 +127,7 @@
     margin: 0 !important;
   }
   
-  .no-print, .no-print * {
+  .no-print, .no-print *, .print\:hidden, .print\:hidden * {
     display: none !important;
   }
   

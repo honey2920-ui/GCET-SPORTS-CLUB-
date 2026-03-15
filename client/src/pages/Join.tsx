@@ -400,7 +400,7 @@ function BudgetView({ expenses, addExpense, deleteExpense, canEdit, excelLink }:
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-      <div className="flex justify-between items-center px-1">
+      <div className="flex justify-between items-center px-1 no-print">
         <h2 className="text-2xl font-bold tracking-tight">Budget Management</h2>
         <a href={excelLink} target="_blank" rel="noopener noreferrer" className="text-green-400 p-2 hover:bg-green-400/10 rounded-xl transition-colors">
           <FileSpreadsheet size={24} />
