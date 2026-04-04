@@ -12,17 +12,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const container = document.getElementById('falling-container');
     if (!container) return;
-    const emojis = ['⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏉'];
+    const emojis = ['⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏉', '🏸', '🏓', '🏏', '🏑', '🥊', '🥋', '🥅', '⛳', '⛸️', '🎣', '🎽', '🎿', '🛷', '🥌', '🎯', '🎱', '🎳', '🪁'];
     
     let interval = setInterval(() => {
       const el = document.createElement('div');
       el.className = 'falling-item';
       el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
       el.style.left = `${Math.random() * 100}vw`;
-      el.style.animationDuration = `${Math.random() * 3 + 5}s`;
+      el.style.animationDuration = `${Math.random() * 4 + 6}s`; // 6s to 10s fall duration
+      el.style.fontSize = `${Math.random() * 16 + 16}px`; // 16px to 32px size
       container.appendChild(el);
-      setTimeout(() => el.remove(), 8000);
-    }, 1500);
+      setTimeout(() => el.remove(), 10000);
+    }, 800);
     return () => clearInterval(interval);
   }, []);
 
@@ -33,7 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       className="min-h-screen pb-24 relative overflow-hidden font-sans bg-[#0b102a] print-bg-white"
       style={bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : {}}
     >
-      <div id="falling-container" className="fixed inset-0 pointer-events-none z-0 opacity-[0.15] print:hidden" />
+      <div id="falling-container" className="fixed inset-0 pointer-events-none z-0 opacity-[0.25] print:hidden" />
       <div className="print:hidden"><DynamicIsland /></div>
       <div className="print:hidden"><LoginModal /></div>
 

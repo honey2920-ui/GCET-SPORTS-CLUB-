@@ -418,7 +418,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
              </thead>
              <tbody>
                 {/* Mock data for attendance sheet */}
-                {registrations.length > 0 ? registrations.map((r, i) => (
+                {currentRegistrations.length > 0 ? currentRegistrations.map((r, i) => (
                   <tr key={r.id}>
                     <td>{i + 1}</td>
                     <td>{r.name}</td>
@@ -438,18 +438,106 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
 
       {/* Attendance specific view for staff */}
       {!isRegistration && canEdit && (
-        <div className="mt-12">
+        <div className="mt-12 space-y-6">
           <div className="flex justify-between items-center px-1 mb-6 no-print">
             <h3 className="text-xl font-bold">Attendance Sheet</h3>
-            <button 
-              onClick={() => window.print()}
-              className="flex items-center gap-2 bg-[#6b5cff] text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#8073ff] transition-all shadow-lg active:scale-95"
-            >
-              <Download size={16} /> Download PDF
-            </button>
+            <div className="flex items-center gap-3">
+               <input 
+                 type="text" 
+                 placeholder="ID, Roll No, or Index (e.g. 1, 2, 5)" 
+                 value={printIds}
+                 onChange={(e) => setPrintIds(e.target.value)}
+                 className="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-sm focus:border-[#6b5cff] outline-none placeholder:text-white/40 flex-1 md:flex-none min-w-[200px]"
+               />
+               <button 
+                 onClick={() => window.print()}
+                 className="flex items-center gap-2 bg-[#6b5cff] text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#8073ff] transition-all shadow-lg active:scale-95 whitespace-nowrap"
+               >
+                 <Download size={16} /> Print {printIds.trim() ? 'Selected' : 'All'} PDF
+               </button>
+            </div>
           </div>
           
-           <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 flex flex-col md:flex-row items-start md:items-center justify-between backdrop-blur-md no-print">
+          {registrations.length === 0 ? (
+            <div className="bg-white/5 border border-white/10 rounded-2xl py-12 text-center text-white/40 font-medium no-print">
+              No registrations yet.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:hidden">
+              {currentRegistrations.map(r => (
+                <div key={r.id} className="bg-white/5 border border-white/20 p-6 rounded-[24px] relative group overflow-hidden">
+                  {editingId === r.id ? (
+                    <div className="space-y-3 relative z-10 no-print">
+                      <input type="text" value={editName} onChange={e => setEditName(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Name" />
+                      <input type="text" value={editEvent} onChange={e => setEditEvent(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Event" />
+                      <div className="grid grid-cols-2 gap-2">
+                        <input type="text" value={editRollNo} onChange={e => setEditRollNo(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Roll No" />
+                        <input type="text" value={editMobile} onChange={e => setEditMobile(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Mobile" />
+                        <input type="text" value={editYear} onChange={e => setEditYear(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Year" />
+                        <input type="text" value={editSem} onChange={e => setEditSem(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Sem" />
+                        <input type="text" value={editEngType} onChange={e => setEditEngType(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Type" />
+                      </div>
+                      <div className="flex gap-2 mt-4">
+                        <button onClick={handleSaveEdit} className="flex-1 bg-[#10b981] hover:bg-[#0da06f] text-white py-2 rounded-lg font-bold text-sm">Save</button>
+                        <button onClick={() => setEditingId(null)} className="flex-1 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white py-2 rounded-lg font-bold text-sm">Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex gap-5 relative z-10">
+                        <div className="w-20 h-24 rounded-xl bg-black/40 border border-white/10 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                          {r.photo ? (
+                            <img src={r.photo} alt={r.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-4xl text-white/20">👤</span>
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-lg mb-1 text-white">{r.name}</h4>
+                          <p className="text-xs font-bold text-[#fca311] mb-2">{r.event}</p>
+                          <div className="flex flex-wrap gap-2 text-[10px] text-white/50">
+                            <span className="bg-white/5 px-2 py-1 rounded">Roll: {r.rollNo}</span>
+                            <span className="bg-white/5 px-2 py-1 rounded">Phone: {r.mobile}</span>
+                            <span className="bg-white/5 px-2 py-1 rounded">{r.year} Yr / {r.sem} Sem</span>
+                            <span className="bg-white/5 px-2 py-1 rounded">{r.engType}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="no-print absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          onClick={() => {
+                            setPrintIds(r.id);
+                            setTimeout(() => window.print(), 100);
+                          }}
+                          className="p-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500 hover:text-white"
+                          title="Download PDF"
+                        >
+                          <Download size={16} />
+                        </button>
+                        <button 
+                          onClick={() => handleEditClick(r)}
+                          className="p-2 bg-[#fca311]/20 text-[#fca311] rounded-lg hover:bg-[#fca311] hover:text-white"
+                          title="Edit"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <button 
+                          onClick={() => deleteRegistration(r.id)}
+                          className="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500 hover:text-white"
+                          title="Delete"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+           <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 flex flex-col md:flex-row items-start md:items-center justify-between backdrop-blur-md no-print mt-6">
             <div className="flex items-center gap-4 mb-4 md:mb-0">
                <div className="p-3 bg-red-500/10 rounded-2xl text-red-400">
                   <FileSpreadsheet size={24} />
