@@ -449,23 +449,23 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
             </button>
           </div>
           
-          <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 flex flex-col md:flex-row items-start md:items-center justify-between backdrop-blur-md no-print">
+           <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 flex flex-col md:flex-row items-start md:items-center justify-between backdrop-blur-md no-print">
             <div className="flex items-center gap-4 mb-4 md:mb-0">
-               <div className="p-3 bg-green-500/10 rounded-2xl text-green-400">
+               <div className="p-3 bg-red-500/10 rounded-2xl text-red-400">
                   <FileSpreadsheet size={24} />
                </div>
                <div>
-                 <h4 className="font-bold text-lg">Live Attendance Excel</h4>
-                 <p className="text-xs text-white/30 font-mono tracking-wider">attendance_2026.xlsx</p>
+                 <h4 className="font-bold text-lg">Live Attendance PDF</h4>
+                 <p className="text-xs text-white/30 font-mono tracking-wider">attendance_2026.pdf</p>
                </div>
             </div>
             <a 
               href="https://onedrive.live.com/view.aspx?resid=9876543210!123" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-[#10b981] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-[#0da270] transition-all active:scale-95 shadow-lg shadow-green-500/20"
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 shadow-lg shadow-red-500/20"
             >
-              Open Live Excel <ExternalLink size={14} />
+              Open Live PDF <ExternalLink size={14} />
             </a>
           </div>
         </div>
