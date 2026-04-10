@@ -399,10 +399,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setHolidayPdf = (pdf: HolidayPdf | null) => {
     setHolidayPdfState(pdf);
     if(pdf) {
-      setHolidays([{ id: 'pdf-sync', title: pdf.name, dateRange: 'LATEST UPDATE' }]);
+      setHolidays(prev => {
+        const withoutPdf = prev.filter(h => h.id !== 'pdf-sync');
+        const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+        return [{ id: 'pdf-sync', title: pdf.name, dateRange: today }, ...withoutPdf];
+      });
       showIsland('Holidays PDF linked & synced');
     } else {
-      setHolidays([]);
+      setHolidays(prev => prev.filter(h => h.id !== 'pdf-sync'));
       showIsland('Holidays PDF unlinked');
     }
   };

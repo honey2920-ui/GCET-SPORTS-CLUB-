@@ -287,7 +287,7 @@ export default function Admin() {
             <div className="col-span-2 text-right">ACTIONS</div>
           </div>
 
-          <div className="divide-y divide-white/5">
+          <div className="divide-y divide-white/5 h-[300px] overflow-y-auto custom-scrollbar">
             {visibleCreds.map(cred => (
               <div key={cred.id} className="flex flex-col md:grid md:grid-cols-12 gap-4 p-5 items-start md:items-center hover:bg-white/5 transition-colors group border-b border-white/5 last:border-0">
                 <div className="col-span-5 flex flex-col gap-1 w-full">
