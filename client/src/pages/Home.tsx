@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppStore, getFaceEmoji } from '@/lib/store';
-import { Edit2, Trash2, PlusCircle, LayoutDashboard, Users, UserCog, ArrowRight, Plus } from 'lucide-react';
+import { Edit2, Trash2, PlusCircle, LayoutDashboard, Users, UserCog, ArrowRight, Plus, ExternalLink, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Home() {
@@ -42,7 +42,8 @@ function TabButton({ icon, label, active, onClick }: any) {
 }
 
 function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void, onGoToDept: (dept: string) => void }) {
-  const { role, coreId, coreCreds, holidays, addHoliday, updateHoliday, deleteHoliday, bannerMsg, bannerVisible, events, coreMembers, coreDepts, addCoreDept, updateCoreDept, deleteCoreDept } = useAppStore();
+  const { role, coreId, coreCreds, holidays, addHoliday, updateHoliday, deleteHoliday, holidayPdf, setHolidayPdf, bannerMsg, bannerVisible, events, coreMembers, coreDepts, addCoreDept, updateCoreDept, deleteCoreDept } = useAppStore();
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
@@ -84,6 +85,20 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
     }
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // In a real app, this would upload to a server
+      // For now, we'll store a mock URL and the filename
+      const url = URL.createObjectURL(file);
+      setHolidayPdf({
+        url,
+        name: file.name,
+        uploadDate: new Date().toLocaleDateString()
+      });
+    }
+  };
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
       {bannerVisible && (
@@ -109,27 +124,52 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
       </div>
       
       <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-xl p-6 rounded-[28px] border border-white/10">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#fca311]"></span>
             Holidays & Break
           </h3>
-          {canEditHolidays && (
-            <div className="flex gap-2">
-              <button onClick={() => {
-                const url = prompt("Enter PDF link for Holidays list:", "https://...");
-                if(url) {
-                  // In a real app we'd save this PDF url to the backend
-                  alert("PDF linked! Events will sync from this document automatically.");
-                }
-              }} className="p-2 bg-white/10 rounded-xl hover:bg-red-500 transition-colors text-white/70 hover:text-white" title="Link PDF">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M12 18v-6"></path><path d="M9 15l3 3 3-3"></path></svg>
-              </button>
-              <button onClick={handleAddHoliday} className="p-2 bg-white/10 rounded-xl hover:bg-[#6b5cff] transition-colors">
-                <Plus size={16} />
-              </button>
-            </div>
-          )}
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            {holidayPdf ? (
+              <div className="flex items-center gap-2 bg-[#10b981]/10 border border-[#10b981]/30 px-3 py-1.5 rounded-xl text-[#10b981] text-xs font-bold w-full md:w-auto overflow-hidden">
+                <span className="truncate flex-1">{holidayPdf.name}</span>
+                {canEditHolidays && (
+                  <button onClick={() => {
+                    if(confirm("Unlink PDF?")) setHolidayPdf(null);
+                  }} className="p-1 hover:bg-[#10b981]/20 rounded-lg shrink-0">
+                    <Trash2 size={12} />
+                  </button>
+                )}
+                <a href={holidayPdf.url} target="_blank" rel="noopener noreferrer" className="p-1 hover:bg-[#10b981]/20 rounded-lg shrink-0">
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            ) : (
+               <span className="text-[10px] text-white/30 uppercase tracking-widest font-bold hidden md:block">No PDF Linked</span>
+            )}
+            
+            {canEditHolidays && (
+              <div className="flex gap-2 shrink-0">
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  className="hidden" 
+                  accept=".pdf" 
+                  onChange={handleFileUpload} 
+                />
+                <button 
+                  onClick={() => fileInputRef.current?.click()} 
+                  className={`p-2 rounded-xl transition-colors text-white/70 hover:text-white flex items-center gap-2 text-xs font-bold ${holidayPdf ? 'bg-white/5 hover:bg-white/10' : 'bg-[#6b5cff]/20 text-[#6b5cff] hover:bg-[#6b5cff]/40 hover:text-white'}`} 
+                  title={holidayPdf ? "Replace PDF" : "Upload PDF"}
+                >
+                  <Upload size={16} /> {holidayPdf ? '' : 'Upload'}
+                </button>
+                <button onClick={handleAddHoliday} className="p-2 bg-white/10 rounded-xl hover:bg-[#6b5cff] transition-colors">
+                  <Plus size={16} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
           {holidays.map(h => (

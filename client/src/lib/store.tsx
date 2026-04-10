@@ -57,6 +57,12 @@ export interface Holiday {
   dateRange: string;
 }
 
+export interface HolidayPdf {
+  url: string;
+  name: string;
+  uploadDate: string;
+}
+
 export interface Portal {
   id: string;
   title: string;
@@ -102,6 +108,7 @@ interface AppState {
   coreMembers: CoreMember[];
   coreDepts: CoreDept[];
   holidays: Holiday[];
+  holidayPdf: HolidayPdf | null;
   expenses: Expense[];
   equipment: Equipment[];
   portals: Portal[];
@@ -147,6 +154,7 @@ interface AppState {
   addHoliday: (h: Omit<Holiday, 'id'>) => void;
   updateHoliday: (id: string, h: Partial<Holiday>) => void;
   deleteHoliday: (id: string) => void;
+  setHolidayPdf: (pdf: HolidayPdf | null) => void;
   addPortal: (p: Omit<Portal, 'id'>) => void;
   updatePortal: (id: string, p: Partial<Portal>) => void;
   deletePortal: (id: string) => void;
@@ -198,6 +206,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [holidays, setHolidays] = useState<Holiday[]>([
     { id: 'h1', title: 'Winter Break', dateRange: 'DEC 25 - JAN 1' }
   ]);
+  const [holidayPdf, setHolidayPdfState] = useState<HolidayPdf | null>(null);
   const [portals, setPortals] = useState<Portal[]>([
     { id: 'p1', title: 'Khelo India', icon: '🏆', link: '#' },
     { id: 'p2', title: 'Khel Mahakumbh', icon: '🏅', link: '#' }
@@ -387,6 +396,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     showIsland('Holiday removed');
   };
 
+  const setHolidayPdf = (pdf: HolidayPdf | null) => {
+    setHolidayPdfState(pdf);
+    if(pdf) showIsland('Holidays PDF linked & synced');
+    else showIsland('Holidays PDF unlinked');
+  };
+
   const addPortal = (p: Omit<Portal, 'id'>) => {
     setPortals([...portals, { ...p, id: Math.random().toString(36).substr(2, 9) }]);
     showIsland('Portal added');
@@ -430,14 +445,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass,
       setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       addCoreDept, updateCoreDept, deleteCoreDept,
       updateCoreCred, updateCoreId, addCoreCred, deleteCoreCred,
       addExpense, deleteExpense, addEquipment, deleteEquipment,
-      addHoliday, updateHoliday, deleteHoliday,
+      addHoliday, updateHoliday, deleteHoliday, setHolidayPdf,
       addPortal, updatePortal, deletePortal,
       addEvent, updateEvent, deleteEvent,
       addRegistration, updateRegistration, deleteRegistration
