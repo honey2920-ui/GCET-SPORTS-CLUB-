@@ -303,7 +303,7 @@ export default function Admin() {
                       disabled={!canManageIDs}
                       type="text"
                       value={cred.id}
-                      onChange={(e) => updateCoreId(cred.id, e.target.value)}
+                      onChange={(e) => updateCoreCred(cred.id, { id: e.target.value })}
                       className="text-[13px] text-white/40 mt-0.5 bg-transparent border-none outline-none focus:border-b focus:border-[#6b5cff]/50 w-full"
                     />
                   </div>
@@ -364,6 +364,7 @@ export default function Admin() {
             ))}
           </div>
         </div>
+      </div>
       )}
     </motion.div>
   );
