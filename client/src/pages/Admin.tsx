@@ -22,7 +22,7 @@ export default function Admin() {
   const canEditBanner = isMaster || power === 'classic';
   const canManageIDs = role === 'admin';
 
-  const visibleCreds = isMaster ? Object.values(coreCreds) : Object.values(coreCreds).filter(c => c.id === coreId);
+  const visibleCreds = role === 'admin' ? Object.values(coreCreds) : Object.values(coreCreds).filter(c => c.id === coreId);
 
   const posts = [
     "President", "Vice President", "Secretary", "Coordinator", "Sports Lead", 
@@ -131,12 +131,14 @@ export default function Admin() {
               >
                 <Shield size={14} /> Core Members
               </button>
-              <button 
-                onClick={() => setTab('logs')}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'logs' ? 'bg-[#6b5cff] text-white shadow-lg shadow-[#6b5cff]/20' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
-              >
-                <MessageSquare size={14} /> System Logs
-              </button>
+              {isMaster && (
+                <button 
+                  onClick={() => setTab('logs')}
+                  className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'logs' ? 'bg-[#6b5cff] text-white shadow-lg shadow-[#6b5cff]/20' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
+                >
+                  <MessageSquare size={14} /> System Logs
+                </button>
+              )}
             </div>
             
             {tab === 'settings' && (
@@ -194,7 +196,7 @@ export default function Admin() {
               </div>
             )}
             
-            {tab === 'logs' && (
+            {tab === 'logs' && isMaster && (
               <div className="animate-in fade-in h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 <div className="space-y-3">
                   {logs.map((log) => (
@@ -256,7 +258,7 @@ export default function Admin() {
           
           {canManageIDs && (
             <div className="mb-8 bg-[#181832] p-4 md:p-6 rounded-[24px] border border-white/5">
-            <h4 className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-4">ADD NEW CORE MEMBER</h4>
+              <h4 className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-4">ADD NEW CORE MEMBER</h4>
             <div className="flex flex-col md:flex-row gap-4 items-start">
               <div className="flex-1 w-full">
                 <input 

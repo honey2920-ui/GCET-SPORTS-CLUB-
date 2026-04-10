@@ -398,8 +398,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const setHolidayPdf = (pdf: HolidayPdf | null) => {
     setHolidayPdfState(pdf);
-    if(pdf) showIsland('Holidays PDF linked & synced');
-    else showIsland('Holidays PDF unlinked');
+    if(pdf) {
+      setHolidays([{ id: 'pdf-sync', title: pdf.name, dateRange: 'LATEST UPDATE' }]);
+      showIsland('Holidays PDF linked & synced');
+    } else {
+      setHolidays([]);
+      showIsland('Holidays PDF unlinked');
+    }
   };
 
   const addPortal = (p: Omit<Portal, 'id'>) => {
