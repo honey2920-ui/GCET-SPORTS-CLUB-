@@ -34,19 +34,19 @@ export function LoginModal() {
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-[#1e1e3f] w-full max-w-[400px] p-8 rounded-[32px] text-center border border-white/10 shadow-2xl"
+        className="bg-[#1e1e3f] w-full max-w-[400px] p-8 rounded-[32px] text-center border border-white/10 shadow-2xl relative"
       >
         <div className="w-24 h-24 mx-auto border-4 border-[#6b5cff] rounded-full mb-6 flex items-center justify-center bg-[#12163f] shadow-[0_0_30px_rgba(107,92,255,0.3)]">
           <span className="text-4xl">⚽</span>
         </div>
         <h1 className="text-[#6b5cff] text-2xl font-bold mb-8 tracking-wider">GCET SPORTS CLUB</h1>
         
-        <div className="flex gap-2 mb-8 bg-black/20 p-1 rounded-2xl border border-white/5">
+        <div className="flex gap-2 mb-8 bg-black/20 p-1 rounded-2xl border border-white/5 relative z-10">
           {(['student', 'core', 'admin'] as Role[]).map(r => (
             <button
               key={r}
               onClick={() => setSelectedRole(r)}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all relative z-20 ${
                 selectedRole === r ? 'bg-[#6b5cff] text-white shadow-lg' : 'bg-transparent text-white/50 hover:text-white/80'
               }`}
             >

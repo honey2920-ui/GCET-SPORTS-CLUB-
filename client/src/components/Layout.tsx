@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useAppStore } from '@/lib/store';
 import { DynamicIsland } from './DynamicIsland';

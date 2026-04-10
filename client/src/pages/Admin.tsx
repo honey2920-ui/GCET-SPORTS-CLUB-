@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { useAppStore, getFaceEmoji } from '@/lib/store';
+import { useAppStore } from '@/lib/store';
+import { getFaceEmoji } from '@/lib/utils';
 import { Shield, KeyRound, Trash2, Plus, Palette, Upload, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';

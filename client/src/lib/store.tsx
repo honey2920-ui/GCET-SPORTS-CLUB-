@@ -476,10 +476,3 @@ export const useAppStore = () => {
   if (!ctx) throw new Error('Missing AppProvider');
   return ctx;
 };
-
-export const getFaceEmoji = (str: string) => {
-  if (!str) return '😎';
-  const faces = ['😎', '🤠', '🤓', '🧐', '🦸', '🦹', '🧙', '🧑‍🚀', '👨‍🎤', '🕵️', '👩‍💻', '👨‍💻', '🧑‍🎓', '👨‍🏫', '🦁', '🦊', '🐯'];
-  const hash = str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return faces[hash % faces.length];
-};

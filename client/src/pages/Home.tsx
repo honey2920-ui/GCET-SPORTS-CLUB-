@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useAppStore, getFaceEmoji } from '@/lib/store';
+import { useAppStore } from '@/lib/store';
+import { getFaceEmoji } from '@/lib/utils';
 import { Edit2, Trash2, PlusCircle, LayoutDashboard, Users, UserCog, ArrowRight, Plus, ExternalLink, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 
