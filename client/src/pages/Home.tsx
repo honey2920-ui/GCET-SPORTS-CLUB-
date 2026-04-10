@@ -15,10 +15,10 @@ export default function Home() {
 
   return (
     <div className="space-y-6 animate-in fade-in zoom-in duration-500">
-      <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-md relative overflow-hidden">
-        <TabButton icon={<LayoutDashboard size={16}/>} label="Dashboard" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
-        <TabButton icon={<Users size={16}/>} label="Mentors" active={activeTab === 'mentors'} onClick={() => setActiveTab('mentors')} />
-        <TabButton icon={<UserCog size={16}/>} label="Committee" active={activeTab === 'core'} onClick={() => setActiveTab('core')} />
+      <div className="flex bg-black/40 p-1 rounded-xl md:rounded-2xl border border-white/5 backdrop-blur-md relative overflow-x-auto scrollbar-hide">
+        <TabButton icon={<LayoutDashboard size={14} className="md:w-4 md:h-4"/>} label="Dashboard" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
+        <TabButton icon={<Users size={14} className="md:w-4 md:h-4"/>} label="Mentors" active={activeTab === 'mentors'} onClick={() => setActiveTab('mentors')} />
+        <TabButton icon={<UserCog size={14} className="md:w-4 md:h-4"/>} label="Committee" active={activeTab === 'core'} onClick={() => setActiveTab('core')} />
       </div>
 
       {activeTab === 'overview' && <OverviewTab onGoToMentors={() => setActiveTab('mentors')} onGoToDept={goToDept} />}
@@ -32,11 +32,11 @@ function TabButton({ icon, label, active, onClick }: any) {
   return (
     <button
       onClick={onClick}
-      className={`flex-1 py-3 flex items-center justify-center gap-2 rounded-xl text-sm font-bold transition-all duration-300 relative z-10 ${
+      className={`flex-1 min-w-[100px] py-2.5 md:py-3 px-2 flex items-center justify-center gap-1.5 md:gap-2 rounded-lg md:rounded-xl text-[11px] md:text-sm font-bold transition-all duration-300 relative z-10 ${
         active ? 'bg-gradient-to-r from-[#6b5cff] to-[#8073ff] text-white shadow-[0_4px_20px_rgba(107,92,255,0.3)]' : 'text-white/50 hover:text-white/90 hover:bg-white/5'
       }`}
     >
-      {icon} {label}
+      {icon} <span className="whitespace-nowrap">{label}</span>
     </button>
   );
 }
@@ -97,14 +97,14 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-gradient-to-br from-[#6b5cff]/20 to-[#9f7aea]/10 border border-[#6b5cff]/30 p-6 rounded-[24px] text-center backdrop-blur-xl relative overflow-hidden group">
           <p className="text-xs text-[#b0b0cc] mb-2 font-bold tracking-widest uppercase relative z-10">Active Events</p>
-          <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60 relative z-10">{events.length}</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60 relative z-10">{events.length}</h2>
         </div>
         <div className="bg-gradient-to-br from-[#fca311]/20 to-orange-500/10 border border-[#fca311]/30 p-6 rounded-[24px] text-center backdrop-blur-xl relative overflow-hidden group">
           <p className="text-xs text-[#b0b0cc] mb-2 font-bold tracking-widest uppercase relative z-10">Committee</p>
-          <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60 relative z-10">{coreMembers.length}</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60 relative z-10">{coreMembers.length}</h2>
         </div>
       </div>
       
@@ -176,12 +176,12 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
             </button>
           )}
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3 md:gap-4">
           {coreDepts.map(d => (
             <div 
               key={d.id}
               onClick={() => onGoToDept(d.name)}
-              className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:bg-[#6b5cff]/20 hover:border-[#6b5cff]/50 transition-all group relative"
+              className="bg-white/5 border border-white/10 p-3 md:p-4 rounded-xl md:rounded-2xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:bg-[#6b5cff]/20 hover:border-[#6b5cff]/50 transition-all group relative"
             >
               {canEditHolidays && (
                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

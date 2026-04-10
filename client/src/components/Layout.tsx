@@ -59,26 +59,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <div className="print:hidden"><DynamicIsland /></div>
       <div className="print:hidden"><LoginModal /></div>
 
-      <div className="p-5 flex justify-between items-center relative z-10 max-w-4xl mx-auto print:hidden">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-gradient-to-tr from-[#6b5cff] to-[#9f7aea] rounded-full flex items-center justify-center font-bold text-lg shadow-[0_0_20px_rgba(107,92,255,0.4)] border-2 border-white/10">
+      <div className="p-4 md:p-5 flex justify-between items-center relative z-10 w-full max-w-4xl mx-auto print:hidden">
+        <div className="flex items-center gap-3 md:gap-4">
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-tr from-[#6b5cff] to-[#9f7aea] rounded-full flex items-center justify-center font-bold text-base md:text-lg shadow-[0_0_20px_rgba(107,92,255,0.4)] border-2 border-white/10 shrink-0">
             {role ? role.charAt(0).toUpperCase() : '?'}
           </div>
-          <div>
-            <p className="text-[10px] text-[#b0b0cc] uppercase tracking-wider font-semibold mb-0.5">Signed in as</p>
-            <p className="font-bold text-base tracking-wide">
+          <div className="min-w-0">
+            <p className="text-[9px] md:text-[10px] text-[#b0b0cc] uppercase tracking-wider font-semibold mb-0.5">Signed in as</p>
+            <p className="font-bold text-sm md:text-base tracking-wide truncate">
               {role === 'admin' ? 'ADMIN MASTER' : role === 'core' ? `CORE [${coreId}]` : 'STUDENT GUEST'}
             </p>
           </div>
         </div>
         {role && (
-          <button onClick={logout} className="bg-white/5 border border-white/10 p-3 rounded-2xl hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-            <LogOut size={20} />
+          <button onClick={logout} className="bg-white/5 border border-white/10 p-2.5 md:p-3 rounded-xl md:rounded-2xl hover:bg-white/10 transition-colors text-white/70 hover:text-white shrink-0 ml-2">
+            <LogOut size={18} className="md:w-5 md:h-5" />
           </button>
         )}
       </div>
 
-      <main className="relative z-10 max-w-4xl mx-auto p-4">
+      <main className="relative z-10 w-full max-w-4xl mx-auto p-4 md:px-6">
         {children}
       </main>
 

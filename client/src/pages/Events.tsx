@@ -80,7 +80,7 @@ export default function Events() {
             </button>
           )}
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {portals.map(p => (
             <PortalCard key={p.id} portal={p} canEdit={role === 'admin'} onEdit={() => handleEditPortal(p)} onDelete={() => deletePortal(p.id)} />
           ))}
@@ -105,12 +105,12 @@ export default function Events() {
                 <img src={e.img} alt={e.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
               </div>
-              <div className="p-6 relative">
+              <div className="p-4 md:p-6 relative">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-[#6b5cff]" />
-                  <h4 className="font-bold text-xl">{e.name}</h4>
+                  <h4 className="font-bold text-lg md:text-xl">{e.name}</h4>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed mb-6">{e.description}</p>
+                <p className="text-xs md:text-sm text-white/50 leading-relaxed mb-4 md:mb-6">{e.description}</p>
                 <div className="flex items-center justify-between text-white/30 font-mono text-xs uppercase tracking-widest">
                   <div className="flex items-center gap-2">
                     <Trophy size={14} /> {e.date}
@@ -133,19 +133,21 @@ export default function Events() {
 
 function PortalCard({ portal, canEdit, onEdit, onDelete }: any) {
   return (
-    <div className="bg-[#1e1e3f]/60 border border-white/5 p-8 rounded-[32px] text-center backdrop-blur-xl hover:bg-[#6b5cff]/10 hover:border-[#6b5cff]/20 transition-all relative group">
+    <div className="bg-[#1e1e3f]/60 border border-white/5 p-4 md:p-8 rounded-2xl md:rounded-[32px] text-center backdrop-blur-xl hover:bg-[#6b5cff]/10 hover:border-[#6b5cff]/20 transition-all relative group">
       {canEdit && (
         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
            <button onClick={onEdit} className="p-1.5 bg-black/40 hover:bg-[#6b5cff] rounded-lg text-white/60 hover:text-white transition-colors"><Edit2 size={12}/></button>
            <button onClick={onDelete} className="p-1.5 bg-black/40 hover:bg-red-500 rounded-lg text-white/60 hover:text-white transition-colors"><Trash2 size={12}/></button>
         </div>
       )}
-      <a href={portal.link} target="_blank" rel="noopener noreferrer" className="block cursor-pointer">
-        <div className="text-3xl mb-4 group-hover:scale-125 transition-transform duration-300">{portal.icon}</div>
-        <h4 className="font-bold text-lg mb-1">{portal.title}</h4>
-        <p className="text-[10px] text-white/30 uppercase tracking-widest font-bold flex items-center justify-center gap-2">
-          Open portal <ExternalLink size={10} />
-        </p>
+      <a href={portal.link} target="_blank" rel="noopener noreferrer" className="block cursor-pointer flex md:block items-center gap-4 text-left md:text-center">
+        <div className="text-3xl md:mb-4 group-hover:scale-125 transition-transform duration-300">{portal.icon}</div>
+        <div className="flex-1">
+          <h4 className="font-bold text-base md:text-lg mb-0.5 md:mb-1">{portal.title}</h4>
+          <p className="text-[10px] text-white/30 uppercase tracking-widest font-bold flex items-center md:justify-center gap-2">
+            Open portal <ExternalLink size={10} />
+          </p>
+        </div>
       </a>
     </div>
   );

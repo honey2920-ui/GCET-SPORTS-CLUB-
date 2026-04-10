@@ -21,7 +21,7 @@ export default function Join() {
   return (
     <div className="space-y-6 animate-in fade-in zoom-in duration-500 pb-20">
       {isStaff && (
-        <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-md overflow-x-auto scrollbar-hide no-print">
+        <div className="flex bg-black/40 p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-white/5 backdrop-blur-md overflow-x-auto scrollbar-hide no-print">
           <TabButton label="Registration" active={activeTab === 'registration'} onClick={() => setActiveTab('registration')} />
           <TabButton label="Attendance" active={activeTab === 'attendance'} onClick={() => setActiveTab('attendance')} />
           <TabButton label="Budget" active={activeTab === 'budget'} onClick={() => setActiveTab('budget')} />
@@ -46,7 +46,7 @@ function TabButton({ label, active, onClick }: any) {
   return (
     <button
       onClick={onClick}
-      className={`whitespace-nowrap flex-1 py-3 px-6 rounded-xl text-sm font-bold transition-all duration-300 ${
+      className={`whitespace-nowrap flex-1 py-2.5 md:py-3 px-3 md:px-6 rounded-lg md:rounded-xl text-[11px] md:text-sm font-bold transition-all duration-300 ${
         active ? 'bg-gradient-to-r from-[#6b5cff] to-[#8073ff] text-white shadow-lg' : 'text-white/40 hover:text-white/80'
       }`}
     >
@@ -182,13 +182,13 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
 
       <div className="no-print">
       {!isPublished ? (
-        <div className="bg-[#1e1e3f]/50 backdrop-blur-xl border border-white/10 rounded-[32px] p-12 text-center shadow-2xl">
-          <div className="text-6xl mb-6">⏳</div>
-          <h3 className="text-2xl font-bold text-white mb-2">We will be right soon</h3>
-          <p className="text-white/50">with a new event</p>
+        <div className="bg-[#1e1e3f]/50 backdrop-blur-xl border border-white/10 rounded-[32px] p-6 md:p-12 text-center shadow-2xl">
+          <div className="text-4xl md:text-6xl mb-4 md:mb-6">⏳</div>
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-2">We will be right soon</h3>
+          <p className="text-sm md:text-base text-white/50">with a new event</p>
         </div>
       ) : (
-        <div className="bg-[#1e1e3f]/50 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 space-y-6 shadow-2xl">
+        <div className="bg-[#1e1e3f]/50 backdrop-blur-xl border border-white/10 rounded-[32px] p-4 md:p-8 space-y-6 shadow-2xl">
           {showUpload && (
             <div className="flex flex-col items-center gap-4">
               <div 
@@ -274,10 +274,10 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
       )}
 
       {isRegistration && canEdit && (
-        <div className="mt-12 space-y-6">
+        <div className="mt-8 md:mt-12 space-y-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-1 gap-4 no-print">
-            <h3 className="text-2xl font-bold flex items-center gap-3">
-              <CreditCard className="text-[#fca311]" /> Registrations & ID Cards
+            <h3 className="text-xl md:text-2xl font-bold flex items-center gap-3">
+              <CreditCard className="text-[#fca311] w-5 h-5 md:w-6 md:h-6" /> Registrations & ID Cards
             </h3>
             {registrations.length > 0 && (
               <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
