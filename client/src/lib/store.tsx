@@ -84,6 +84,14 @@ export interface Registration {
   sem: string;
   photo: string | null;
   date: string;
+  status?: 'present' | 'absent';
+}
+
+export interface SystemLog {
+  id: string;
+  user: string;
+  action: string;
+  date: string;
 }
 
 interface AppState {
@@ -99,8 +107,11 @@ interface AppState {
   portals: Portal[];
   events: EventItem[];
   registrations: Registration[];
+  logs: SystemLog[];
   islandMessage: string | null;
   bgUrl: string;
+  themeColor: string;
+  fontFamily: string;
   bannerMsg: string;
   bannerVisible: boolean;
   formPublished: boolean;
@@ -110,6 +121,8 @@ interface AppState {
   logout: () => void;
   setIslandMessage: (msg: string | null) => void;
   setBgUrl: (url: string) => void;
+  setThemeColor: (color: string) => void;
+  setFontFamily: (font: string) => void;
   setBanner: (msg: string, visible: boolean) => void;
   setFormPublished: (pub: boolean) => void;
   setAttendanceFormPublished: (pub: boolean) => void;
@@ -174,6 +187,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     { id: 'd8', name: 'Logistics Head', icon: '💰' }
   ]);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
+  const [logs, setLogs] = useState<SystemLog[]>([
+    { id: 'l1', user: 'System', action: 'System Initialized', date: new Date().toLocaleString() }
+  ]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([
     { id: 'e1', name: 'Football', qty: 5, type: 'available' },
@@ -190,6 +206,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     { id: 'ev1', name: 'Inter-College Cricket', date: '2026-03-15', description: 'Annual cricket tournament with neighboring colleges.', img: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=800' }
   ]);
   const [bgUrl, setBgUrlState] = useState(localStorage.getItem('g_bg') || '');
+  const [themeColor, setThemeColorState] = useState(localStorage.getItem('g_theme') || '#6b5cff');
+  const [fontFamily, setFontFamilyState] = useState(localStorage.getItem('g_font') || 'Outfit');
   const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || '');
   const [bannerVisible, setBannerVisible] = useState(localStorage.getItem('g_msg_s') === 'Y');
   const [formPublished, setFormPublishedState] = useState(localStorage.getItem('g_form_pub') !== 'N');
@@ -201,10 +219,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const login = (r: Role, id?: string) => {
     setRole(r);
     if(id) setCoreId(id);
+    const userName = r === 'admin' ? 'Admin' : (r === 'core' ? `Core[${id}]` : 'Student');
+    setLogs([{ id: Math.random().toString(36).substr(2, 9), user: userName, action: 'LOG IN', date: new Date().toLocaleString() }, ...logs]);
     showIsland(`Logged in as ${r}`);
   };
 
   const logout = () => {
+    const userName = role === 'admin' ? 'Admin' : (role === 'core' ? `Core[${coreId}]` : 'Student');
+    if (role) {
+      setLogs([{ id: Math.random().toString(36).substr(2, 9), user: userName, action: 'LOG OUT', date: new Date().toLocaleString() }, ...logs]);
+    }
     setRole(null);
     setCoreId(null);
     showIsland('Logged out successfully');
@@ -213,6 +237,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setBgUrl = (url: string) => {
     setBgUrlState(url);
     localStorage.setItem('g_bg', url);
+  };
+
+  const setThemeColor = (color: string) => {
+    setThemeColorState(color);
+    localStorage.setItem('g_theme', color);
+  };
+
+  const setFontFamily = (font: string) => {
+    setFontFamilyState(font);
+    localStorage.setItem('g_font', font);
   };
 
   const setBanner = (msg: string, visible: boolean) => {
@@ -396,8 +430,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, expenses, equipment, portals, events, registrations, islandMessage, bgUrl, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass,
-      setIslandMessage, login, logout, setBgUrl, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass,
+      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       addCoreDept, updateCoreDept, deleteCoreDept,

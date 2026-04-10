@@ -7,7 +7,7 @@ import { LogOut, Home, Trophy, UserPlus, ShieldAlert } from 'lucide-react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
-  const { role, coreId, logout, bgUrl } = useAppStore();
+  const { role, coreId, logout, bgUrl, themeColor, fontFamily } = useAppStore();
 
   useEffect(() => {
     const container = document.getElementById('falling-container');
@@ -31,9 +31,30 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div 
-      className="min-h-screen pb-24 relative overflow-hidden font-sans bg-[#0b102a] print-bg-white"
-      style={bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : {}}
+      className="min-h-screen pb-24 relative overflow-hidden print-bg-white"
+      style={{
+        fontFamily: fontFamily || 'Outfit, sans-serif',
+        ...(bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : { backgroundColor: '#0b102a' })
+      }}
     >
+      {/* Dynamic Theme Color override */}
+      <style>{`
+        :root {
+          --primary: ${themeColor || '#6b5cff'};
+        }
+        .text-\\[\\#6b5cff\\] { color: var(--primary) !important; }
+        .bg-\\[\\#6b5cff\\] { background-color: var(--primary) !important; }
+        .border-\\[\\#6b5cff\\] { border-color: var(--primary) !important; }
+        .from-\\[\\#6b5cff\\] { --tw-gradient-from: var(--primary) !important; }
+        .to-\\[\\#8073ff\\] { --tw-gradient-to: var(--primary) !important; }
+        .hover\\:bg-\\[\\#8073ff\\]:hover { background-color: var(--primary) !important; opacity: 0.9; }
+        .hover\\:bg-\\[\\#6b5cff\\]:hover { background-color: var(--primary) !important; }
+        .hover\\:text-\\[\\#6b5cff\\]:hover { color: var(--primary) !important; }
+        .hover\\:border-\\[\\#6b5cff\\]:hover { border-color: var(--primary) !important; }
+        .focus\\:border-\\[\\#6b5cff\\]:focus { border-color: var(--primary) !important; }
+        .shadow-\\[0_0_20px_rgba\\(107\\,92\\,255\\,0\\.4\\)\\] { box-shadow: 0 0 20px var(--primary) !important; opacity: 0.8; }
+      `}</style>
+      
       <div id="falling-container" className="fixed inset-0 pointer-events-none z-0 opacity-[0.25] print:hidden" />
       <div className="print:hidden"><DynamicIsland /></div>
       <div className="print:hidden"><LoginModal /></div>

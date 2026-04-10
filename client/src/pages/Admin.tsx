@@ -5,10 +5,11 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
 export default function Admin() {
-  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, bannerMsg, setBanner, setAdminPass } = useAppStore();
+  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, bannerMsg, setBanner, setAdminPass, logs } = useAppStore();
   const [, setLoc] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newName, setNewName] = useState('');
+  const [tab, setTab] = useState<'settings' | 'users' | 'logs'>('users');
 
   if (role !== 'admin' && role !== 'core') {
     setLoc('/');
@@ -117,14 +118,60 @@ export default function Admin() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {isMaster && (
           <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 backdrop-blur-xl">
-            <h3 className="text-xl font-bold flex items-center gap-3 mb-6">
-              <div className="p-2 bg-[#6b5cff]/20 rounded-xl">
-                <Palette size={20} className="text-[#6b5cff]" /> 
-              </div>
-              Style Studio
-            </h3>
+            <div className="flex gap-2 mb-6 bg-black/20 p-1.5 rounded-xl">
+              <button 
+                onClick={() => setTab('settings')}
+                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'settings' ? 'bg-[#6b5cff] text-white shadow-lg shadow-[#6b5cff]/20' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
+              >
+                <Palette size={14} /> Portal Settings
+              </button>
+              <button 
+                onClick={() => setTab('users')}
+                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'users' ? 'bg-[#6b5cff] text-white shadow-lg shadow-[#6b5cff]/20' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
+              >
+                <Shield size={14} /> Core Members
+              </button>
+              <button 
+                onClick={() => setTab('logs')}
+                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'logs' ? 'bg-[#6b5cff] text-white shadow-lg shadow-[#6b5cff]/20' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
+              >
+                <MessageSquare size={14} /> System Logs
+              </button>
+            </div>
             
-            <div className="space-y-4">
+            {tab === 'settings' && (
+              <div className="space-y-4 animate-in fade-in">
+                <div>
+                  <label className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2 block">Theme Color</label>
+                  <div className="flex gap-2 mb-4 flex-wrap">
+                  {['#6b5cff', '#10b981', '#fca311', '#ef4444', '#ec4899', '#3b82f6', '#8b5cf6', '#d946ef', '#14b8a6', '#f59e0b', '#ffffff', '#000000'].map(color => (
+                    <button 
+                      key={color} 
+                      onClick={() => setThemeColor(color)}
+                      className={`w-8 h-8 rounded-full border-2 ${themeColor === color ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-70 hover:opacity-100'}`}
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                  <input type="color" value={themeColor} onChange={e => setThemeColor(e.target.value)} className="w-8 h-8 rounded-full cursor-pointer bg-transparent border-0 p-0" />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2 block">Font Family</label>
+                <select 
+                  value={fontFamily} 
+                  onChange={e => setFontFamily(e.target.value)}
+                  className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#6b5cff] outline-none transition-colors text-white appearance-none"
+                >
+                  <option value="Outfit, sans-serif">Outfit (Modern Sans)</option>
+                  <option value="Inter, sans-serif">Inter (Clean Sans)</option>
+                  <option value="'Space Grotesk', sans-serif">Space Grotesk (Tech Sans)</option>
+                  <option value="'Playfair Display', serif">Playfair Display (Elegant Serif)</option>
+                  <option value="'JetBrains Mono', monospace">JetBrains Mono (Code/Tech)</option>
+                  <option value="'Comic Sans MS', serif">Comic Sans (Playful)</option>
+                </select>
+              </div>
+
               <div>
                 <label className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2 block">Background Source</label>
                 <div className="flex gap-2">
@@ -141,10 +188,30 @@ export default function Admin() {
                   </button>
                 </div>
               </div>
-              <button onClick={() => setIslandMessage('Theme applied!')} className="w-full py-3 bg-white/10 hover:bg-[#6b5cff] rounded-xl text-sm font-bold transition-colors">
-                Apply Theme
-              </button>
-            </div>
+                <button onClick={() => setIslandMessage('Theme applied!')} className="w-full py-3 bg-white/10 hover:bg-[#6b5cff] rounded-xl text-sm font-bold transition-colors mt-6">
+                  Apply Theme
+                </button>
+              </div>
+            )}
+            
+            {tab === 'logs' && (
+              <div className="animate-in fade-in h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="space-y-3">
+                  {logs.map((log) => (
+                    <div key={log.id} className="bg-black/30 border border-white/5 rounded-xl p-3 flex flex-col gap-1">
+                      <div className="flex justify-between items-start">
+                        <span className="text-xs font-bold text-[#6b5cff]">{log.user}</span>
+                        <span className="text-[10px] text-white/30">{log.date}</span>
+                      </div>
+                      <span className="text-sm font-medium text-white/80">{log.action}</span>
+                    </div>
+                  ))}
+                  {logs.length === 0 && (
+                    <div className="text-center text-white/30 text-sm py-8 font-medium">No logs available</div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -184,13 +251,14 @@ export default function Admin() {
         )}
       </div>
 
-      <div className="bg-[#1e1e3f]/80 border border-white/10 rounded-[28px] p-8 backdrop-blur-xl shadow-2xl">
-        
-        {canManageIDs && (
-          <div className="mb-8 bg-[#181832] p-6 rounded-[24px] border border-white/5">
+      {(tab === 'users' || !isMaster) && (
+        <div className="bg-[#1e1e3f]/80 border border-white/10 rounded-[28px] p-4 md:p-8 backdrop-blur-xl shadow-2xl overflow-hidden animate-in fade-in">
+          
+          {canManageIDs && (
+            <div className="mb-8 bg-[#181832] p-4 md:p-6 rounded-[24px] border border-white/5">
             <h4 className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-4">ADD NEW CORE MEMBER</h4>
-            <div className="flex gap-4 items-start">
-              <div className="flex-1">
+            <div className="flex flex-col md:flex-row gap-4 items-start">
+              <div className="flex-1 w-full">
                 <input 
                   type="text" 
                   placeholder="Full Name (e.g. John Doe)" 
@@ -202,7 +270,7 @@ export default function Admin() {
               </div>
               <button 
                 onClick={handleGenerateID}
-                className="px-6 py-4 bg-[#10b981] hover:bg-[#0da06f] text-white rounded-xl font-bold transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap shadow-lg shadow-green-500/20"
+                className="w-full md:w-auto px-6 py-4 bg-[#10b981] hover:bg-[#0da06f] text-white rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2 text-sm whitespace-nowrap shadow-lg shadow-green-500/20"
               >
                 <Plus size={16} /> GENERATE ID
               </button>
@@ -296,7 +364,7 @@ export default function Admin() {
             ))}
           </div>
         </div>
-      </div>
+      )}
     </motion.div>
   );
 }
