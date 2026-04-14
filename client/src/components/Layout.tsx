@@ -31,16 +31,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div 
-      className="min-h-screen pb-24 relative overflow-hidden print-bg-white"
+      className="min-h-screen pb-24 relative overflow-hidden print-bg-white bg-[#f8fafc]"
       style={{
-        fontFamily: fontFamily || 'Outfit, sans-serif',
-        ...(bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : { backgroundColor: '#0b102a' })
+        fontFamily: fontFamily || 'Inter, sans-serif',
+        ...(bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : {})
       }}
     >
       {/* Dynamic Theme Color override */}
       <style>{`
         :root {
-          --primary: ${themeColor || '#6b5cff'};
+          --primary: ${themeColor || '#2563eb'};
         }
         .text-\\[\\#6b5cff\\] { color: var(--primary) !important; }
         .bg-\\[\\#6b5cff\\] { background-color: var(--primary) !important; }
@@ -53,6 +53,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         .hover\\:border-\\[\\#6b5cff\\]:hover { border-color: var(--primary) !important; }
         .focus\\:border-\\[\\#6b5cff\\]:focus { border-color: var(--primary) !important; }
         .shadow-\\[0_0_20px_rgba\\(107\\,92\\,255\\,0\\.4\\)\\] { box-shadow: 0 0 20px var(--primary) !important; opacity: 0.8; }
+        
+        .text-white { color: #0f172a !important; }
+        .text-white\\/50 { color: #64748b !important; }
+        .text-white\\/60 { color: #475569 !important; }
+        .text-white\\/70 { color: #334155 !important; }
+        .bg-black\\/40 { background-color: #ffffff !important; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .bg-white\\/5 { background-color: #f1f5f9 !important; border-color: #e2e8f0 !important; }
+        .bg-white\\/10 { background-color: #e2e8f0 !important; border-color: #cbd5e1 !important; }
+        .border-white\\/5, .border-white\\/10 { border-color: #e2e8f0 !important; }
       `}</style>
       
       <div id="falling-container" className="fixed inset-0 pointer-events-none z-0 opacity-[0.25] print:hidden" />

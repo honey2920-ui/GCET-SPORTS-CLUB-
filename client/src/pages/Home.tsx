@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <div className="space-y-6 animate-in fade-in zoom-in duration-500">
-      <div className="flex bg-black/40 p-1 rounded-xl md:rounded-2xl border border-white/5 backdrop-blur-md relative overflow-x-auto scrollbar-hide">
+      <div className="flex bg-white p-1 rounded-xl md:rounded-2xl border border-slate-200 backdrop-blur-md relative overflow-x-auto scrollbar-hide shadow-sm">
         <TabButton icon={<LayoutDashboard size={14} className="md:w-4 md:h-4"/>} label="Dashboard" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
         <TabButton icon={<Users size={14} className="md:w-4 md:h-4"/>} label="Mentors" active={activeTab === 'mentors'} onClick={() => setActiveTab('mentors')} />
         <TabButton icon={<UserCog size={14} className="md:w-4 md:h-4"/>} label="Committee" active={activeTab === 'core'} onClick={() => setActiveTab('core')} />
@@ -34,7 +34,7 @@ function TabButton({ icon, label, active, onClick }: any) {
     <button
       onClick={onClick}
       className={`flex-1 min-w-[100px] py-2.5 md:py-3 px-2 flex items-center justify-center gap-1.5 md:gap-2 rounded-lg md:rounded-xl text-[11px] md:text-sm font-bold transition-all duration-300 relative z-10 ${
-        active ? 'bg-gradient-to-r from-[#6b5cff] to-[#8073ff] text-white shadow-[0_4px_20px_rgba(107,92,255,0.3)]' : 'text-white/50 hover:text-white/90 hover:bg-white/5'
+        active ? 'bg-gradient-to-r from-[#2563eb] to-[#3b82f6] text-white shadow-[0_4px_20px_rgba(37,99,235,0.3)]' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
       }`}
     >
       {icon} <span className="whitespace-nowrap">{label}</span>
@@ -114,20 +114,26 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gradient-to-br from-[#6b5cff]/20 to-[#9f7aea]/10 border border-[#6b5cff]/30 p-6 rounded-[24px] text-center backdrop-blur-xl relative overflow-hidden group">
-          <p className="text-xs text-[#b0b0cc] mb-2 font-bold tracking-widest uppercase relative z-10">Active Events</p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60 relative z-10">{events.length}</h2>
+        <div className="bg-white border border-slate-200 p-6 rounded-[24px] text-center relative overflow-hidden group shadow-sm">
+          <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
+            <span className="text-8xl">🏆</span>
+          </div>
+          <p className="text-xs text-slate-500 mb-2 font-bold tracking-widest uppercase relative z-10">Active Events</p>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[#2563eb] relative z-10">{events.length}</h2>
         </div>
-        <div className="bg-gradient-to-br from-[#fca311]/20 to-orange-500/10 border border-[#fca311]/30 p-6 rounded-[24px] text-center backdrop-blur-xl relative overflow-hidden group">
-          <p className="text-xs text-[#b0b0cc] mb-2 font-bold tracking-widest uppercase relative z-10">Committee</p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60 relative z-10">{coreMembers.length}</h2>
+        <div className="bg-white border border-slate-200 p-6 rounded-[24px] text-center relative overflow-hidden group shadow-sm">
+          <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
+            <span className="text-8xl">👥</span>
+          </div>
+          <p className="text-xs text-slate-500 mb-2 font-bold tracking-widest uppercase relative z-10">Committee</p>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[#2563eb] relative z-10">{coreMembers.length}</h2>
         </div>
       </div>
       
-      <div className="bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-xl p-6 rounded-[28px] border border-white/10">
+      <div className="bg-white p-6 rounded-[28px] border border-slate-200 shadow-sm">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <h3 className="text-lg font-bold flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#fca311]"></span>
+          <h3 className="text-lg font-bold flex items-center gap-2 text-slate-900">
+            <span className="w-2 h-2 rounded-full bg-[#10b981]"></span>
             Holidays & Break
           </h3>
           <div className="flex items-center gap-3 w-full md:w-auto">
@@ -160,12 +166,12 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
                 />
                 <button 
                   onClick={() => fileInputRef.current?.click()} 
-                  className={`p-2 rounded-xl transition-colors text-white/70 hover:text-white flex items-center gap-2 text-xs font-bold ${holidayPdf ? 'bg-white/5 hover:bg-white/10' : 'bg-[#6b5cff]/20 text-[#6b5cff] hover:bg-[#6b5cff]/40 hover:text-white'}`} 
+                  className={`p-2 rounded-xl transition-colors text-slate-500 hover:text-slate-900 flex items-center gap-2 text-xs font-bold ${holidayPdf ? 'bg-slate-100 hover:bg-slate-200' : 'bg-[#2563eb]/10 text-[#2563eb] hover:bg-[#2563eb]/20 hover:text-[#1d4ed8]'}`} 
                   title={holidayPdf ? "Replace PDF" : "Upload PDF"}
                 >
                   <Upload size={16} /> {holidayPdf ? '' : 'Upload'}
                 </button>
-                <button onClick={handleAddHoliday} className="p-2 bg-white/10 rounded-xl hover:bg-[#6b5cff] transition-colors">
+                <button onClick={handleAddHoliday} className="p-2 bg-slate-100 rounded-xl hover:bg-[#2563eb] hover:text-white transition-colors text-slate-600">
                   <Plus size={16} />
                 </button>
               </div>
@@ -174,45 +180,45 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
         </div>
         <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
           {holidays.map(h => (
-            <div key={h.id} className="min-w-[180px] p-5 rounded-2xl bg-white/5 border border-white/10 shrink-0 relative group">
-              <p className="text-[10px] font-bold text-[#fca311] mb-2 tracking-wider uppercase">{h.dateRange}</p>
-              <p className="font-bold text-lg leading-tight">{h.title}</p>
+            <div key={h.id} className="min-w-[180px] p-5 rounded-2xl bg-white border border-slate-200 shadow-sm shrink-0 relative group">
+              <p className="text-[10px] font-bold text-[#2563eb] mb-2 tracking-wider uppercase">{h.dateRange}</p>
+              <p className="font-bold text-lg leading-tight text-slate-900">{h.title}</p>
               {canEditHolidays && (
                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => handleEditHoliday(h)} className="p-1 bg-black/50 rounded-lg text-white/50 hover:text-white">
+                  <button onClick={() => handleEditHoliday(h)} className="p-1 bg-slate-100 rounded-lg text-slate-400 hover:text-[#2563eb]">
                     <Edit2 size={10} />
                   </button>
-                  <button onClick={() => deleteHoliday(h.id)} className="p-1 bg-black/50 rounded-lg text-red-400/50 hover:text-red-400">
+                  <button onClick={() => deleteHoliday(h.id)} className="p-1 bg-slate-100 rounded-lg text-slate-400 hover:text-red-500">
                     <Trash2 size={10} />
                   </button>
                 </div>
               )}
             </div>
           ))}
-          {holidays.length === 0 && <p className="text-white/20 text-xs italic p-4">No upcoming holidays</p>}
+          {holidays.length === 0 && <p className="text-slate-400 text-xs italic p-4">No upcoming holidays</p>}
         </div>
       </div>
 
       <div>
-        <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-          <Users className="text-[#6b5cff]" size={20} /> Directory
+        <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-slate-900">
+          <Users className="text-[#2563eb]" size={20} /> Directory
         </h3>
         
         <div 
           onClick={onGoToMentors}
-          className="bg-white/5 border border-white/10 p-5 rounded-2xl flex items-center justify-between cursor-pointer hover:bg-white/10 hover:border-[#6b5cff]/50 transition-all mb-4"
+          className="bg-white border border-slate-200 shadow-sm p-5 rounded-2xl flex items-center justify-between cursor-pointer hover:border-[#2563eb]/50 transition-all mb-4"
         >
           <div className="flex items-center gap-4">
             <div className="text-2xl">👨‍🏫</div>
-            <h4 className="font-bold text-lg">Our Mentors</h4>
+            <h4 className="font-bold text-lg text-slate-900">Our Mentors</h4>
           </div>
-          <ArrowRight className="text-white/50" size={20} />
+          <ArrowRight className="text-slate-400" size={20} />
         </div>
 
         <div className="flex justify-between items-center mb-4 mt-6">
-          <h4 className="text-sm font-bold text-white/50 tracking-widest uppercase">Core Committee</h4>
+          <h4 className="text-sm font-bold text-slate-400 tracking-widest uppercase">Core Committee</h4>
           {canEditHolidays && (
-            <button onClick={handleAddDept} className="text-xs flex items-center gap-1 bg-white/10 hover:bg-[#6b5cff] px-3 py-1.5 rounded-lg transition-colors font-bold text-white/80 hover:text-white">
+            <button onClick={handleAddDept} className="text-xs flex items-center gap-1 bg-slate-100 hover:bg-[#2563eb] hover:text-white px-3 py-1.5 rounded-lg transition-colors font-bold text-slate-600">
               <Plus size={12} /> Add Dept
             </button>
           )}
@@ -222,20 +228,20 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
             <div 
               key={d.id}
               onClick={() => onGoToDept(d.name)}
-              className="bg-white/5 border border-white/10 p-3 md:p-4 rounded-xl md:rounded-2xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:bg-[#6b5cff]/20 hover:border-[#6b5cff]/50 transition-all group relative"
+              className="bg-white border border-slate-200 shadow-sm p-3 md:p-4 rounded-xl md:rounded-2xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:bg-slate-50 hover:border-[#2563eb]/50 transition-all group relative"
             >
               {canEditHolidays && (
                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={(e) => handleEditDept(d, e)} className="p-1 bg-black/50 rounded hover:bg-[#6b5cff] text-white/50 hover:text-white transition-colors">
+                  <button onClick={(e) => handleEditDept(d, e)} className="p-1 bg-slate-100 rounded hover:bg-[#2563eb] hover:text-white text-slate-400 transition-colors">
                     <Edit2 size={10} />
                   </button>
-                  <button onClick={(e) => handleDeleteDept(d, e)} className="p-1 bg-black/50 rounded hover:bg-red-500 text-white/50 hover:text-white transition-colors">
+                  <button onClick={(e) => handleDeleteDept(d, e)} className="p-1 bg-slate-100 rounded hover:bg-red-500 hover:text-white text-slate-400 transition-colors">
                     <Trash2 size={10} />
                   </button>
                 </div>
               )}
               <div className="text-2xl group-hover:scale-110 transition-transform">{d.icon || '💼'}</div>
-              <span className="text-xs font-bold">{d.name}</span>
+              <span className="text-xs font-bold text-slate-700">{d.name}</span>
             </div>
           ))}
         </div>
@@ -272,11 +278,11 @@ function MentorsTab() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
       <div className="flex justify-between items-center mb-4 px-1">
-        <h2 className="text-xl font-bold tracking-wide flex items-center gap-2">
+        <h2 className="text-xl font-bold tracking-wide flex items-center gap-2 text-slate-900">
           Our Mentors
         </h2>
         {canEdit && (
-          <button onClick={handleAdd} className="flex items-center gap-2 bg-[#10b981]/20 text-[#10b981] px-4 py-2 rounded-xl text-sm font-bold border border-[#10b981]/30 hover:bg-[#10b981]/30 transition-colors">
+          <button onClick={handleAdd} className="flex items-center gap-2 bg-[#10b981]/10 text-[#10b981] px-4 py-2 rounded-xl text-sm font-bold border border-[#10b981]/20 hover:bg-[#10b981]/20 transition-colors">
             <PlusCircle size={16} /> Add Mentor
           </button>
         )}
@@ -284,27 +290,27 @@ function MentorsTab() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {mentors.map(m => (
-          <div key={m.id} className="bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-[24px] p-6 relative group hover:bg-white/10 transition-all hover:border-white/20">
+          <div key={m.id} className="bg-white border border-slate-200 rounded-[24px] p-6 relative group hover:border-[#2563eb]/30 transition-all shadow-sm hover:shadow-md">
             <div className="flex items-start gap-5">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#fca311] to-orange-500 shrink-0 flex items-center justify-center text-3xl shadow-[0_4px_20px_rgba(252,163,17,0.3)]">
+              <div className="w-16 h-16 rounded-2xl bg-[#2563eb]/10 text-[#2563eb] shrink-0 flex items-center justify-center text-3xl shadow-sm border border-[#2563eb]/20">
                 {getFaceEmoji(m.name)}
               </div>
               <div className="flex-1">
-                <h4 className="font-bold text-lg mb-1 text-white">{m.name}</h4>
-                <p className="text-sm text-[#fca311] font-bold mb-2 tracking-wide uppercase">{m.designation}</p>
-                <p className="text-sm text-white/60 leading-relaxed">{m.description}</p>
-                {m.dateAdded && <p className="text-[10px] font-mono text-white/30 mt-4 uppercase tracking-widest">Added: {m.dateAdded}</p>}
+                <h4 className="font-bold text-lg mb-1 text-slate-900">{m.name}</h4>
+                <p className="text-sm text-[#2563eb] font-bold mb-2 tracking-wide uppercase">{m.designation}</p>
+                <p className="text-sm text-slate-500 leading-relaxed">{m.description}</p>
+                {m.dateAdded && <p className="text-[10px] font-mono text-slate-400 mt-4 uppercase tracking-widest">Added: {m.dateAdded}</p>}
               </div>
             </div>
             
             {canEdit && (
               <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => handleEdit(m)} className="p-2 bg-black/50 rounded-xl text-white/70 hover:text-white hover:bg-[#6b5cff] transition-colors border border-white/10">
+                <button onClick={() => handleEdit(m)} className="p-2 bg-slate-100 rounded-xl text-slate-400 hover:text-[#2563eb] transition-colors">
                   <Edit2 size={14} />
                 </button>
                 <button onClick={() => {
                   if(confirm("Delete this mentor?")) deleteMentor(m.id);
-                }} className="p-2 bg-black/50 rounded-xl text-red-400 hover:text-white hover:bg-red-500 transition-colors border border-white/10">
+                }} className="p-2 bg-slate-100 rounded-xl text-slate-400 hover:text-red-500 transition-colors">
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -355,8 +361,8 @@ function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void
             onClick={() => setDept(d.name)}
             className={`whitespace-nowrap px-5 py-3 rounded-[16px] text-sm font-bold transition-all duration-300 border ${
               dept === d.name 
-              ? 'bg-[#6b5cff]/20 text-[#6b5cff] border-[#6b5cff]/50 shadow-[0_0_15px_rgba(107,92,255,0.2)]' 
-              : 'bg-white/5 text-white/50 border-white/5 hover:bg-white/10 hover:text-white/80'
+              ? 'bg-[#2563eb]/10 text-[#2563eb] border-[#2563eb]/30 shadow-sm' 
+              : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-900 shadow-sm'
             }`}
           >
             {d.name}
@@ -364,11 +370,11 @@ function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void
         ))}
       </div>
 
-      <div className="bg-gradient-to-b from-white/10 to-white/5 border border-white/10 rounded-[28px] p-6 min-h-[300px] backdrop-blur-md">
-        <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
-          <h3 className="text-xl font-bold text-white tracking-wide">{dept} <span className="text-[#6b5cff]">Members</span></h3>
+      <div className="bg-white border border-slate-200 rounded-[28px] p-6 min-h-[300px] shadow-sm">
+        <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
+          <h3 className="text-xl font-bold text-slate-900 tracking-wide">{dept} <span className="text-[#2563eb]">Members</span></h3>
           {canEdit && (
-            <button onClick={handleAdd} className="flex items-center gap-2 bg-[#10b981]/20 text-[#10b981] px-4 py-2 rounded-xl text-sm font-bold border border-[#10b981]/30 hover:bg-[#10b981]/30 transition-colors">
+            <button onClick={handleAdd} className="flex items-center gap-2 bg-[#10b981]/10 text-[#10b981] px-4 py-2 rounded-xl text-sm font-bold border border-[#10b981]/20 hover:bg-[#10b981]/20 transition-colors">
               <PlusCircle size={16} /> Add Member
             </button>
           )}
@@ -376,26 +382,26 @@ function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {members.map(m => (
-            <div key={m.id} className="flex items-center justify-between p-5 bg-black/40 rounded-[20px] border border-white/5 group hover:border-[#6b5cff]/50 hover:bg-black/60 transition-all">
+            <div key={m.id} className="flex items-center justify-between p-5 bg-slate-50 rounded-[20px] border border-slate-200 group hover:border-[#2563eb]/30 hover:bg-white hover:shadow-sm transition-all">
               <div className="flex items-center gap-5">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6b5cff] to-purple-600 flex items-center justify-center text-2xl shadow-lg border border-white/10">
+                <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-2xl shadow-sm text-[#2563eb]">
                   {getFaceEmoji(m.name)}
                 </div>
                 <div>
-                  <h4 className="font-bold text-lg">{m.name}</h4>
-                  <p className="text-[11px] font-bold text-[#fca311] tracking-wider uppercase mb-1">{m.branch}</p>
-                  {m.description && <p className="text-xs text-white/60 line-clamp-2">{m.description}</p>}
+                  <h4 className="font-bold text-lg text-slate-900">{m.name}</h4>
+                  <p className="text-[11px] font-bold text-[#2563eb] tracking-wider uppercase mb-1">{m.branch}</p>
+                  {m.description && <p className="text-xs text-slate-500 line-clamp-2">{m.description}</p>}
                 </div>
               </div>
               
               {canEdit && (
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => handleEdit(m)} className="p-2.5 bg-white/5 hover:bg-[#6b5cff] rounded-xl text-white/70 hover:text-white transition-colors">
+                  <button onClick={() => handleEdit(m)} className="p-2.5 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl text-slate-400 hover:text-[#2563eb] transition-colors">
                     <Edit2 size={16} />
                   </button>
                   <button onClick={() => {
                     if(confirm("Delete member?")) deleteCoreMember(m.id);
-                  }} className="p-2.5 bg-white/5 hover:bg-red-500 rounded-xl text-red-400 hover:text-white transition-colors">
+                  }} className="p-2.5 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl text-slate-400 hover:text-red-500 transition-colors">
                     <Trash2 size={16} />
                   </button>
                 </div>

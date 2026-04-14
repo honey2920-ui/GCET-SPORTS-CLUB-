@@ -14,28 +14,25 @@
 }
 
 :root {
-  --primary: #6b5cff; 
-  --secondary: #9f7aea; 
-  --accent: #fca311;
-  --bg-dark: #0b102a; 
-  --card-bg: rgba(255, 255, 255, 0.08);
-  --text-main: #ffffff; 
-  --text-dim: #b0b0cc;
-  --success: #10b981; 
-  --danger: #ef4444; 
-  --nav-bg: #12163f;
-  --border: rgba(255,255,255,0.15);
+  --primary: #2563eb; 
+  --secondary: #3b82f6; 
+  --accent: #10b981;
+  --bg-dark: #f8fafc; 
+  --card-bg: #ffffff;
+  --text-main: #0f172a; 
+  --text-dim: #64748b;
+  --success: #059669; 
+  --danger: #dc2626; 
+  --nav-bg: #ffffff;
+  --border: #e2e8f0;
 }
 
 @layer base {
   body {
-    background: linear-gradient(180deg, var(--bg-dark), #12163f);
-    background-size: cover; 
-    background-position: center; 
-    background-attachment: fixed;
+    background: #f8fafc;
     color: var(--text-main);
     min-height: 100vh;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
 }
 

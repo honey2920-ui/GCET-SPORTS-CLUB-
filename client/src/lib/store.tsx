@@ -215,8 +215,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     { id: 'ev1', name: 'Inter-College Cricket', date: '2026-03-15', description: 'Annual cricket tournament with neighboring colleges.', img: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=800' }
   ]);
   const [bgUrl, setBgUrlState] = useState(localStorage.getItem('g_bg') || '');
-  const [themeColor, setThemeColorState] = useState(localStorage.getItem('g_theme') || '#6b5cff');
-  const [fontFamily, setFontFamilyState] = useState(localStorage.getItem('g_font') || 'Outfit');
+  const [themeColor, setThemeColorState] = useState(localStorage.getItem('g_theme') || '#2563eb');
+  const [fontFamily, setFontFamilyState] = useState(localStorage.getItem('g_font') || 'Inter');
   const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || '');
   const [bannerVisible, setBannerVisible] = useState(localStorage.getItem('g_msg_s') === 'Y');
   const [formPublished, setFormPublishedState] = useState(localStorage.getItem('g_form_pub') !== 'N');

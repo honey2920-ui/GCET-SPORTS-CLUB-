@@ -77,38 +77,38 @@ export default function Admin() {
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6 pb-20">
       
       <div className={`p-6 rounded-[28px] border relative overflow-hidden ${
-        isMaster ? 'bg-gradient-to-r from-red-500/10 to-orange-500/10 border-red-500/30' : 'bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-blue-500/30'
+        isMaster ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200'
       }`}>
-        <div className="absolute top-0 right-0 p-8 opacity-10">
+        <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
           <Shield size={100} />
         </div>
         <div className="flex items-center gap-3 mb-3 relative z-10">
-          <Shield className={isMaster ? "text-red-400" : "text-blue-400"} size={28} />
-          <h2 className={`text-2xl font-extrabold tracking-wide ${isMaster ? "text-red-400" : "text-blue-400"}`}>
+          <Shield className={isMaster ? "text-red-500" : "text-blue-500"} size={28} />
+          <h2 className={`text-2xl font-extrabold tracking-wide ${isMaster ? "text-red-600" : "text-blue-600"}`}>
             Control Panel
           </h2>
         </div>
-        <p className="text-sm text-white/70 relative z-10 font-medium">
+        <p className="text-sm text-slate-600 relative z-10 font-medium">
           {isMaster ? 'You have Master Control access. You can add/delete IDs, grant power levels, and customize themes.' : `You have ${power} Core access. You can manage your own credentials.`}
         </p>
       </div>
 
       {role === 'admin' && (
-        <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 backdrop-blur-xl">
-          <h3 className="text-xl font-bold flex items-center gap-3 mb-6">
-            <div className="p-2 bg-red-500/20 rounded-xl">
-              <KeyRound size={20} className="text-red-500" /> 
+        <div className="bg-white border border-slate-200 shadow-sm rounded-[28px] p-6">
+          <h3 className="text-xl font-bold flex items-center gap-3 mb-6 text-slate-900">
+            <div className="p-2 bg-red-100 rounded-xl">
+              <KeyRound size={20} className="text-red-600" /> 
             </div>
             Admin Security
           </h3>
-          <p className="text-sm text-white/60 mb-4">Change the primary admin password.</p>
+          <p className="text-sm text-slate-500 mb-4">Change the primary admin password.</p>
           <div className="flex gap-4">
             <button 
               onClick={() => {
                 const p = prompt("Enter new Admin Password:");
                 if(p) setAdminPass(p);
               }}
-              className="px-6 py-3 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-xl text-sm font-bold transition-colors border border-red-500/30"
+              className="px-6 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-sm font-bold transition-colors border border-red-200"
             >
               Change Admin Password
             </button>
@@ -118,24 +118,24 @@ export default function Admin() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {isMaster && (
-          <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 backdrop-blur-xl">
-            <div className="flex gap-2 mb-6 bg-black/20 p-1.5 rounded-xl">
+          <div className="bg-white border border-slate-200 shadow-sm rounded-[28px] p-6">
+            <div className="flex gap-2 mb-6 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
               <button 
                 onClick={() => setTab('settings')}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'settings' ? 'bg-[#6b5cff] text-white shadow-lg shadow-[#6b5cff]/20' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
+                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'settings' ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-transparent'}`}
               >
                 <Palette size={14} /> Portal Settings
               </button>
               <button 
                 onClick={() => setTab('users')}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'users' ? 'bg-[#6b5cff] text-white shadow-lg shadow-[#6b5cff]/20' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
+                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'users' ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-transparent'}`}
               >
                 <Shield size={14} /> Core Members
               </button>
               {isMaster && (
                 <button 
                   onClick={() => setTab('logs')}
-                  className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'logs' ? 'bg-[#6b5cff] text-white shadow-lg shadow-[#6b5cff]/20' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
+                  className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${tab === 'logs' ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-transparent'}`}
                 >
                   <MessageSquare size={14} /> System Logs
                 </button>
@@ -145,13 +145,13 @@ export default function Admin() {
             {tab === 'settings' && (
               <div className="space-y-4 animate-in fade-in">
                 <div>
-                  <label className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2 block">Theme Color</label>
+                  <label className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2 block">Theme Color</label>
                   <div className="flex gap-2 mb-4 flex-wrap">
-                  {['#6b5cff', '#10b981', '#fca311', '#ef4444', '#ec4899', '#3b82f6', '#8b5cf6', '#d946ef', '#14b8a6', '#f59e0b', '#ffffff', '#000000'].map(color => (
+                  {['#2563eb', '#10b981', '#fca311', '#ef4444', '#ec4899', '#6b5cff', '#8b5cf6', '#d946ef', '#14b8a6', '#f59e0b', '#0f172a'].map(color => (
                     <button 
                       key={color} 
                       onClick={() => setThemeColor(color)}
-                      className={`w-8 h-8 rounded-full border-2 ${themeColor === color ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-70 hover:opacity-100'}`}
+                      className={`w-8 h-8 rounded-full border-2 ${themeColor === color ? 'border-slate-800 scale-110 shadow-lg' : 'border-transparent opacity-70 hover:opacity-100'}`}
                       style={{ backgroundColor: color }}
                     />
                   ))}
@@ -160,14 +160,14 @@ export default function Admin() {
               </div>
 
               <div>
-                <label className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2 block">Font Family</label>
+                <label className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2 block">Font Family</label>
                 <select 
                   value={fontFamily} 
                   onChange={e => setFontFamily(e.target.value)}
-                  className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#6b5cff] outline-none transition-colors text-white appearance-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-[#2563eb] outline-none transition-colors text-slate-900 appearance-none"
                 >
-                  <option value="Outfit, sans-serif">Outfit (Modern Sans)</option>
                   <option value="Inter, sans-serif">Inter (Clean Sans)</option>
+                  <option value="Outfit, sans-serif">Outfit (Modern Sans)</option>
                   <option value="'Space Grotesk', sans-serif">Space Grotesk (Tech Sans)</option>
                   <option value="'Playfair Display', serif">Playfair Display (Elegant Serif)</option>
                   <option value="'JetBrains Mono', monospace">JetBrains Mono (Code/Tech)</option>
@@ -176,22 +176,22 @@ export default function Admin() {
               </div>
 
               <div>
-                <label className="text-xs text-white/50 font-bold uppercase tracking-wider mb-2 block">Background Source</label>
+                <label className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2 block">Background Source</label>
                 <div className="flex gap-2">
                   <input 
                     type="text" 
                     value={bgUrl.startsWith('data:') ? 'Local Image' : bgUrl}
                     onChange={e => setBgUrl(e.target.value)}
                     placeholder="https://..." 
-                    className="flex-1 bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#6b5cff] outline-none transition-colors"
+                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-[#2563eb] outline-none transition-colors text-slate-900"
                   />
                   <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
-                  <button onClick={() => fileInputRef.current?.click()} className="p-3 bg-white/5 hover:bg-[#6b5cff] rounded-xl transition-colors border border-white/10">
+                  <button onClick={() => fileInputRef.current?.click()} className="p-3 bg-slate-100 hover:bg-[#2563eb] hover:text-white text-slate-500 rounded-xl transition-colors border border-slate-200">
                     <Upload size={18} />
                   </button>
                 </div>
               </div>
-                <button onClick={() => setIslandMessage('Theme applied!')} className="w-full py-3 bg-white/10 hover:bg-[#6b5cff] rounded-xl text-sm font-bold transition-colors mt-6">
+                <button onClick={() => setIslandMessage('Theme applied!')} className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold transition-colors mt-6 shadow-sm">
                   Apply Theme
                 </button>
               </div>
@@ -201,16 +201,16 @@ export default function Admin() {
               <div className="animate-in fade-in h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 <div className="space-y-3">
                   {logs.map((log) => (
-                    <div key={log.id} className="bg-black/30 border border-white/5 rounded-xl p-3 flex flex-col gap-1">
+                    <div key={log.id} className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-col gap-1">
                       <div className="flex justify-between items-start">
-                        <span className="text-xs font-bold text-[#6b5cff]">{log.user}</span>
-                        <span className="text-[10px] text-white/30">{log.date}</span>
+                        <span className="text-xs font-bold text-[#2563eb]">{log.user}</span>
+                        <span className="text-[10px] text-slate-400">{log.date}</span>
                       </div>
-                      <span className="text-sm font-medium text-white/80">{log.action}</span>
+                      <span className="text-sm font-medium text-slate-700">{log.action}</span>
                     </div>
                   ))}
                   {logs.length === 0 && (
-                    <div className="text-center text-white/30 text-sm py-8 font-medium">No logs available</div>
+                    <div className="text-center text-slate-400 text-sm py-8 font-medium">No logs available</div>
                   )}
                 </div>
               </div>
@@ -219,13 +219,13 @@ export default function Admin() {
         )}
 
         {canEditBanner && (
-          <div className="bg-gradient-to-br from-[#10b981]/20 to-[#0da06f]/10 border border-[#10b981]/30 rounded-[28px] p-8 backdrop-blur-xl relative overflow-hidden group shadow-[0_0_30px_rgba(16,185,129,0.1)]">
-            <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:scale-110 transition-transform duration-500 group-hover:opacity-30">
+          <div className="bg-[#10b981]/5 border border-[#10b981]/20 rounded-[28px] p-8 relative overflow-hidden group shadow-sm">
+            <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500">
               <MessageSquare size={120} className="text-[#10b981]" />
             </div>
             
             <div className="relative z-10">
-              <h3 className="text-2xl font-extrabold flex items-center gap-3 mb-2 text-white tracking-wide">
+              <h3 className="text-2xl font-extrabold flex items-center gap-3 mb-2 text-slate-900 tracking-wide">
                 Announcement Banner
               </h3>
               <p className="text-[#10b981] text-sm font-bold tracking-wider uppercase mb-8">Broadcast message to all users</p>
@@ -237,14 +237,14 @@ export default function Admin() {
                     onChange={e => setBanner(e.target.value, true)}
                     placeholder="Enter announcement message..." 
                     rows={3}
-                    className="w-full bg-black/40 border border-[#10b981]/30 rounded-2xl px-5 py-4 text-white focus:border-[#10b981] outline-none transition-all placeholder:text-white/20 shadow-inner resize-none font-medium"
+                    className="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 focus:border-[#10b981] outline-none transition-all placeholder:text-slate-400 shadow-sm resize-none font-medium"
                   />
                 </div>
                 <div className="flex gap-4">
-                  <button onClick={() => setBanner(bannerMsg, true)} className="flex-[2] py-4 bg-gradient-to-r from-[#10b981] to-[#0da06f] hover:from-[#0da06f] hover:to-[#098058] text-white rounded-xl font-bold transition-all shadow-lg active:scale-95 text-lg">
+                  <button onClick={() => setBanner(bannerMsg, true)} className="flex-[2] py-4 bg-[#10b981] hover:bg-[#0da06f] text-white rounded-xl font-bold transition-all shadow-sm active:scale-95 text-lg">
                     Update & Show Banner
                   </button>
-                  <button onClick={() => setBanner(bannerMsg, false)} className="flex-1 py-4 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-xl font-bold transition-all border border-red-500/30 active:scale-95">
+                  <button onClick={() => setBanner(bannerMsg, false)} className="flex-1 py-4 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-bold transition-all border border-red-200 active:scale-95">
                     Hide Banner
                   </button>
                 </div>
@@ -255,11 +255,11 @@ export default function Admin() {
       </div>
 
       {(tab === 'users' || !isMaster) && (
-        <div className="bg-[#1e1e3f]/80 border border-white/10 rounded-[28px] p-4 md:p-8 backdrop-blur-xl shadow-2xl overflow-hidden animate-in fade-in">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-[28px] p-4 md:p-8 overflow-hidden animate-in fade-in">
           
           {canManageIDs && (
-            <div className="mb-8 bg-[#181832] p-4 md:p-6 rounded-[24px] border border-white/5">
-              <h4 className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-4">ADD NEW CORE MEMBER</h4>
+            <div className="mb-8 bg-slate-50 p-4 md:p-6 rounded-[24px] border border-slate-200">
+              <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4">ADD NEW CORE MEMBER</h4>
             <div className="flex flex-col md:flex-row gap-4 items-start">
               <div className="flex-1 w-full">
                 <input 
@@ -267,13 +267,13 @@ export default function Admin() {
                   placeholder="Full Name (e.g. John Doe)" 
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
-                  className="w-full bg-[#1e1e3f] border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:border-[#6b5cff] outline-none transition-colors"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-5 py-4 text-slate-900 text-sm focus:border-[#2563eb] outline-none transition-colors"
                 />
-                <p className="text-[10px] text-white/30 mt-2 italic">* ID will be auto-generated as: name.surname</p>
+                <p className="text-[10px] text-slate-500 mt-2 italic">* ID will be auto-generated as: name.surname</p>
               </div>
               <button 
                 onClick={handleGenerateID}
-                className="w-full md:w-auto px-6 py-4 bg-[#10b981] hover:bg-[#0da06f] text-white rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2 text-sm whitespace-nowrap shadow-lg shadow-green-500/20"
+                className="w-full md:w-auto px-6 py-4 bg-[#10b981] hover:bg-[#0da06f] text-white rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2 text-sm whitespace-nowrap shadow-sm"
               >
                 <Plus size={16} /> GENERATE ID
               </button>
@@ -281,16 +281,16 @@ export default function Admin() {
           </div>
         )}
 
-        <div className="bg-[#181832] rounded-[24px] border border-white/5 overflow-hidden">
-          <div className="hidden md:grid grid-cols-12 gap-4 p-5 border-b border-white/10 text-[10px] font-bold text-white/40 uppercase tracking-widest bg-black/20">
+        <div className="bg-white rounded-[24px] border border-slate-200 overflow-hidden shadow-sm">
+          <div className="hidden md:grid grid-cols-12 gap-4 p-5 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-50">
             <div className="col-span-5">NAME & ID</div>
             <div className="col-span-5">ROLE & POST</div>
             <div className="col-span-2 text-right">ACTIONS</div>
           </div>
 
-          <div className="divide-y divide-white/5 h-[300px] overflow-y-auto custom-scrollbar">
+          <div className="divide-y divide-slate-100 h-[300px] overflow-y-auto custom-scrollbar">
             {visibleCreds.map(cred => (
-              <div key={cred.id} className="flex flex-col md:grid md:grid-cols-12 gap-4 p-5 items-start md:items-center hover:bg-white/5 transition-colors group border-b border-white/5 last:border-0">
+              <div key={cred.id} className="flex flex-col md:grid md:grid-cols-12 gap-4 p-5 items-start md:items-center hover:bg-slate-50 transition-colors group border-b border-slate-100 last:border-0">
                 <div className="col-span-5 flex flex-col gap-1 w-full">
                   <div className="flex items-center gap-2">
                     <input 
@@ -298,7 +298,7 @@ export default function Admin() {
                       type="text"
                       value={cred.name || cred.id}
                       onChange={(e) => updateCoreCred(cred.id, { name: e.target.value })}
-                      className="font-bold text-[15px] text-white leading-tight bg-transparent border-none outline-none focus:border-b focus:border-[#6b5cff]/50 w-full"
+                      className="font-bold text-[15px] text-slate-900 leading-tight bg-transparent border-none outline-none focus:border-b focus:border-[#2563eb]/50 w-full"
                     />
                   </div>
                   <div className="flex items-center gap-2">
@@ -307,11 +307,11 @@ export default function Admin() {
                       type="text"
                       value={cred.id}
                       onChange={(e) => updateCoreCred(cred.id, { id: e.target.value })}
-                      className="text-[13px] text-white/40 mt-0.5 bg-transparent border-none outline-none focus:border-b focus:border-[#6b5cff]/50 w-full"
+                      className="text-[13px] text-slate-500 mt-0.5 bg-transparent border-none outline-none focus:border-b focus:border-[#2563eb]/50 w-full"
                     />
                   </div>
                   {(isMaster || cred.id === coreId) && (
-                     <p className="text-[10px] text-white/20 mt-1 font-mono hover:text-[#fca311] transition-colors">PWD: {cred.pass}</p>
+                     <p className="text-[10px] text-slate-400 mt-1 font-mono hover:text-[#2563eb] transition-colors">PWD: {cred.pass}</p>
                   )}
                 </div>
                 
@@ -321,22 +321,22 @@ export default function Admin() {
                       disabled={!canManageIDs}
                       value={mapPowerToLevel(cred.power)}
                       onChange={(e) => updateCoreCred(cred.id, { power: mapLevelToPower(e.target.value) as any })}
-                      className="bg-[#2a2a4a] border border-white/10 rounded-lg px-3 py-1.5 text-[13px] font-medium text-white appearance-none outline-none focus:border-[#6b5cff] disabled:opacity-70 pr-8 shadow-sm cursor-pointer"
+                      className="bg-slate-100 border border-slate-200 rounded-lg px-3 py-1.5 text-[13px] font-medium text-slate-700 appearance-none outline-none focus:border-[#2563eb] disabled:opacity-70 pr-8 shadow-sm cursor-pointer hover:bg-slate-200 transition-colors"
                     >
-                      {levels.map(l => <option key={l} value={l} className="bg-[#1e1e3f]">{l}</option>)}
+                      {levels.map(l => <option key={l} value={l} className="bg-white text-slate-900">{l}</option>)}
                     </select>
-                    {canManageIDs && <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#fca311] text-[10px]">▼</div>}
+                    {canManageIDs && <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 text-[10px]">▼</div>}
                   </div>
                   <div className="relative inline-block w-fit mt-1">
                     <select 
                       disabled={!canManageIDs}
                       value={cred.post || "Member"}
                       onChange={(e) => updateCoreCred(cred.id, { post: e.target.value })}
-                      className="bg-transparent border-none text-[#fca311] text-[13px] font-medium appearance-none outline-none cursor-pointer pr-6 hover:text-yellow-300 transition-colors"
+                      className="bg-transparent border-none text-[#2563eb] text-[13px] font-medium appearance-none outline-none cursor-pointer pr-6 hover:text-[#1d4ed8] transition-colors"
                     >
-                      {posts.map(p => <option key={p} value={p} className="bg-[#1e1e3f] text-white">{p}</option>)}
+                      {posts.map(p => <option key={p} value={p} className="bg-white text-slate-900">{p}</option>)}
                     </select>
-                    {canManageIDs && <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-[#fca311] text-[10px]">▼</div>}
+                    {canManageIDs && <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-[#2563eb] text-[10px]">▼</div>}
                   </div>
                 </div>
 
@@ -347,7 +347,7 @@ export default function Admin() {
                        const newPass = prompt("New Password:", cred.pass);
                        if(newPass) updateCoreCred(cred.id, { pass: newPass });
                      }}
-                     className="px-3 py-1.5 bg-[#6b5cff]/20 hover:bg-[#6b5cff]/40 text-[#6b5cff] hover:text-white rounded-lg text-xs font-bold transition-colors"
+                     className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-lg text-xs font-bold transition-colors border border-slate-200"
                    >
                      Pass
                    </button>
@@ -357,7 +357,7 @@ export default function Admin() {
                       onClick={() => {
                         if(confirm(`Permanently delete ${cred.id}?`)) deleteCoreCred(cred.id);
                       }}
-                      className="text-red-500/50 hover:text-red-400 transition-colors p-2 hover:bg-red-500/10 rounded-lg"
+                      className="text-slate-400 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-lg"
                     >
                       <Trash2 size={16} />
                     </button>

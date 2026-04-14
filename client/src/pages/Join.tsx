@@ -21,7 +21,7 @@ export default function Join() {
   return (
     <div className="space-y-6 animate-in fade-in zoom-in duration-500 pb-20">
       {isStaff && (
-        <div className="flex bg-black/40 p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-white/5 backdrop-blur-md overflow-x-auto scrollbar-hide no-print">
+        <div className="flex bg-white p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-slate-200 overflow-x-auto scrollbar-hide no-print shadow-sm">
           <TabButton label="Registration" active={activeTab === 'registration'} onClick={() => setActiveTab('registration')} />
           <TabButton label="Attendance" active={activeTab === 'attendance'} onClick={() => setActiveTab('attendance')} />
           <TabButton label="Budget" active={activeTab === 'budget'} onClick={() => setActiveTab('budget')} />
@@ -47,7 +47,7 @@ function TabButton({ label, active, onClick }: any) {
     <button
       onClick={onClick}
       className={`whitespace-nowrap flex-1 py-2.5 md:py-3 px-3 md:px-6 rounded-lg md:rounded-xl text-[11px] md:text-sm font-bold transition-all duration-300 ${
-        active ? 'bg-gradient-to-r from-[#6b5cff] to-[#8073ff] text-white shadow-lg' : 'text-white/40 hover:text-white/80'
+        active ? 'bg-[#2563eb] text-white shadow-sm' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
       }`}
     >
       {label}
@@ -169,11 +169,11 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
       <div className="flex justify-between items-center px-1 no-print">
-        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h2>
         {canEdit && (
           <button 
             onClick={togglePublished} 
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${isPublished ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-[#10b981] hover:bg-[#0da06f] text-white'}`}
+            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${isPublished ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200' : 'bg-[#10b981] hover:bg-[#0da06f] text-white'}`}
           >
             {isPublished ? 'Unpublish' : 'Publish'}
           </button>
@@ -182,28 +182,28 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
 
       <div className="no-print">
       {!isPublished ? (
-        <div className="bg-[#1e1e3f]/50 backdrop-blur-xl border border-white/10 rounded-[32px] p-6 md:p-12 text-center shadow-2xl">
+        <div className="bg-white border border-slate-200 rounded-[32px] p-6 md:p-12 text-center shadow-sm">
           <div className="text-4xl md:text-6xl mb-4 md:mb-6">⏳</div>
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-2">We will be right soon</h3>
-          <p className="text-sm md:text-base text-white/50">with a new event</p>
+          <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-2">We will be right soon</h3>
+          <p className="text-sm md:text-base text-slate-500">with a new event</p>
         </div>
       ) : (
-        <div className="bg-[#1e1e3f]/50 backdrop-blur-xl border border-white/10 rounded-[32px] p-4 md:p-8 space-y-6 shadow-2xl">
+        <div className="bg-white border border-slate-200 rounded-[32px] p-4 md:p-8 space-y-6 shadow-sm">
           {showUpload && (
             <div className="flex flex-col items-center gap-4">
               <div 
                 onClick={() => fileInputRef.current?.click()}
-                className="w-32 h-32 rounded-3xl bg-black/30 border-2 border-dashed border-white/10 flex flex-col items-center justify-center cursor-pointer hover:border-[#6b5cff]/50 hover:bg-black/40 transition-all overflow-hidden relative group"
+                className="w-32 h-32 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center cursor-pointer hover:border-[#2563eb]/50 hover:bg-slate-100 transition-all overflow-hidden relative group"
               >
                 {previewUrl ? (
                   <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                 ) : (
                   <>
-                    <Upload className="text-white/20 group-hover:text-[#6b5cff] transition-colors" size={32} />
-                    <span className="text-[10px] font-bold text-white/20 mt-2 uppercase tracking-widest">Upload Photo</span>
+                    <Upload className="text-slate-400 group-hover:text-[#2563eb] transition-colors" size={32} />
+                    <span className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Upload Photo</span>
                   </>
                 )}
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <Plus className="text-white" size={24} />
                 </div>
               </div>
@@ -214,7 +214,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                 accept="image/*" 
                 onChange={handleFileChange} 
               />
-              <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Passport size photo required</p>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Passport size photo required</p>
             </div>
           )}
 
@@ -230,7 +230,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
           </div>
           <button 
             onClick={handleSubmit}
-            className="w-full bg-[#6b5cff] hover:bg-[#8073ff] text-white py-4 rounded-2xl font-bold text-lg transition-all mt-4 shadow-lg active:scale-95"
+            className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white py-4 rounded-2xl font-bold text-lg transition-all mt-4 shadow-sm active:scale-95"
           >
             {actionLabel}
           </button>
@@ -276,7 +276,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
       {isRegistration && canEdit && (
         <div className="mt-8 md:mt-12 space-y-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-1 gap-4 no-print">
-            <h3 className="text-xl md:text-2xl font-bold flex items-center gap-3">
+            <h3 className="text-xl md:text-2xl font-bold flex items-center gap-3 text-slate-900">
               <CreditCard className="text-[#fca311] w-5 h-5 md:w-6 md:h-6" /> Registrations & ID Cards
             </h3>
             {registrations.length > 0 && (
@@ -286,11 +286,11 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                   placeholder="ID, Roll No, or Index (e.g. 1, 2, 5)" 
                   value={printIds}
                   onChange={(e) => setPrintIds(e.target.value)}
-                  className="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-sm focus:border-[#6b5cff] outline-none placeholder:text-white/40 flex-1 md:flex-none min-w-[200px]"
+                  className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm focus:border-[#2563eb] outline-none placeholder:text-slate-400 flex-1 md:flex-none min-w-[200px]"
                 />
                 <button 
                   onClick={printIDCards}
-                  className="flex items-center justify-center gap-2 bg-[#6b5cff] text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#8073ff] transition-all shadow-lg active:scale-95 whitespace-nowrap flex-1 md:flex-none"
+                  className="flex items-center justify-center gap-2 bg-[#2563eb] text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#1d4ed8] transition-all shadow-sm active:scale-95 whitespace-nowrap flex-1 md:flex-none"
                 >
                   <Download size={16} /> Print {printIds.trim() ? 'Selected' : 'All'}
                 </button>
@@ -299,72 +299,72 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
           </div>
           
           {registrations.length === 0 ? (
-            <div className="bg-white/5 border border-white/10 rounded-2xl py-12 text-center text-white/40 font-medium no-print">
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl py-12 text-center text-slate-500 font-medium no-print">
               No registrations yet.
             </div>
           ) : (
             <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 print:block print:w-full`}>
               {currentRegistrations.map(r => (
-                <div key={r.id} className={`id-card-print bg-white/5 border border-white/20 p-6 rounded-[24px] relative group overflow-hidden ${getPrintSizeClass()}`}>
+                <div key={r.id} className={`id-card-print bg-white border border-slate-200 p-6 rounded-[24px] relative group overflow-hidden shadow-sm ${getPrintSizeClass()}`}>
                   {editingId === r.id ? (
                     <div className="space-y-3 relative z-10 no-print">
-                      <input type="text" value={editName} onChange={e => setEditName(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Name" />
-                      <input type="text" value={editEvent} onChange={e => setEditEvent(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Event" />
+                      <input type="text" value={editName} onChange={e => setEditName(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Name" />
+                      <input type="text" value={editEvent} onChange={e => setEditEvent(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Event" />
                       <div className="grid grid-cols-2 gap-2">
-                        <input type="text" value={editRollNo} onChange={e => setEditRollNo(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Roll No" />
-                        <input type="text" value={editMobile} onChange={e => setEditMobile(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Mobile" />
-                        <input type="text" value={editYear} onChange={e => setEditYear(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Year" />
-                        <input type="text" value={editSem} onChange={e => setEditSem(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Sem" />
-                        <input type="text" value={editEngType} onChange={e => setEditEngType(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Type" />
+                        <input type="text" value={editRollNo} onChange={e => setEditRollNo(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Roll No" />
+                        <input type="text" value={editMobile} onChange={e => setEditMobile(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Mobile" />
+                        <input type="text" value={editYear} onChange={e => setEditYear(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Year" />
+                        <input type="text" value={editSem} onChange={e => setEditSem(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Sem" />
+                        <input type="text" value={editEngType} onChange={e => setEditEngType(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Type" />
                       </div>
                       <div className="flex gap-2 mt-4">
                         <button onClick={handleSaveEdit} className="flex-1 bg-[#10b981] hover:bg-[#0da06f] text-white py-2 rounded-lg font-bold text-sm">Save</button>
-                        <button onClick={() => setEditingId(null)} className="flex-1 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white py-2 rounded-lg font-bold text-sm">Cancel</button>
+                        <button onClick={() => setEditingId(null)} className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-2 rounded-lg font-bold text-sm">Cancel</button>
                       </div>
                     </div>
                   ) : (
                     <>
                       {/* ID Card Design */}
-                      <div className="absolute top-0 right-0 p-4 opacity-10">
+                      <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
                         <span className="text-6xl">⚽</span>
                       </div>
                       
                       <div className="flex gap-5 relative z-10">
-                        <div className="w-24 h-32 rounded-xl bg-black/40 border border-white/10 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                        <div className="w-24 h-32 rounded-xl bg-slate-50 border border-slate-200 flex-shrink-0 overflow-hidden flex items-center justify-center">
                           {r.photo ? (
                             <img src={r.photo} alt={r.name} className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-4xl text-white/20">👤</span>
+                            <span className="text-4xl text-slate-300">👤</span>
                           )}
                         </div>
                         <div className="flex-1">
-                          <h4 className="font-extrabold text-xl mb-1 text-[#6b5cff] uppercase tracking-wide id-card-text">{r.name}</h4>
+                          <h4 className="font-extrabold text-xl mb-1 text-[#2563eb] uppercase tracking-wide id-card-text">{r.name}</h4>
                           <p className="text-xs font-bold text-[#fca311] mb-3 tracking-widest uppercase id-card-text">{r.event}</p>
                           
                           <div className="grid grid-cols-2 gap-y-2 text-xs">
                             <div>
-                              <span className="text-white/40 uppercase tracking-wider text-[9px] block id-card-label">Roll No</span>
-                              <span className="font-mono font-bold id-card-text">{r.rollNo}</span>
+                              <span className="text-slate-500 uppercase tracking-wider text-[9px] block id-card-label">Roll No</span>
+                              <span className="font-mono font-bold text-slate-900 id-card-text">{r.rollNo}</span>
                             </div>
                             <div>
-                              <span className="text-white/40 uppercase tracking-wider text-[9px] block id-card-label">Mobile</span>
-                              <span className="font-mono font-bold id-card-text">{r.mobile}</span>
+                              <span className="text-slate-500 uppercase tracking-wider text-[9px] block id-card-label">Mobile</span>
+                              <span className="font-mono font-bold text-slate-900 id-card-text">{r.mobile}</span>
                             </div>
                             <div>
-                              <span className="text-white/40 uppercase tracking-wider text-[9px] block id-card-label">Year/Sem</span>
-                              <span className="font-bold id-card-text">{r.year} Yr / {r.sem} Sem</span>
+                              <span className="text-slate-500 uppercase tracking-wider text-[9px] block id-card-label">Year/Sem</span>
+                              <span className="font-bold text-slate-900 id-card-text">{r.year} Yr / {r.sem} Sem</span>
                             </div>
                             <div>
-                              <span className="text-white/40 uppercase tracking-wider text-[9px] block id-card-label">Type</span>
-                              <span className="font-bold id-card-text">{r.engType}</span>
+                              <span className="text-slate-500 uppercase tracking-wider text-[9px] block id-card-label">Type</span>
+                              <span className="font-bold text-slate-900 id-card-text">{r.engType}</span>
                             </div>
                           </div>
                         </div>
                       </div>
                       
-                      <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
-                        <span className="text-[10px] font-mono text-white/30 id-card-label">ID: {r.id.toUpperCase()}</span>
-                        <span className="text-[10px] font-bold text-white/50 tracking-widest id-card-label">GCET SPORTS CLUB</span>
+                      <div className="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
+                        <span className="text-[10px] font-mono text-slate-400 id-card-label">ID: {r.id.toUpperCase()}</span>
+                        <span className="text-[10px] font-bold text-slate-400 tracking-widest id-card-label">GCET SPORTS CLUB</span>
                       </div>
     
                       <div className="no-print absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -373,21 +373,21 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                             setPrintIds(r.id);
                             setTimeout(() => window.print(), 100);
                           }}
-                          className="p-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500 hover:text-white"
+                          className="p-2 bg-blue-50 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-100"
                           title="Download PDF"
                         >
                           <Download size={16} />
                         </button>
                         <button 
                           onClick={() => handleEditClick(r)}
-                          className="p-2 bg-[#fca311]/20 text-[#fca311] rounded-lg hover:bg-[#fca311] hover:text-white"
+                          className="p-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-lg hover:bg-amber-100"
                           title="Edit"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
                         <button 
                           onClick={() => deleteRegistration(r.id)}
-                          className="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500 hover:text-white"
+                          className="p-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100"
                           title="Delete"
                         >
                           <Trash2 size={16} />
