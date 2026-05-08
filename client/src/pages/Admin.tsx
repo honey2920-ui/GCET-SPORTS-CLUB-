@@ -22,9 +22,9 @@ export default function Admin() {
   const isSuperAdmin = role === 'admin' && adminLevel === 'super';
   
   const canEditBanner = isMaster || power === 'classic';
-  const canManageIDs = isSuperAdmin;
+  const canManageIDs = isMaster;
 
-  const visibleCreds = isSuperAdmin ? Object.values(coreCreds) : Object.values(coreCreds).filter(c => c.id === coreId);
+  const visibleCreds = isMaster ? Object.values(coreCreds) : Object.values(coreCreds).filter(c => c.id === coreId);
 
   const posts = [
     "President", "Vice President", "Secretary", "Coordinator", "Sports Lead", 
