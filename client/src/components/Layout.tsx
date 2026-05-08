@@ -7,7 +7,7 @@ import { LogOut, Home, Trophy, UserPlus, ShieldAlert } from 'lucide-react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
-  const { role, coreId, logout, bgUrl, themeColor, fontFamily } = useAppStore();
+  const { role, coreId, logout, bgUrl, themeColor, fontFamily, maintenanceMode, maintenanceMsg } = useAppStore();
 
   useEffect(() => {
     const container = document.getElementById('falling-container');
