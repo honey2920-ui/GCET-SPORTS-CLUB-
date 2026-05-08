@@ -103,7 +103,6 @@ export default function Admin() {
               </div>
               Admin Security
             </h3>
-            <p className="text-sm text-slate-500 mb-4">Current Level: <strong className="text-[#2563eb] uppercase tracking-widest">{adminLevel || 'NORMAL'}</strong></p>
             <div className="flex gap-4">
               <button 
                 onClick={() => {
@@ -119,21 +118,21 @@ export default function Admin() {
 
           <div className="pt-6 border-t border-slate-100">
             <h3 className="text-lg font-bold flex items-center gap-3 mb-2 text-slate-900">
-              Maintenance Mode
+              🚧 Maintenance Mode
             </h3>
             <p className="text-sm text-slate-500 mb-4">Toggle maintenance mode for all users except admins.</p>
             
-            <div className="space-y-4">
+            <div className="space-y-4 p-5 rounded-2xl bg-amber-50 border border-amber-200">
               <textarea 
                 value={maintenanceMsg}
                 onChange={e => setMaintenance(maintenanceMode, e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:border-[#2563eb] outline-none"
+                className="w-full bg-white border border-amber-200 rounded-xl p-3 text-sm focus:border-amber-500 outline-none text-amber-900"
                 rows={2}
                 placeholder="Maintenance message..."
               />
               <button 
                 onClick={() => setMaintenance(!maintenanceMode, maintenanceMsg)}
-                className={`px-6 py-3 rounded-xl text-sm font-bold transition-colors border w-full md:w-auto ${maintenanceMode ? 'bg-red-50 hover:bg-red-100 text-red-600 border-red-200' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'}`}
+                className={`px-6 py-3 rounded-xl text-sm font-bold transition-colors border w-full md:w-auto ${maintenanceMode ? 'bg-amber-100 hover:bg-amber-200 text-amber-700 border-amber-300' : 'bg-white hover:bg-amber-50 text-amber-600 border-amber-200'}`}
               >
                 {maintenanceMode ? 'Disable Maintenance Mode' : 'Enable Maintenance Mode'}
               </button>
@@ -231,6 +230,19 @@ export default function Admin() {
               </div>
 
               <div>
+                <label className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2 block">Tab Shape</label>
+                <select 
+                  value={tabShape} 
+                  onChange={e => setTabShape(e.target.value as any)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-[#2563eb] outline-none transition-colors text-slate-900 appearance-none"
+                >
+                  <option value="pill">Pill (Default)</option>
+                  <option value="rounded">Rounded Box</option>
+                  <option value="square">Square</option>
+                </select>
+              </div>
+
+              <div>
                 <label className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2 block">Background Source</label>
                 <div className="flex gap-2">
                   <input 
@@ -274,16 +286,16 @@ export default function Admin() {
         )}
 
         {canEditBanner && (
-          <div className="bg-[#10b981]/5 border border-[#10b981]/20 rounded-[28px] p-8 relative overflow-hidden group shadow-sm">
-            <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500">
-              <MessageSquare size={120} className="text-[#10b981]" />
+          <div className="bg-[#0b102a] border border-[#2563eb]/30 rounded-[28px] p-8 relative overflow-hidden group shadow-sm">
+            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform duration-500">
+              <MessageSquare size={120} className="text-[#2563eb]" />
             </div>
             
             <div className="relative z-10">
-              <h3 className="text-2xl font-extrabold flex items-center gap-3 mb-2 text-slate-900 tracking-wide">
+              <h3 className="text-2xl font-extrabold flex items-center gap-3 mb-2 text-white tracking-wide">
                 Announcement Banner
               </h3>
-              <p className="text-[#10b981] text-sm font-bold tracking-wider uppercase mb-8">Broadcast message to all users</p>
+              <p className="text-[#2563eb] text-sm font-bold tracking-wider uppercase mb-8">Broadcast message to all users</p>
               
               <div className="space-y-6">
                 <div>
@@ -292,14 +304,14 @@ export default function Admin() {
                     onChange={e => setBanner(e.target.value, true)}
                     placeholder="Enter announcement message..." 
                     rows={3}
-                    className="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 focus:border-[#10b981] outline-none transition-all placeholder:text-slate-400 shadow-sm resize-none font-medium"
+                    className="w-full bg-[#12163f] border border-[#2563eb]/20 rounded-2xl px-5 py-4 text-white focus:border-[#2563eb] outline-none transition-all placeholder:text-white/30 shadow-sm resize-none font-medium"
                   />
                 </div>
                 <div className="flex gap-4">
-                  <button onClick={() => setBanner(bannerMsg, true)} className="flex-[2] py-4 bg-[#10b981] hover:bg-[#0da06f] text-white rounded-xl font-bold transition-all shadow-sm active:scale-95 text-lg">
+                  <button onClick={() => setBanner(bannerMsg, true)} className="flex-[2] py-4 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-xl font-bold transition-all shadow-sm active:scale-95 text-lg">
                     Update & Show Banner
                   </button>
-                  <button onClick={() => setBanner(bannerMsg, false)} className="flex-1 py-4 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-bold transition-all border border-red-200 active:scale-95">
+                  <button onClick={() => setBanner(bannerMsg, false)} className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white/70 rounded-xl font-bold transition-all border border-white/10 active:scale-95">
                     Hide Banner
                   </button>
                 </div>

@@ -7,7 +7,7 @@ import { LogOut, Home, Trophy, UserPlus, ShieldAlert } from 'lucide-react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
-  const { role, coreId, logout, bgUrl, themeColor, fontFamily, maintenanceMode, maintenanceMsg } = useAppStore();
+  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, maintenanceMode, maintenanceMsg } = useAppStore();
 
   useEffect(() => {
     const container = document.getElementById('falling-container');
@@ -32,10 +32,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
   if (maintenanceMode && role && role !== 'admin') {
     return (
       <div className="min-h-screen bg-[#0b102a] flex flex-col items-center justify-center p-6 text-center text-white">
-        <ShieldAlert size={64} className="text-amber-500 mb-6" />
-        <h1 className="text-2xl font-bold text-white mb-4">Under Maintenance</h1>
-        <p className="text-white/70 max-w-md leading-relaxed">{maintenanceMsg}</p>
-        <button onClick={logout} className="mt-8 bg-white/10 text-white px-6 py-3 rounded-xl font-bold hover:bg-white/20 transition-colors">
+        <div className="text-7xl mb-6">🚧</div>
+        <h1 className="text-2xl font-black text-black mb-4">Under Maintenance</h1>
+        <p className="text-black/70 max-w-md leading-relaxed font-bold">{maintenanceMsg}</p>
+        <button onClick={logout} className="mt-8 bg-black/10 text-black px-6 py-3 rounded-xl font-bold hover:bg-black/20 transition-colors border border-black/20">
           Back to Login
         </button>
       </div>
@@ -97,11 +97,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       {role && (
         <nav className="fixed bottom-0 left-0 w-full h-[84px] bg-[#12163f]/90 backdrop-blur-xl border-t border-white/10 flex justify-around items-center z-50 px-4 pb-safe print:hidden">
-          <NavItem icon={<Home size={22} />} label="Home" active={loc === '/'} onClick={() => setLoc('/')} />
-          <NavItem icon={<Trophy size={22} />} label="Events" active={loc === '/events'} onClick={() => setLoc('/events')} />
-          <NavItem icon={<UserPlus size={22} />} label="Join" active={loc === '/join'} onClick={() => setLoc('/join')} />
+          <NavItem icon={<Home size={22} />} label="Home" active={loc === '/'} onClick={() => setLoc('/')} shape={tabShape} />
+          <NavItem icon={<Trophy size={22} />} label="Events" active={loc === '/events'} onClick={() => setLoc('/events')} shape={tabShape} />
+          <NavItem icon={<UserPlus size={22} />} label="Join" active={loc === '/join'} onClick={() => setLoc('/join')} shape={tabShape} />
           {isStaff && (
-            <NavItem icon={<ShieldAlert size={22} />} label="Admin" active={loc === '/admin'} onClick={() => setLoc('/admin')} />
+            <NavItem icon={<ShieldAlert size={22} />} label="Admin" active={loc === '/admin'} onClick={() => setLoc('/admin')} shape={tabShape} />
           )}
         </nav>
       )}
@@ -113,11 +113,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function NavItem({ icon, label, active, onClick }: { icon: React.ReactNode, label: string, active: boolean, onClick: () => void }) {
+function NavItem({ icon, label, active, onClick, shape }: { icon: React.ReactNode, label: string, active: boolean, onClick: () => void, shape: 'rounded' | 'pill' | 'square' }) {
+  const roundedClass = shape === 'pill' ? 'rounded-full' : shape === 'rounded' ? 'rounded-2xl' : 'rounded-md';
+  
   return (
     <div 
       onClick={onClick}
-      className={`flex flex-col items-center gap-1.5 cursor-pointer transition-all duration-300 px-4 py-2 rounded-2xl ${
+      className={`flex flex-col items-center gap-1.5 cursor-pointer transition-all duration-300 px-4 py-2 ${roundedClass} ${
         active ? 'text-[#6b5cff] -translate-y-2' : 'text-white/40 hover:text-white/70 hover:bg-white/5'
       }`}
     >

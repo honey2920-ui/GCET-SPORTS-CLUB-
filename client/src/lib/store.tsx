@@ -129,6 +129,7 @@ interface AppState {
   fontFamily: string;
   bannerMsg: string;
   bannerVisible: boolean;
+  tabShape: 'rounded' | 'pill' | 'square';
   formPublished: boolean;
   attendanceFormPublished: boolean;
   adminPass: string;
@@ -143,6 +144,7 @@ interface AppState {
   setBgUrl: (url: string) => void;
   setThemeColor: (color: string) => void;
   setFontFamily: (font: string) => void;
+  setTabShape: (shape: 'rounded' | 'pill' | 'square') => void;
   setBanner: (msg: string, visible: boolean) => void;
   setFormPublished: (pub: boolean) => void;
   setAttendanceFormPublished: (pub: boolean) => void;
@@ -234,6 +236,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [bgUrl, setBgUrlState] = useState(localStorage.getItem('g_bg_v2') || '');
   const [themeColor, setThemeColorState] = useState(localStorage.getItem('g_theme_v2') || '#6b5cff');
   const [fontFamily, setFontFamilyState] = useState(localStorage.getItem('g_font_v2') || 'Outfit, sans-serif');
+  const [tabShape, setTabShapeState] = useState<'rounded' | 'pill' | 'square'>(localStorage.getItem('g_tab_shape') as any || 'pill');
   const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || '');
   const [bannerVisible, setBannerVisible] = useState(localStorage.getItem('g_msg_s') === 'Y');
   const [formPublished, setFormPublishedState] = useState(localStorage.getItem('g_form_pub') !== 'N');
@@ -280,6 +283,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setFontFamily = (font: string) => {
     setFontFamilyState(font);
     localStorage.setItem('g_font_v2', font);
+  };
+
+  const setTabShape = (shape: 'rounded' | 'pill' | 'square') => {
+    setTabShapeState(shape);
+    localStorage.setItem('g_tab_shape', shape);
   };
 
   const setBanner = (msg: string, visible: boolean) => {
@@ -502,8 +510,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, permissionsGranted, userGallery,
-      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setPermissionsGranted, addUserImage, deleteUserImage,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, tabShape, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, permissionsGranted, userGallery,
+      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setTabShape, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setPermissionsGranted, addUserImage, deleteUserImage,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       addCoreDept, updateCoreDept, deleteCoreDept,
