@@ -32,24 +32,24 @@ export function LoginModal() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#f8fafc] z-[9999] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-[#0b102a] z-[9999] flex items-center justify-center p-4">
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white w-full max-w-[400px] p-8 rounded-[32px] text-center border border-slate-200 shadow-2xl relative"
+        className="bg-[#12163f] w-full max-w-[400px] p-8 rounded-[32px] text-center border border-white/10 shadow-2xl relative"
       >
-        <div className="w-24 h-24 mx-auto border-4 border-[#2563eb] rounded-full mb-6 flex items-center justify-center bg-white shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+        <div className="w-24 h-24 mx-auto border-4 border-[#6b5cff] rounded-full mb-6 flex items-center justify-center bg-[#0b102a] shadow-[0_0_30px_rgba(107,92,255,0.3)]">
           <span className="text-4xl">⚽</span>
         </div>
-        <h1 className="text-[#2563eb] text-2xl font-bold mb-8 tracking-wider">GCET SPORTS CLUB</h1>
+        <h1 className="text-[#6b5cff] text-2xl font-bold mb-8 tracking-wider">GCET SPORTS CLUB</h1>
         
-        <div className="flex gap-2 mb-8 bg-slate-100 p-1 rounded-2xl border border-slate-200 relative z-10">
+        <div className="flex gap-2 mb-8 bg-white/5 p-1 rounded-2xl border border-white/10 relative z-10">
           {(['student', 'core', 'admin'] as Role[]).map(r => (
             <button
               key={r}
               onClick={() => setSelectedRole(r)}
               className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all relative z-20 ${
-                selectedRole === r ? 'bg-[#2563eb] text-white shadow-lg' : 'bg-transparent text-slate-500 hover:text-slate-800'
+                selectedRole === r ? 'bg-[#6b5cff] text-white shadow-lg' : 'bg-transparent text-white/50 hover:text-white'
               }`}
             >
               {r?.toUpperCase()}
@@ -63,7 +63,7 @@ export function LoginModal() {
             placeholder="Enter Core ID"
             value={id}
             onChange={e => setId(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-slate-900 mb-4 outline-none focus:border-[#2563eb] transition-colors"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white mb-4 outline-none focus:border-[#6b5cff] transition-colors placeholder:text-white/30"
           />
         )}
         
@@ -73,13 +73,13 @@ export function LoginModal() {
             placeholder="Password"
             value={pass}
             onChange={e => setPass(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-slate-900 mb-8 outline-none focus:border-[#2563eb] transition-colors"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white mb-8 outline-none focus:border-[#6b5cff] transition-colors placeholder:text-white/30"
           />
         )}
 
         <button
           onClick={handleLogin}
-          className="w-full bg-gradient-to-r from-[#2563eb] to-[#3b82f6] text-white py-4 rounded-xl font-bold text-lg hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all"
+          className="w-full bg-gradient-to-r from-[#6b5cff] to-[#9f7aea] text-white py-4 rounded-xl font-bold text-lg hover:shadow-[0_0_20px_rgba(107,92,255,0.4)] transition-all"
         >
           SIGN IN
         </button>
