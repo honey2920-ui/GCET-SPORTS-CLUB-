@@ -31,11 +31,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   if (maintenanceMode && role !== 'admin') {
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-[#0b102a] flex flex-col items-center justify-center p-6 text-center text-white">
         <ShieldAlert size={64} className="text-amber-500 mb-6" />
-        <h1 className="text-2xl font-bold text-slate-900 mb-4">Under Maintenance</h1>
-        <p className="text-slate-500 max-w-md leading-relaxed">{maintenanceMsg}</p>
-        <button onClick={logout} className="mt-8 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition-colors">
+        <h1 className="text-2xl font-bold text-white mb-4">Under Maintenance</h1>
+        <p className="text-white/70 max-w-md leading-relaxed">{maintenanceMsg}</p>
+        <button onClick={logout} className="mt-8 bg-white/10 text-white px-6 py-3 rounded-xl font-bold hover:bg-white/20 transition-colors">
           Logout
         </button>
       </div>
@@ -44,7 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div 
-      className="min-h-screen pb-24 relative overflow-hidden print-bg-white bg-[#0f172a] text-white"
+      className="min-h-screen pb-24 relative overflow-hidden print-bg-white"
       style={{
         fontFamily: fontFamily || 'Inter, sans-serif',
         ...(bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : {})
@@ -53,7 +53,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {/* Dynamic Theme Color override */}
       <style>{`
         :root {
-          --primary: ${themeColor || '#2563eb'};
+          --primary: ${themeColor || '#6b5cff'};
         }
         .text-\\[\\#6b5cff\\] { color: var(--primary) !important; }
         .bg-\\[\\#6b5cff\\] { background-color: var(--primary) !important; }
@@ -66,19 +66,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         .hover\\:border-\\[\\#6b5cff\\]:hover { border-color: var(--primary) !important; }
         .focus\\:border-\\[\\#6b5cff\\]:focus { border-color: var(--primary) !important; }
         .shadow-\\[0_0_20px_rgba\\(107\\,92\\,255\\,0\\.4\\)\\] { box-shadow: 0 0 20px var(--primary) !important; opacity: 0.8; }
-        
-        .bg-white { background-color: rgba(255,255,255,0.05) !important; color: white; border-color: rgba(255,255,255,0.1); }
-        .text-slate-900 { color: #ffffff !important; }
-        .text-slate-800 { color: #f1f5f9 !important; }
-        .text-slate-700 { color: #e2e8f0 !important; }
-        .text-slate-600 { color: #cbd5e1 !important; }
-        .text-slate-500 { color: #94a3b8 !important; }
-        .text-slate-400 { color: #64748b !important; }
-        .bg-slate-50 { background-color: rgba(255,255,255,0.02) !important; }
-        .bg-slate-100 { background-color: rgba(255,255,255,0.05) !important; }
-        .bg-slate-200 { background-color: rgba(255,255,255,0.1) !important; }
-        .border-slate-100 { border-color: rgba(255,255,255,0.05) !important; }
-        .border-slate-200 { border-color: rgba(255,255,255,0.1) !important; }
       `}</style>
       
       <div id="falling-container" className="fixed inset-0 pointer-events-none z-0 opacity-[0.25] print:hidden" />

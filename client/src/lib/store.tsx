@@ -220,9 +220,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [events, setEvents] = useState<EventItem[]>([
     { id: 'ev1', name: 'Inter-College Cricket', date: '2026-03-15', description: 'Annual cricket tournament with neighboring colleges.', img: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=800' }
   ]);
-  const [bgUrl, setBgUrlState] = useState(localStorage.getItem('g_bg') || '');
-  const [themeColor, setThemeColorState] = useState(localStorage.getItem('g_theme') || '#2563eb');
-  const [fontFamily, setFontFamilyState] = useState(localStorage.getItem('g_font') || 'Inter');
+  const [bgUrl, setBgUrlState] = useState(localStorage.getItem('g_bg_v2') || '');
+  const [themeColor, setThemeColorState] = useState(localStorage.getItem('g_theme_v2') || '#6b5cff');
+  const [fontFamily, setFontFamilyState] = useState(localStorage.getItem('g_font_v2') || 'Outfit, sans-serif');
   const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || '');
   const [bannerVisible, setBannerVisible] = useState(localStorage.getItem('g_msg_s') === 'Y');
   const [formPublished, setFormPublishedState] = useState(localStorage.getItem('g_form_pub') !== 'N');
@@ -257,17 +257,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const setBgUrl = (url: string) => {
     setBgUrlState(url);
-    localStorage.setItem('g_bg', url);
+    localStorage.setItem('g_bg_v2', url);
   };
 
   const setThemeColor = (color: string) => {
     setThemeColorState(color);
-    localStorage.setItem('g_theme', color);
+    localStorage.setItem('g_theme_v2', color);
   };
 
   const setFontFamily = (font: string) => {
     setFontFamilyState(font);
-    localStorage.setItem('g_font', font);
+    localStorage.setItem('g_font_v2', font);
   };
 
   const setBanner = (msg: string, visible: boolean) => {
