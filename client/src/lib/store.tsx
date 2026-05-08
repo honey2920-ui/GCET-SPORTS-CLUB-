@@ -130,6 +130,7 @@ interface AppState {
   bannerMsg: string;
   bannerVisible: boolean;
   tabShape: 'rounded' | 'pill' | 'square';
+  tabStyles: Record<string, { color: string, size: number }>;
   formPublished: boolean;
   attendanceFormPublished: boolean;
   adminPass: string;
@@ -145,6 +146,7 @@ interface AppState {
   setThemeColor: (color: string) => void;
   setFontFamily: (font: string) => void;
   setTabShape: (shape: 'rounded' | 'pill' | 'square') => void;
+  setTabStyle: (tab: string, style: { color?: string, size?: number }) => void;
   setBanner: (msg: string, visible: boolean) => void;
   setFormPublished: (pub: boolean) => void;
   setAttendanceFormPublished: (pub: boolean) => void;
@@ -237,6 +239,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [themeColor, setThemeColorState] = useState(localStorage.getItem('g_theme_v2') || '#6b5cff');
   const [fontFamily, setFontFamilyState] = useState(localStorage.getItem('g_font_v2') || 'Outfit, sans-serif');
   const [tabShape, setTabShapeState] = useState<'rounded' | 'pill' | 'square'>(localStorage.getItem('g_tab_shape') as any || 'pill');
+  const [tabStyles, setTabStylesState] = useState<Record<string, {color: string, size: number}>>(
+    JSON.parse(localStorage.getItem('g_tab_styles') || 'null') || {
+      home: { color: '#6b5cff', size: 1 },
+      events: { color: '#6b5cff', size: 1 },
+      join: { color: '#6b5cff', size: 1 },
+      admin: { color: '#6b5cff', size: 1 }
+    }
+  );
   const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || '');
   const [bannerVisible, setBannerVisible] = useState(localStorage.getItem('g_msg_s') === 'Y');
   const [formPublished, setFormPublishedState] = useState(localStorage.getItem('g_form_pub') !== 'N');
@@ -288,6 +298,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setTabShape = (shape: 'rounded' | 'pill' | 'square') => {
     setTabShapeState(shape);
     localStorage.setItem('g_tab_shape', shape);
+  };
+
+  const setTabStyle = (tab: string, style: {color?: string, size?: number}) => {
+    setTabStylesState(prev => {
+      const next = { ...prev, [tab]: { ...prev[tab], ...style } };
+      localStorage.setItem('g_tab_styles', JSON.stringify(next));
+      return next;
+    });
   };
 
   const setBanner = (msg: string, visible: boolean) => {
@@ -510,8 +528,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, tabShape, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, permissionsGranted, userGallery,
-      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setTabShape, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setPermissionsGranted, addUserImage, deleteUserImage,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, tabShape, tabStyles, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, permissionsGranted, userGallery,
+      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setTabShape, setTabStyle, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setPermissionsGranted, addUserImage, deleteUserImage,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       addCoreDept, updateCoreDept, deleteCoreDept,

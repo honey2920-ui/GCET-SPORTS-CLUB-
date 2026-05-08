@@ -7,7 +7,7 @@ import { LogOut, Home, Trophy, UserPlus, ShieldAlert } from 'lucide-react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
-  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, maintenanceMode, maintenanceMsg } = useAppStore();
+  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, tabStyles, maintenanceMode, maintenanceMsg } = useAppStore();
 
   useEffect(() => {
     const container = document.getElementById('falling-container');
@@ -105,11 +105,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       {role && (
         <nav className="fixed bottom-0 left-0 w-full h-[84px] bg-[#12163f]/90 backdrop-blur-xl border-t border-white/10 flex justify-around items-center z-50 px-4 pb-safe print:hidden">
-          <NavItem icon={<Home size={22} />} label="Home" active={loc === '/'} onClick={() => setLoc('/')} shape={tabShape} />
-          <NavItem icon={<Trophy size={22} />} label="Events" active={loc === '/events'} onClick={() => setLoc('/events')} shape={tabShape} />
-          <NavItem icon={<UserPlus size={22} />} label="Join" active={loc === '/join'} onClick={() => setLoc('/join')} shape={tabShape} />
+          <NavItem icon={<Home size={22} />} label="Home" active={loc === '/'} onClick={() => setLoc('/')} shape={tabShape} customStyle={tabStyles?.home} />
+          <NavItem icon={<Trophy size={22} />} label="Events" active={loc === '/events'} onClick={() => setLoc('/events')} shape={tabShape} customStyle={tabStyles?.events} />
+          <NavItem icon={<UserPlus size={22} />} label="Join" active={loc === '/join'} onClick={() => setLoc('/join')} shape={tabShape} customStyle={tabStyles?.join} />
           {isStaff && (
-            <NavItem icon={<ShieldAlert size={22} />} label="Admin" active={loc === '/admin'} onClick={() => setLoc('/admin')} shape={tabShape} />
+            <NavItem icon={<ShieldAlert size={22} />} label="Admin" active={loc === '/admin'} onClick={() => setLoc('/admin')} shape={tabShape} customStyle={tabStyles?.admin} />
           )}
         </nav>
       )}
@@ -121,20 +121,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function NavItem({ icon, label, active, onClick, shape }: { icon: React.ReactNode, label: string, active: boolean, onClick: () => void, shape: 'rounded' | 'pill' | 'square' }) {
+function NavItem({ icon, label, active, onClick, shape, customStyle }: { icon: React.ReactNode, label: string, active: boolean, onClick: () => void, shape: 'rounded' | 'pill' | 'square', customStyle?: { color: string, size: number } }) {
   const roundedClass = shape === 'pill' ? 'rounded-full' : shape === 'rounded' ? 'rounded-2xl' : 'rounded-md';
+  const activeColor = customStyle?.color || '#6b5cff';
+  const sizeMultiplier = customStyle?.size || 1;
   
   return (
     <div 
       onClick={onClick}
       className={`flex flex-col items-center gap-1.5 cursor-pointer transition-all duration-300 px-4 py-2 ${roundedClass} ${
-        active ? 'text-[#6b5cff] -translate-y-2' : 'text-white/40 hover:text-white/70 hover:bg-white/5'
+        active ? '-translate-y-2' : 'text-white/40 hover:text-white/70 hover:bg-white/5'
       }`}
+      style={active ? { color: activeColor } : {}}
     >
-      <div className={`${active ? 'scale-110 drop-shadow-[0_0_8px_rgba(107,92,255,0.8)]' : ''} transition-all`}>
+      <div 
+        className={`transition-all ${active ? 'drop-shadow-lg' : ''}`}
+        style={active ? { transform: `scale(${1.1 * sizeMultiplier})` } : { transform: `scale(${sizeMultiplier})` }}
+      >
         {icon}
       </div>
-      <span className="text-[10px] font-bold uppercase tracking-wider">{label}</span>
+      <span className="text-[10px] font-bold uppercase tracking-wider transition-all" style={active ? { transform: `scale(${sizeMultiplier})` } : {}}>{label}</span>
     </div>
   );
 }

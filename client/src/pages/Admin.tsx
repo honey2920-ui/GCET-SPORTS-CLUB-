@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
 export default function Admin() {
-  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, tabShape, setTabShape, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
+  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, tabShape, setTabShape, tabStyles, setTabStyle, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
   const [, setLoc] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newName, setNewName] = useState('');
@@ -240,6 +240,31 @@ export default function Admin() {
                   <option value="rounded">Rounded Box</option>
                   <option value="square">Square</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2 block">Individual Tab Styles</label>
+                <div className="space-y-3">
+                  {['home', 'events', 'join', 'admin'].map(t => (
+                    <div key={t} className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                      <span className="text-xs font-bold uppercase w-14 text-slate-700">{t}</span>
+                      <input 
+                        type="color" 
+                        value={tabStyles?.[t]?.color || '#6b5cff'} 
+                        onChange={e => setTabStyle(t, { color: e.target.value })} 
+                        className="w-8 h-8 rounded-full cursor-pointer bg-transparent border-0 p-0 shrink-0" 
+                      />
+                      <input 
+                        type="range" 
+                        min="0.8" max="1.5" step="0.1" 
+                        value={tabStyles?.[t]?.size || 1}
+                        onChange={e => setTabStyle(t, { size: parseFloat(e.target.value) })}
+                        className="flex-1 accent-[#2563eb]"
+                      />
+                      <span className="text-[10px] text-slate-500 font-mono font-bold w-6">{tabStyles?.[t]?.size || 1}x</span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div>
