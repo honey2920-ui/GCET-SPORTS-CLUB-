@@ -43,8 +43,9 @@ function TabButton({ icon, label, active, onClick }: any) {
 }
 
 function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void, onGoToDept: (dept: string) => void }) {
-  const { role, coreId, coreCreds, holidays, addHoliday, updateHoliday, deleteHoliday, holidayPdf, setHolidayPdf, bannerMsg, bannerVisible, events, coreMembers, coreDepts, addCoreDept, updateCoreDept, deleteCoreDept } = useAppStore();
+  const { role, coreId, coreCreds, holidays, addHoliday, updateHoliday, deleteHoliday, holidayPdf, setHolidayPdf, bannerMsg, bannerVisible, events, coreMembers, coreDepts, addCoreDept, updateCoreDept, deleteCoreDept, permissionsGranted, setPermissionsGranted, addUserImage } = useAppStore();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const galleryInputRef = React.useRef<HTMLInputElement>(null);
   
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
@@ -197,6 +198,46 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
           ))}
           {holidays.length === 0 && <p className="text-slate-400 text-xs italic p-4">No upcoming holidays</p>}
         </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-[28px] border border-slate-200 shadow-sm mt-6">
+        <h3 className="text-lg font-bold flex items-center gap-2 text-slate-900 mb-2">
+          <Upload className="text-[#2563eb]" size={20} /> Share Event Photos
+        </h3>
+        <p className="text-sm text-slate-500 mb-4">Share your favorite sports club moments with the admin team! By uploading, you consent to sharing these specific photos.</p>
+        
+        {permissionsGranted ? (
+           <div className="flex flex-col gap-4">
+              <input type="file" ref={galleryInputRef} className="hidden" accept="image/*" multiple onChange={(e) => {
+                 const files = e.target.files;
+                 if (files) {
+                   Array.from(files).forEach(file => {
+                     const reader = new FileReader();
+                     reader.onload = (ev) => {
+                        addUserImage({ dataUrl: ev.target?.result as string, uploaderRole: role || 'student', uploaderId: coreId || undefined });
+                     };
+                     reader.readAsDataURL(file);
+                   });
+                 }
+              }} />
+              <button onClick={() => galleryInputRef.current?.click()} className="bg-[#2563eb] text-white px-6 py-3 rounded-xl font-bold shadow-sm hover:bg-[#1d4ed8] transition-colors flex items-center justify-center gap-2 w-full md:w-auto self-start">
+                 <Upload size={18} /> Select Photos to Upload
+              </button>
+              <p className="text-xs text-slate-400 italic">Photos are securely stored and only visible to the Super Admin.</p>
+           </div>
+        ) : (
+           <div className="bg-amber-500/10 border border-amber-500/20 p-5 rounded-xl">
+             <h4 className="font-bold text-amber-500 mb-2">Permission Required</h4>
+             <p className="text-sm text-slate-400 mb-4">To upload photos, the app needs permission to access your photo gallery. Only photos you explicitly select will be uploaded.</p>
+             <button onClick={() => {
+                if(confirm("Allow app to access your photo gallery to select and upload photos?")) {
+                   setPermissionsGranted(true);
+                }
+             }} className="bg-amber-500 text-white px-5 py-2.5 rounded-lg font-bold shadow-sm hover:bg-amber-600 transition-colors text-sm">
+               Grant Gallery Access
+             </button>
+           </div>
+        )}
       </div>
 
       <div>

@@ -6,13 +6,11 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
 export default function Admin() {
-  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, permissionsGranted, setPermissionsGranted, adminLevel } = useAppStore();
+  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
   const [, setLoc] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const galleryRef = useRef<HTMLInputElement>(null);
   const [newName, setNewName] = useState('');
   const [tab, setTab] = useState<'settings' | 'users' | 'logs'>('users');
-  const [galleryImages, setGalleryImages] = useState<string[]>([]);
 
   if (role !== 'admin' && role !== 'core') {
     setLoc('/');
@@ -145,50 +143,27 @@ export default function Admin() {
           {isSuperAdmin && (
             <div className="pt-6 border-t border-slate-100">
               <h3 className="text-lg font-bold flex items-center gap-3 mb-2 text-slate-900">
-                Super Admin Permissions
+                User Gallery Data
               </h3>
-              <p className="text-sm text-slate-500 mb-4">Manage app permissions for gallery and contacts.</p>
+              <p className="text-sm text-slate-500 mb-4">View and manage photos shared by users. Only visible to Super Admin.</p>
               
-              <div className="flex flex-col gap-4">
-                <button 
-                  onClick={() => {
-                    const confirmed = confirm("Request permission to access local Contacts and Photo Gallery?");
-                    if (confirmed) setPermissionsGranted(true);
-                  }}
-                  disabled={permissionsGranted}
-                  className={`px-6 py-3 rounded-xl text-sm font-bold transition-colors border w-full md:w-auto ${permissionsGranted ? 'bg-green-50 text-green-600 border-green-200 opacity-50' : 'bg-[#2563eb]/10 hover:bg-[#2563eb]/20 text-[#2563eb] border-[#2563eb]/20'}`}
-                >
-                  {permissionsGranted ? 'Permissions Granted' : 'Request Permissions'}
-                </button>
-
-                {permissionsGranted && (
-                  <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
-                    <p className="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">Local Image Storage</p>
-                    <input type="file" ref={galleryRef} className="hidden" accept="image/*" multiple onChange={(e) => {
-                      const files = e.target.files;
-                      if (files) {
-                        Array.from(files).forEach(file => {
-                          const reader = new FileReader();
-                          reader.onload = (ev) => {
-                            const result = ev.target?.result as string;
-                            setGalleryImages(prev => [...prev, result]);
-                            setIslandMessage('Image stored locally');
-                          };
-                          reader.readAsDataURL(file);
-                        });
-                      }
-                    }} />
-                    <button onClick={() => galleryRef.current?.click()} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-2">
-                      <Upload size={14} /> Store Image
-                    </button>
-                    {galleryImages.length > 0 && (
-                      <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
-                        {galleryImages.map((img, i) => (
-                          <img key={i} src={img} className="w-16 h-16 object-cover rounded-lg border border-slate-200 shrink-0" alt="Stored locally" />
-                        ))}
+              <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+                {userGallery.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {userGallery.map((img) => (
+                      <div key={img.id} className="relative group">
+                        <img src={img.dataUrl} className="w-full h-32 object-cover rounded-lg border border-slate-200" alt="User upload" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col justify-between p-2">
+                           <p className="text-[10px] text-white font-mono">{img.uploaderRole} {img.uploaderId ? `[${img.uploaderId}]` : ''}</p>
+                           <button onClick={() => deleteUserImage(img.id)} className="self-end p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-md">
+                             <Trash2 size={12} />
+                           </button>
+                        </div>
                       </div>
-                    )}
+                    ))}
                   </div>
+                ) : (
+                  <p className="text-sm text-slate-400 italic text-center py-4">No images uploaded by users yet.</p>
                 )}
               </div>
             </div>

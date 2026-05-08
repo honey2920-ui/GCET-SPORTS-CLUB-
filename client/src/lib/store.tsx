@@ -100,6 +100,14 @@ export interface SystemLog {
   date: string;
 }
 
+export type UploadedImage = {
+  id: string;
+  uploaderRole: string;
+  uploaderId?: string;
+  dataUrl: string;
+  timestamp: string;
+};
+
 interface AppState {
   role: Role;
   coreId: string | null;
@@ -128,6 +136,7 @@ interface AppState {
   maintenanceMode: boolean;
   maintenanceMsg: string;
   permissionsGranted: boolean;
+  userGallery: UploadedImage[];
   login: (role: Role, id?: string, level?: 'normal' | 'super') => void;
   logout: () => void;
   setIslandMessage: (msg: string | null) => void;
@@ -140,6 +149,8 @@ interface AppState {
   setAdminPass: (pass: string) => void;
   setMaintenance: (mode: boolean, msg: string) => void;
   setPermissionsGranted: (granted: boolean) => void;
+  addUserImage: (img: Omit<UploadedImage, 'id' | 'timestamp'>) => void;
+  deleteUserImage: (id: string) => void;
   addMentor: (m: Omit<Mentor, 'id'>) => void;
   updateMentor: (id: string, m: Partial<Mentor>) => void;
   deleteMentor: (id: string) => void;
@@ -232,6 +243,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [maintenanceMode, setMaintenanceMode] = useState(localStorage.getItem('g_maint_mode') === 'Y');
   const [maintenanceMsg, setMaintenanceMsg] = useState(localStorage.getItem('g_maint_msg') || 'The portal is currently under maintenance. Please check back later.');
   const [permissionsGranted, setPermissionsGrantedState] = useState(localStorage.getItem('g_perms') === 'Y');
+  const [userGallery, setUserGallery] = useState<UploadedImage[]>([]);
 
   const showIsland = (msg: string) => setIslandMessage(msg);
 
@@ -307,6 +319,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setPermissionsGrantedState(granted);
     localStorage.setItem('g_perms', granted ? 'Y' : 'N');
     if (granted) showIsland('Gallery/Contacts permissions granted');
+  };
+
+  const addUserImage = (img: Omit<UploadedImage, 'id' | 'timestamp'>) => {
+    setUserGallery(prev => [...prev, { ...img, id: Math.random().toString(36).substr(2, 9), timestamp: new Date().toLocaleString() }]);
+    showIsland('Photo uploaded successfully!');
+  };
+
+  const deleteUserImage = (id: string) => {
+    setUserGallery(prev => prev.filter(img => img.id !== id));
+    showIsland('Photo deleted');
   };
 
   const addMentor = (m: Omit<Mentor, 'id'>) => {
@@ -480,8 +502,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, permissionsGranted,
-      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setPermissionsGranted,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, permissionsGranted, userGallery,
+      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setPermissionsGranted, addUserImage, deleteUserImage,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       addCoreDept, updateCoreDept, deleteCoreDept,
