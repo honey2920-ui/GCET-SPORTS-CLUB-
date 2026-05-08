@@ -14,22 +14,22 @@
 }
 
 :root {
-  --primary: #2563eb; 
-  --secondary: #3b82f6; 
+  --primary: #6b5cff; 
+  --secondary: #8073ff; 
   --accent: #10b981;
-  --bg-dark: #f8fafc; 
-  --card-bg: #ffffff;
-  --text-main: #0f172a; 
-  --text-dim: #64748b;
+  --bg-dark: #0f172a; 
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --text-main: #ffffff; 
+  --text-dim: rgba(255, 255, 255, 0.7);
   --success: #059669; 
   --danger: #dc2626; 
-  --nav-bg: #ffffff;
-  --border: #e2e8f0;
+  --nav-bg: rgba(18, 22, 63, 0.9);
+  --border: rgba(255, 255, 255, 0.1);
 }
 
 @layer base {
   body {
-    background: #f8fafc;
+    background: #0f172a;
     color: var(--text-main);
     min-height: 100vh;
     font-family: 'Inter', sans-serif;

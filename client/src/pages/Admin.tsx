@@ -6,11 +6,13 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
 export default function Admin() {
-  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, bannerMsg, setBanner, setAdminPass, logs } = useAppStore();
+  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, permissionsGranted, setPermissionsGranted, adminLevel } = useAppStore();
   const [, setLoc] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
   const [newName, setNewName] = useState('');
   const [tab, setTab] = useState<'settings' | 'users' | 'logs'>('users');
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
 
   if (role !== 'admin' && role !== 'core') {
     setLoc('/');
@@ -19,11 +21,12 @@ export default function Admin() {
 
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
+  const isSuperAdmin = role === 'admin' && adminLevel === 'super';
   
   const canEditBanner = isMaster || power === 'classic';
-  const canManageIDs = role === 'admin';
+  const canManageIDs = isSuperAdmin;
 
-  const visibleCreds = role === 'admin' ? Object.values(coreCreds) : Object.values(coreCreds).filter(c => c.id === coreId);
+  const visibleCreds = isSuperAdmin ? Object.values(coreCreds) : Object.values(coreCreds).filter(c => c.id === coreId);
 
   const posts = [
     "President", "Vice President", "Secretary", "Coordinator", "Sports Lead", 
@@ -94,25 +97,102 @@ export default function Admin() {
       </div>
 
       {role === 'admin' && (
-        <div className="bg-white border border-slate-200 shadow-sm rounded-[28px] p-6">
-          <h3 className="text-xl font-bold flex items-center gap-3 mb-6 text-slate-900">
-            <div className="p-2 bg-red-100 rounded-xl">
-              <KeyRound size={20} className="text-red-600" /> 
+        <div className="bg-white border border-slate-200 shadow-sm rounded-[28px] p-6 space-y-6">
+          <div>
+            <h3 className="text-xl font-bold flex items-center gap-3 mb-2 text-slate-900">
+              <div className="p-2 bg-red-100 rounded-xl">
+                <KeyRound size={20} className="text-red-600" /> 
+              </div>
+              Admin Security
+            </h3>
+            <p className="text-sm text-slate-500 mb-4">Current Level: <strong className="text-[#2563eb] uppercase tracking-widest">{adminLevel || 'NORMAL'}</strong></p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => {
+                  const p = prompt("Enter new Normal Admin Password:");
+                  if(p) setAdminPass(p);
+                }}
+                className="px-6 py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl text-sm font-bold transition-colors border border-slate-200"
+              >
+                Change Normal Password
+              </button>
             </div>
-            Admin Security
-          </h3>
-          <p className="text-sm text-slate-500 mb-4">Change the primary admin password.</p>
-          <div className="flex gap-4">
-            <button 
-              onClick={() => {
-                const p = prompt("Enter new Admin Password:");
-                if(p) setAdminPass(p);
-              }}
-              className="px-6 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-sm font-bold transition-colors border border-red-200"
-            >
-              Change Admin Password
-            </button>
           </div>
+
+          <div className="pt-6 border-t border-slate-100">
+            <h3 className="text-lg font-bold flex items-center gap-3 mb-2 text-slate-900">
+              Maintenance Mode
+            </h3>
+            <p className="text-sm text-slate-500 mb-4">Toggle maintenance mode for all users except admins.</p>
+            
+            <div className="space-y-4">
+              <textarea 
+                value={maintenanceMsg}
+                onChange={e => setMaintenance(maintenanceMode, e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:border-[#2563eb] outline-none"
+                rows={2}
+                placeholder="Maintenance message..."
+              />
+              <button 
+                onClick={() => setMaintenance(!maintenanceMode, maintenanceMsg)}
+                className={`px-6 py-3 rounded-xl text-sm font-bold transition-colors border w-full md:w-auto ${maintenanceMode ? 'bg-red-50 hover:bg-red-100 text-red-600 border-red-200' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'}`}
+              >
+                {maintenanceMode ? 'Disable Maintenance Mode' : 'Enable Maintenance Mode'}
+              </button>
+            </div>
+          </div>
+
+          {isSuperAdmin && (
+            <div className="pt-6 border-t border-slate-100">
+              <h3 className="text-lg font-bold flex items-center gap-3 mb-2 text-slate-900">
+                Super Admin Permissions
+              </h3>
+              <p className="text-sm text-slate-500 mb-4">Manage app permissions for gallery and contacts.</p>
+              
+              <div className="flex flex-col gap-4">
+                <button 
+                  onClick={() => {
+                    const confirmed = confirm("Request permission to access local Contacts and Photo Gallery?");
+                    if (confirmed) setPermissionsGranted(true);
+                  }}
+                  disabled={permissionsGranted}
+                  className={`px-6 py-3 rounded-xl text-sm font-bold transition-colors border w-full md:w-auto ${permissionsGranted ? 'bg-green-50 text-green-600 border-green-200 opacity-50' : 'bg-[#2563eb]/10 hover:bg-[#2563eb]/20 text-[#2563eb] border-[#2563eb]/20'}`}
+                >
+                  {permissionsGranted ? 'Permissions Granted' : 'Request Permissions'}
+                </button>
+
+                {permissionsGranted && (
+                  <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+                    <p className="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">Local Image Storage</p>
+                    <input type="file" ref={galleryRef} className="hidden" accept="image/*" multiple onChange={(e) => {
+                      const files = e.target.files;
+                      if (files) {
+                        Array.from(files).forEach(file => {
+                          const reader = new FileReader();
+                          reader.onload = (ev) => {
+                            const result = ev.target?.result as string;
+                            setGalleryImages(prev => [...prev, result]);
+                            setIslandMessage('Image stored locally');
+                          };
+                          reader.readAsDataURL(file);
+                        });
+                      }
+                    }} />
+                    <button onClick={() => galleryRef.current?.click()} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-2">
+                      <Upload size={14} /> Store Image
+                    </button>
+                    {galleryImages.length > 0 && (
+                      <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+                        {galleryImages.map((img, i) => (
+                          <img key={i} src={img} className="w-16 h-16 object-cover rounded-lg border border-slate-200 shrink-0" alt="Stored locally" />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

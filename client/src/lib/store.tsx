@@ -124,7 +124,11 @@ interface AppState {
   formPublished: boolean;
   attendanceFormPublished: boolean;
   adminPass: string;
-  login: (role: Role, id?: string) => void;
+  adminLevel: 'normal' | 'super' | null;
+  maintenanceMode: boolean;
+  maintenanceMsg: string;
+  permissionsGranted: boolean;
+  login: (role: Role, id?: string, level?: 'normal' | 'super') => void;
   logout: () => void;
   setIslandMessage: (msg: string | null) => void;
   setBgUrl: (url: string) => void;
@@ -134,6 +138,8 @@ interface AppState {
   setFormPublished: (pub: boolean) => void;
   setAttendanceFormPublished: (pub: boolean) => void;
   setAdminPass: (pass: string) => void;
+  setMaintenance: (mode: boolean, msg: string) => void;
+  setPermissionsGranted: (granted: boolean) => void;
   addMentor: (m: Omit<Mentor, 'id'>) => void;
   updateMentor: (id: string, m: Partial<Mentor>) => void;
   deleteMentor: (id: string) => void;
@@ -222,13 +228,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [formPublished, setFormPublishedState] = useState(localStorage.getItem('g_form_pub') !== 'N');
   const [attendanceFormPublished, setAttendanceFormPublishedState] = useState(localStorage.getItem('g_att_form_pub') !== 'N');
   const [adminPass, setAdminPassState] = useState(localStorage.getItem('g_admin_pass') || 'GCET2351');
+  const [adminLevel, setAdminLevel] = useState<'normal' | 'super' | null>(null);
+  const [maintenanceMode, setMaintenanceMode] = useState(localStorage.getItem('g_maint_mode') === 'Y');
+  const [maintenanceMsg, setMaintenanceMsg] = useState(localStorage.getItem('g_maint_msg') || 'The portal is currently under maintenance. Please check back later.');
+  const [permissionsGranted, setPermissionsGrantedState] = useState(localStorage.getItem('g_perms') === 'Y');
 
   const showIsland = (msg: string) => setIslandMessage(msg);
 
-  const login = (r: Role, id?: string) => {
+  const login = (r: Role, id?: string, level?: 'normal' | 'super') => {
     setRole(r);
     if(id) setCoreId(id);
-    const userName = r === 'admin' ? 'Admin' : (r === 'core' ? `Core[${id}]` : 'Student');
+    if(level) setAdminLevel(level);
+    const userName = r === 'admin' ? `Admin (${level})` : (r === 'core' ? `Core[${id}]` : 'Student');
     setLogs([{ id: Math.random().toString(36).substr(2, 9), user: userName, action: 'LOG IN', date: new Date().toLocaleString() }, ...logs]);
     showIsland(`Logged in as ${r}`);
   };
@@ -240,6 +251,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     setRole(null);
     setCoreId(null);
+    setAdminLevel(null);
     showIsland('Logged out successfully');
   };
 
@@ -281,6 +293,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setAdminPassState(pass);
     localStorage.setItem('g_admin_pass', pass);
     showIsland('Admin password updated');
+  };
+
+  const setMaintenance = (mode: boolean, msg: string) => {
+    setMaintenanceMode(mode);
+    setMaintenanceMsg(msg);
+    localStorage.setItem('g_maint_mode', mode ? 'Y' : 'N');
+    localStorage.setItem('g_maint_msg', msg);
+    showIsland(mode ? 'Maintenance Mode Enabled' : 'Maintenance Mode Disabled');
+  };
+
+  const setPermissionsGranted = (granted: boolean) => {
+    setPermissionsGrantedState(granted);
+    localStorage.setItem('g_perms', granted ? 'Y' : 'N');
+    if (granted) showIsland('Gallery/Contacts permissions granted');
   };
 
   const addMentor = (m: Omit<Mentor, 'id'>) => {
@@ -454,8 +480,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass,
-      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, permissionsGranted,
+      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setPermissionsGranted,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       addCoreDept, updateCoreDept, deleteCoreDept,

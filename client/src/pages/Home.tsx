@@ -48,7 +48,7 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
   
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
-  // BASIC, CLASSIC, MASTER, and ADMIN can edit Dashboard (Holidays)
+  // CLASSIC, MASTER, and ADMIN can edit Dashboard (Holidays)
   const canEditHolidays = isMaster || power === 'basic' || power === 'classic';
 
   const handleAddHoliday = () => {

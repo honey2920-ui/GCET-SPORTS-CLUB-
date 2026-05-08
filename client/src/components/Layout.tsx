@@ -29,9 +29,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   const isStaff = role === 'admin' || role === 'core';
 
+  if (maintenanceMode && role !== 'admin') {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center p-6 text-center">
+        <ShieldAlert size={64} className="text-amber-500 mb-6" />
+        <h1 className="text-2xl font-bold text-slate-900 mb-4">Under Maintenance</h1>
+        <p className="text-slate-500 max-w-md leading-relaxed">{maintenanceMsg}</p>
+        <button onClick={logout} className="mt-8 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition-colors">
+          Logout
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div 
-      className="min-h-screen pb-24 relative overflow-hidden print-bg-white bg-[#f8fafc]"
+      className="min-h-screen pb-24 relative overflow-hidden print-bg-white bg-[#0f172a] text-white"
       style={{
         fontFamily: fontFamily || 'Inter, sans-serif',
         ...(bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : {})
@@ -54,14 +67,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         .focus\\:border-\\[\\#6b5cff\\]:focus { border-color: var(--primary) !important; }
         .shadow-\\[0_0_20px_rgba\\(107\\,92\\,255\\,0\\.4\\)\\] { box-shadow: 0 0 20px var(--primary) !important; opacity: 0.8; }
         
-        .text-white { color: #0f172a !important; }
-        .text-white\\/50 { color: #64748b !important; }
-        .text-white\\/60 { color: #475569 !important; }
-        .text-white\\/70 { color: #334155 !important; }
-        .bg-black\\/40 { background-color: #ffffff !important; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        .bg-white\\/5 { background-color: #f1f5f9 !important; border-color: #e2e8f0 !important; }
-        .bg-white\\/10 { background-color: #e2e8f0 !important; border-color: #cbd5e1 !important; }
-        .border-white\\/5, .border-white\\/10 { border-color: #e2e8f0 !important; }
+        .bg-white { background-color: rgba(255,255,255,0.05) !important; color: white; border-color: rgba(255,255,255,0.1); }
+        .text-slate-900 { color: #ffffff !important; }
+        .text-slate-800 { color: #f1f5f9 !important; }
+        .text-slate-700 { color: #e2e8f0 !important; }
+        .text-slate-600 { color: #cbd5e1 !important; }
+        .text-slate-500 { color: #94a3b8 !important; }
+        .text-slate-400 { color: #64748b !important; }
+        .bg-slate-50 { background-color: rgba(255,255,255,0.02) !important; }
+        .bg-slate-100 { background-color: rgba(255,255,255,0.05) !important; }
+        .bg-slate-200 { background-color: rgba(255,255,255,0.1) !important; }
+        .border-slate-100 { border-color: rgba(255,255,255,0.05) !important; }
+        .border-slate-200 { border-color: rgba(255,255,255,0.1) !important; }
       `}</style>
       
       <div id="falling-container" className="fixed inset-0 pointer-events-none z-0 opacity-[0.25] print:hidden" />

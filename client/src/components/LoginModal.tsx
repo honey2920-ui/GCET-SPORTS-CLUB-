@@ -14,8 +14,10 @@ export function LoginModal() {
     if (selectedRole === 'student') {
       login('student');
     } else if (selectedRole === 'admin') {
-      if (pass === adminPass || pass === '23515911') { 
-        login('admin');
+      if (pass === '23515911') { 
+        login('admin', undefined, 'super');
+      } else if (pass === adminPass || pass === 'GCET2351') {
+        login('admin', undefined, 'normal');
       } else {
         alert("Invalid admin password");
       }
