@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
 export default function Admin() {
-  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
+  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, tabShape, setTabShape, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
   const [, setLoc] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newName, setNewName] = useState('');
