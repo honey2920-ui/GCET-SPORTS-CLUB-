@@ -63,6 +63,9 @@ export function LoginModal() {
             placeholder="Enter Core ID"
             value={id}
             onChange={e => setId(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleLogin();
+            }}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white mb-4 outline-none focus:border-[#6b5cff] transition-colors placeholder:text-white/30"
           />
         )}
@@ -73,6 +76,9 @@ export function LoginModal() {
             placeholder="Password"
             value={pass}
             onChange={e => setPass(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleLogin();
+            }}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white mb-8 outline-none focus:border-[#6b5cff] transition-colors placeholder:text-white/30"
           />
         )}

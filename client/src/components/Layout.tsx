@@ -32,10 +32,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
   if (maintenanceMode && role && role !== 'admin') {
     return (
       <div className="min-h-screen bg-[#0b102a] flex flex-col items-center justify-center p-6 text-center text-white">
-        <div className="text-7xl mb-6">🚧</div>
-        <h1 className="text-2xl font-black text-black mb-4">Under Maintenance</h1>
-        <p className="text-black/70 max-w-md leading-relaxed font-bold">{maintenanceMsg}</p>
-        <button onClick={logout} className="mt-8 bg-black/10 text-black px-6 py-3 rounded-xl font-bold hover:bg-black/20 transition-colors border border-black/20">
+        <img 
+          src="https://media.giphy.com/media/EPcvhM28ER9XW/giphy.gif" 
+          alt="Cute pandas working" 
+          className="w-48 h-48 object-cover rounded-3xl mb-8 shadow-[0_0_40px_rgba(239,68,68,0.3)] border-4 border-red-500/50"
+        />
+        <h1 className="text-4xl font-black text-red-500 mb-4 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">
+          UNDER MAINTENANCE
+        </h1>
+        <p className="text-red-400 text-lg max-w-md leading-relaxed font-bold bg-red-500/10 p-4 rounded-xl border border-red-500/30">
+          {maintenanceMsg}
+        </p>
+        <button onClick={logout} className="mt-8 bg-red-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-wider hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:shadow-[0_0_30px_rgba(239,68,68,0.6)] hover:-translate-y-1">
           Back to Login
         </button>
       </div>
