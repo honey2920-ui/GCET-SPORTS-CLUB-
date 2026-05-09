@@ -7,7 +7,7 @@ import { LogOut, Home, Trophy, UserPlus, ShieldAlert } from 'lucide-react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
-  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, tabStyles, maintenanceMode, maintenanceMsg } = useAppStore();
+  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, tabStyles, maintenanceMode, maintenanceMsg, maintenanceGif } = useAppStore();
 
   useEffect(() => {
     const container = document.getElementById('falling-container');
@@ -33,8 +33,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen bg-[#0b102a] flex flex-col items-center justify-center p-6 text-center text-white">
         <img 
-          src="https://media.giphy.com/media/EPcvhM28ER9XW/giphy.gif" 
-          alt="Cute pandas working" 
+          src={maintenanceGif} 
+          alt="Maintenance" 
           className="w-48 h-48 object-cover rounded-3xl mb-8 shadow-[0_0_40px_rgba(239,68,68,0.3)] border-4 border-red-500/50"
         />
         <h1 className="text-4xl font-black text-red-500 mb-4 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">

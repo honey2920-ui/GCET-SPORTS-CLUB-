@@ -364,7 +364,7 @@ function MentorsTab() {
 }
 
 function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void }) {
-  const { role, coreCreds, coreId, coreMembers, coreDepts, addCoreMember, updateCoreMember, deleteCoreMember, addCoreCred } = useAppStore();
+  const { role, coreCreds, coreId, coreMembers, coreDepts, addCoreMember, updateCoreMember, deleteCoreMember, addCoreCred, defaultCorePass } = useAppStore();
   const power = role === 'core' && coreId ? coreCreds[coreId]?.power : null;
   const isMaster = role === 'admin' || power === 'master';
   // CLASSIC, MASTER, and ADMIN can edit Core members
@@ -380,7 +380,7 @@ function CoreTab({ dept, setDept }: { dept: string, setDept: (d: string) => void
     
     // Auto-generate Core ID
     const generatedId = name.toLowerCase().replace(/\s+/g, '.') + Math.floor(Math.random()*100);
-    const generatedPass = "CORE2026";
+    const generatedPass = defaultCorePass;
     addCoreCred(generatedId, generatedPass, 'basic', name, dept);
     alert(`Member added!\nAuto-generated Core ID: ${generatedId}\nPassword: ${generatedPass}`);
   };

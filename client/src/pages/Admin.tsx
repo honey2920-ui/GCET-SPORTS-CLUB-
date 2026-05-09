@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
 export default function Admin() {
-  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, tabShape, setTabShape, tabStyles, setTabStyle, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
+  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, tabShape, setTabShape, tabStyles, setTabStyle, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, maintenanceGif, setMaintenanceGif, defaultCorePass, setDefaultCorePass, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
   const [, setLoc] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newName, setNewName] = useState('');
@@ -68,7 +68,7 @@ export default function Admin() {
     } else {
       id += '.' + Math.floor(Math.random()*100);
     }
-    const pass = "CORE2026";
+    const pass = defaultCorePass;
     addCoreCred(id, pass, 'basic', newName.trim(), 'Member');
     setNewName('');
     setIslandMessage(`ID Generated: ${id}`);
@@ -113,6 +113,15 @@ export default function Admin() {
               >
                 Change Normal Password
               </button>
+              <button 
+                onClick={() => {
+                  const p = prompt("Enter new Default Password for new Core IDs:", defaultCorePass);
+                  if(p) setDefaultCorePass(p);
+                }}
+                className="px-6 py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl text-sm font-bold transition-colors border border-slate-200"
+              >
+                Change Default Core Password
+              </button>
             </div>
           </div>
 
@@ -123,6 +132,19 @@ export default function Admin() {
             <p className="text-sm text-slate-500 mb-4">Toggle maintenance mode for all users except admins.</p>
             
             <div className="space-y-4 p-5 rounded-2xl bg-amber-50 border border-amber-200">
+              <div className="flex gap-4 items-start">
+                <img src={maintenanceGif} className="w-16 h-16 object-cover rounded-lg border border-amber-300" alt="Maintenance" />
+                <div className="flex-1">
+                  <label className="text-xs font-bold text-amber-800 uppercase tracking-widest mb-1 block">Maintenance GIF URL</label>
+                  <input 
+                    type="text" 
+                    value={maintenanceGif}
+                    onChange={e => setMaintenanceGif(e.target.value)}
+                    className="w-full bg-white border border-amber-200 rounded-xl px-3 py-2 text-sm focus:border-amber-500 outline-none text-amber-900"
+                    placeholder="https://..."
+                  />
+                </div>
+              </div>
               <textarea 
                 value={maintenanceMsg}
                 onChange={e => setMaintenance(maintenanceMode, e.target.value)}

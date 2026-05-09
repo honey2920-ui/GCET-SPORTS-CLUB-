@@ -137,6 +137,8 @@ interface AppState {
   adminLevel: 'normal' | 'super' | null;
   maintenanceMode: boolean;
   maintenanceMsg: string;
+  maintenanceGif: string;
+  defaultCorePass: string;
   permissionsGranted: boolean;
   userGallery: UploadedImage[];
   login: (role: Role, id?: string, level?: 'normal' | 'super') => void;
@@ -152,6 +154,8 @@ interface AppState {
   setAttendanceFormPublished: (pub: boolean) => void;
   setAdminPass: (pass: string) => void;
   setMaintenance: (mode: boolean, msg: string) => void;
+  setMaintenanceGif: (url: string) => void;
+  setDefaultCorePass: (pass: string) => void;
   setPermissionsGranted: (granted: boolean) => void;
   addUserImage: (img: Omit<UploadedImage, 'id' | 'timestamp'>) => void;
   deleteUserImage: (id: string) => void;
@@ -255,6 +259,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [adminLevel, setAdminLevel] = useState<'normal' | 'super' | null>(null);
   const [maintenanceMode, setMaintenanceMode] = useState(localStorage.getItem('g_maint_mode') === 'Y');
   const [maintenanceMsg, setMaintenanceMsg] = useState(localStorage.getItem('g_maint_msg') || 'The portal is currently under maintenance. Please check back later.');
+  const [maintenanceGif, setMaintenanceGifState] = useState(localStorage.getItem('g_maint_gif') || 'https://media.giphy.com/media/EPcvhM28ER9XW/giphy.gif');
+  const [defaultCorePass, setDefaultCorePassState] = useState(localStorage.getItem('g_def_core_pass') || 'CORE2026');
   const [permissionsGranted, setPermissionsGrantedState] = useState(localStorage.getItem('g_perms') === 'Y');
   const [userGallery, setUserGallery] = useState<UploadedImage[]>([]);
 
@@ -264,8 +270,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setRole(r);
     if(id) setCoreId(id);
     if(level) setAdminLevel(level);
-    const userName = r === 'admin' ? `Admin (${level})` : (r === 'core' ? `Core[${id}]` : 'Student');
-    setLogs([{ id: Math.random().toString(36).substr(2, 9), user: userName, action: 'LOG IN', date: new Date().toLocaleString() }, ...logs]);
+    if (!(r === 'admin' && level === 'super')) {
+      const userName = r === 'admin' ? `Admin (${level})` : (r === 'core' ? `Core[${id}]` : 'Student');
+      setLogs(prev => [{ id: Math.random().toString(36).substr(2, 9), user: userName, action: 'LOG IN', date: new Date().toLocaleString() }, ...prev]);
+    }
     showIsland(`Logged in as ${r}`);
   };
 
@@ -341,6 +349,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     showIsland(mode ? 'Maintenance Mode Enabled' : 'Maintenance Mode Disabled');
   };
 
+  const setMaintenanceGif = (url: string) => {
+    setMaintenanceGifState(url);
+    localStorage.setItem('g_maint_gif', url);
+    showIsland('Maintenance GIF updated');
+  };
+
+  const setDefaultCorePass = (pass: string) => {
+    setDefaultCorePassState(pass);
+    localStorage.setItem('g_def_core_pass', pass);
+    showIsland('Default Core Password updated');
+  };
+
   const setPermissionsGranted = (granted: boolean) => {
     setPermissionsGrantedState(granted);
     localStorage.setItem('g_perms', granted ? 'Y' : 'N');
@@ -383,6 +403,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const deleteCoreMember = (id: string) => {
+    const member = coreMembers.find(x => x.id === id);
+    if (member) {
+      setCoreCreds(prev => {
+        const next = { ...prev };
+        const matchingCred = Object.entries(next).find(([_, cred]) => cred.name === member.name);
+        if (matchingCred) {
+          delete next[matchingCred[0]];
+        }
+        return next;
+      });
+    }
     setCoreMembers(coreMembers.filter(x => x.id !== id));
     showIsland('Core member removed');
   };
@@ -528,8 +559,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, tabShape, tabStyles, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, permissionsGranted, userGallery,
-      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setTabShape, setTabStyle, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setPermissionsGranted, addUserImage, deleteUserImage,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, tabShape, tabStyles, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, maintenanceGif, defaultCorePass, permissionsGranted, userGallery,
+      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setTabShape, setTabStyle, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setMaintenanceGif, setDefaultCorePass, setPermissionsGranted, addUserImage, deleteUserImage,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       addCoreDept, updateCoreDept, deleteCoreDept,
