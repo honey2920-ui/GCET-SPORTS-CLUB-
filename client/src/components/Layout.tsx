@@ -7,7 +7,7 @@ import { LogOut, Home, Trophy, UserPlus, ShieldAlert, MessageCircle } from 'luci
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
-  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, tabStyles, maintenanceMode, maintenanceMsg, maintenanceGif, bannerVisible, bannerMsg } = useAppStore();
+  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, tabStyles, maintenanceMode, maintenanceMsg, maintenanceGif, bannerVisible, bannerMsg, adminLevel } = useAppStore();
 
   useEffect(() => {
     const container = document.getElementById('falling-container');
@@ -40,10 +40,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <h1 className="text-4xl font-black text-red-500 mb-4 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">
           UNDER MAINTENANCE
         </h1>
-        <p className="text-red-400 text-lg max-w-md leading-relaxed font-bold bg-red-500/10 p-4 rounded-xl border border-red-500/30">
+        <p className="text-red-400 text-lg max-w-md leading-relaxed font-bold bg-red-500/100/10 p-4 rounded-xl border border-red-500/30">
           {maintenanceMsg}
         </p>
-        <button onClick={logout} className="mt-8 bg-red-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-wider hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:shadow-[0_0_30px_rgba(239,68,68,0.6)] hover:-translate-y-1">
+        <button onClick={logout} className="mt-8 bg-red-600 text-white px-8 py-4 rounded-xl font-black uppercase tracking-wider hover:bg-red-500/100 transition-colors shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:shadow-[0_0_30px_rgba(239,68,68,0.6)] hover:-translate-y-1">
           Back to Login
         </button>
       </div>
@@ -52,7 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div 
-      className="min-h-screen pb-24 relative overflow-hidden print-bg-white"
+      className="min-h-screen pb-24 relative overflow-hidden print-bg-[#1e293b]"
       style={{
         fontFamily: fontFamily || 'Inter, sans-serif',
         ...(bgUrl ? { backgroundImage: `url(${bgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : {})
@@ -102,7 +102,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
         {role && (
-          <button onClick={logout} className="bg-white/5 border border-white/10 p-2.5 md:p-3 rounded-xl md:rounded-2xl hover:bg-white/10 transition-colors text-white/70 hover:text-white shrink-0 ml-2">
+          <button onClick={logout} className="bg-[#1e293b]/5 border border-white/10 p-2.5 md:p-3 rounded-xl md:rounded-2xl hover:bg-[#1e293b]/10 transition-colors text-white/70 hover:text-white shrink-0 ml-2">
             <LogOut size={18} className="md:w-5 md:h-5" />
           </button>
         )}
@@ -115,7 +115,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {role && (
         <nav className="fixed bottom-0 left-0 w-full h-[84px] bg-[#12163f]/90 backdrop-blur-xl border-t border-white/10 flex justify-around items-center z-50 px-4 pb-safe print:hidden">
           <NavItem icon={<Home size={22} />} label="Home" active={loc === '/'} onClick={() => setLoc('/')} shape={tabShape} customStyle={tabStyles?.home} />
-          <NavItem icon={<MessageCircle size={22} />} label="Messages" active={loc === '/messages'} onClick={() => setLoc('/messages')} shape={tabShape} customStyle={tabStyles?.messages} />
+          {role !== 'admin' && (
+            <NavItem icon={<MessageCircle size={22} />} label="Messages" active={loc === '/messages'} onClick={() => setLoc('/messages')} shape={tabShape} customStyle={tabStyles?.messages} />
+          )}
           <NavItem icon={<Trophy size={22} />} label="Events" active={loc === '/events'} onClick={() => setLoc('/events')} shape={tabShape} customStyle={tabStyles?.events} />
           <NavItem icon={<UserPlus size={22} />} label="Join" active={loc === '/join'} onClick={() => setLoc('/join')} shape={tabShape} customStyle={tabStyles?.join} />
           {isStaff && (
@@ -140,7 +142,7 @@ function NavItem({ icon, label, active, onClick, shape, customStyle }: { icon: R
     <div 
       onClick={onClick}
       className={`flex flex-col items-center gap-1.5 cursor-pointer transition-all duration-300 px-4 py-2 ${roundedClass} ${
-        active ? '-translate-y-2' : 'text-white/40 hover:text-white/70 hover:bg-white/5'
+        active ? '-translate-y-2' : 'text-white/40 hover:text-white/70 hover:bg-[#1e293b]/5'
       }`}
       style={active ? { color: activeColor } : {}}
     >

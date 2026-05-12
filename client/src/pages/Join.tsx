@@ -21,7 +21,7 @@ export default function Join() {
   return (
     <div className="space-y-6 animate-in fade-in zoom-in duration-500 pb-20">
       {isStaff && (
-        <div className="flex bg-white p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-slate-200 overflow-x-auto scrollbar-hide no-print shadow-sm">
+        <div className="flex bg-[#1e293b] p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-slate-700 overflow-x-auto scrollbar-hide no-print shadow-sm">
           <TabButton label="Registration" active={activeTab === 'registration'} onClick={() => setActiveTab('registration')} />
           <TabButton label="Attendance" active={activeTab === 'attendance'} onClick={() => setActiveTab('attendance')} />
           <TabButton label="Budget" active={activeTab === 'budget'} onClick={() => setActiveTab('budget')} />
@@ -47,7 +47,7 @@ function TabButton({ label, active, onClick }: any) {
     <button
       onClick={onClick}
       className={`whitespace-nowrap flex-1 py-2.5 md:py-3 px-3 md:px-6 rounded-lg md:rounded-xl text-[11px] md:text-sm font-bold transition-all duration-300 ${
-        active ? 'bg-[#2563eb] text-white shadow-sm' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+        active ? 'bg-[#2563eb] text-white shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800'
       }`}
     >
       {label}
@@ -169,11 +169,11 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
       <div className="flex justify-between items-center px-1 no-print">
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-white">{title}</h2>
         {canEdit && (
           <button 
             onClick={togglePublished} 
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${isPublished ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200' : 'bg-[#10b981] hover:bg-[#0da06f] text-white'}`}
+            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${isPublished ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20' : 'bg-[#10b981] hover:bg-[#0da06f] text-white'}`}
           >
             {isPublished ? 'Unpublish' : 'Publish'}
           </button>
@@ -182,18 +182,18 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
 
       <div className="no-print">
       {!isPublished ? (
-        <div className="bg-white border border-slate-200 rounded-[32px] p-6 md:p-12 text-center shadow-sm">
+        <div className="bg-[#1e293b] border border-slate-700 rounded-[32px] p-6 md:p-12 text-center shadow-sm">
           <div className="text-4xl md:text-6xl mb-4 md:mb-6">⏳</div>
-          <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-2">We will be right soon</h3>
-          <p className="text-sm md:text-base text-slate-500">with a new event</p>
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-2">We will be right soon</h3>
+          <p className="text-sm md:text-base text-slate-400">with a new event</p>
         </div>
       ) : (
-        <div className="bg-white border border-slate-200 rounded-[32px] p-4 md:p-8 space-y-6 shadow-sm">
+        <div className="bg-[#1e293b] border border-slate-700 rounded-[32px] p-4 md:p-8 space-y-6 shadow-sm">
           {showUpload && (
             <div className="flex flex-col items-center gap-4">
               <div 
                 onClick={() => fileInputRef.current?.click()}
-                className="w-32 h-32 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center cursor-pointer hover:border-[#2563eb]/50 hover:bg-slate-100 transition-all overflow-hidden relative group"
+                className="w-32 h-32 rounded-3xl bg-slate-800 border-2 border-dashed border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:border-[#2563eb]/50 hover:bg-slate-700 transition-all overflow-hidden relative group"
               >
                 {previewUrl ? (
                   <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
@@ -214,7 +214,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                 accept="image/*" 
                 onChange={handleFileChange} 
               />
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Passport size photo required</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Passport size photo required</p>
             </div>
           )}
 
@@ -276,7 +276,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
       {isRegistration && canEdit && (
         <div className="mt-8 md:mt-12 space-y-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-1 gap-4 no-print">
-            <h3 className="text-xl md:text-2xl font-bold flex items-center gap-3 text-slate-900">
+            <h3 className="text-xl md:text-2xl font-bold flex items-center gap-3 text-white">
               <CreditCard className="text-[#fca311] w-5 h-5 md:w-6 md:h-6" /> Registrations & ID Cards
             </h3>
             {registrations.length > 0 && (
@@ -286,7 +286,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                   placeholder="ID, Roll No, or Index (e.g. 1, 2, 5)" 
                   value={printIds}
                   onChange={(e) => setPrintIds(e.target.value)}
-                  className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm focus:border-[#2563eb] outline-none placeholder:text-slate-400 flex-1 md:flex-none min-w-[200px]"
+                  className="bg-[#1e293b] border border-slate-700 rounded-xl px-4 py-2 text-sm focus:border-[#2563eb] outline-none placeholder:text-slate-400 flex-1 md:flex-none min-w-[200px]"
                 />
                 <button 
                   onClick={printIDCards}
@@ -299,27 +299,27 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
           </div>
           
           {registrations.length === 0 ? (
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl py-12 text-center text-slate-500 font-medium no-print">
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl py-12 text-center text-slate-400 font-medium no-print">
               No registrations yet.
             </div>
           ) : (
             <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 print:block print:w-full`}>
               {currentRegistrations.map(r => (
-                <div key={r.id} className={`id-card-print bg-white border border-slate-200 p-6 rounded-[24px] relative group overflow-hidden shadow-sm ${getPrintSizeClass()}`}>
+                <div key={r.id} className={`id-card-print bg-[#1e293b] border border-slate-700 p-6 rounded-[24px] relative group overflow-hidden shadow-sm ${getPrintSizeClass()}`}>
                   {editingId === r.id ? (
                     <div className="space-y-3 relative z-10 no-print">
-                      <input type="text" value={editName} onChange={e => setEditName(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Name" />
-                      <input type="text" value={editEvent} onChange={e => setEditEvent(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Event" />
+                      <input type="text" value={editName} onChange={e => setEditName(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" placeholder="Name" />
+                      <input type="text" value={editEvent} onChange={e => setEditEvent(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" placeholder="Event" />
                       <div className="grid grid-cols-2 gap-2">
-                        <input type="text" value={editRollNo} onChange={e => setEditRollNo(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Roll No" />
-                        <input type="text" value={editMobile} onChange={e => setEditMobile(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Mobile" />
-                        <input type="text" value={editYear} onChange={e => setEditYear(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Year" />
-                        <input type="text" value={editSem} onChange={e => setEditSem(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Sem" />
-                        <input type="text" value={editEngType} onChange={e => setEditEngType(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900" placeholder="Type" />
+                        <input type="text" value={editRollNo} onChange={e => setEditRollNo(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" placeholder="Roll No" />
+                        <input type="text" value={editMobile} onChange={e => setEditMobile(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" placeholder="Mobile" />
+                        <input type="text" value={editYear} onChange={e => setEditYear(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" placeholder="Year" />
+                        <input type="text" value={editSem} onChange={e => setEditSem(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" placeholder="Sem" />
+                        <input type="text" value={editEngType} onChange={e => setEditEngType(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" placeholder="Type" />
                       </div>
                       <div className="flex gap-2 mt-4">
                         <button onClick={handleSaveEdit} className="flex-1 bg-[#10b981] hover:bg-[#0da06f] text-white py-2 rounded-lg font-bold text-sm">Save</button>
-                        <button onClick={() => setEditingId(null)} className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-2 rounded-lg font-bold text-sm">Cancel</button>
+                        <button onClick={() => setEditingId(null)} className="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 py-2 rounded-lg font-bold text-sm">Cancel</button>
                       </div>
                     </div>
                   ) : (
@@ -330,7 +330,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                       </div>
                       
                       <div className="flex gap-5 relative z-10">
-                        <div className="w-24 h-32 rounded-xl bg-slate-50 border border-slate-200 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                        <div className="w-24 h-32 rounded-xl bg-slate-800 border border-slate-700 flex-shrink-0 overflow-hidden flex items-center justify-center">
                           {r.photo ? (
                             <img src={r.photo} alt={r.name} className="w-full h-full object-cover" />
                           ) : (
@@ -343,26 +343,26 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                           
                           <div className="grid grid-cols-2 gap-y-2 text-xs">
                             <div>
-                              <span className="text-slate-500 uppercase tracking-wider text-[9px] block id-card-label">Roll No</span>
-                              <span className="font-mono font-bold text-slate-900 id-card-text">{r.rollNo}</span>
+                              <span className="text-slate-400 uppercase tracking-wider text-[9px] block id-card-label">Roll No</span>
+                              <span className="font-mono font-bold text-white id-card-text">{r.rollNo}</span>
                             </div>
                             <div>
-                              <span className="text-slate-500 uppercase tracking-wider text-[9px] block id-card-label">Mobile</span>
-                              <span className="font-mono font-bold text-slate-900 id-card-text">{r.mobile}</span>
+                              <span className="text-slate-400 uppercase tracking-wider text-[9px] block id-card-label">Mobile</span>
+                              <span className="font-mono font-bold text-white id-card-text">{r.mobile}</span>
                             </div>
                             <div>
-                              <span className="text-slate-500 uppercase tracking-wider text-[9px] block id-card-label">Year/Sem</span>
-                              <span className="font-bold text-slate-900 id-card-text">{r.year} Yr / {r.sem} Sem</span>
+                              <span className="text-slate-400 uppercase tracking-wider text-[9px] block id-card-label">Year/Sem</span>
+                              <span className="font-bold text-white id-card-text">{r.year} Yr / {r.sem} Sem</span>
                             </div>
                             <div>
-                              <span className="text-slate-500 uppercase tracking-wider text-[9px] block id-card-label">Type</span>
-                              <span className="font-bold text-slate-900 id-card-text">{r.engType}</span>
+                              <span className="text-slate-400 uppercase tracking-wider text-[9px] block id-card-label">Type</span>
+                              <span className="font-bold text-white id-card-text">{r.engType}</span>
                             </div>
                           </div>
                         </div>
                       </div>
                       
-                      <div className="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
+                      <div className="mt-4 pt-4 border-t border-slate-600 flex justify-between items-center">
                         <span className="text-[10px] font-mono text-slate-400 id-card-label">ID: {r.id.toUpperCase()}</span>
                         <span className="text-[10px] font-bold text-slate-400 tracking-widest id-card-label">GCET SPORTS CLUB</span>
                       </div>
@@ -373,21 +373,21 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                             setPrintIds(r.id);
                             setTimeout(() => window.print(), 100);
                           }}
-                          className="p-2 bg-blue-50 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-100"
+                          className="p-2 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/20"
                           title="Download PDF"
                         >
                           <Download size={16} />
                         </button>
                         <button 
                           onClick={() => handleEditClick(r)}
-                          className="p-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-lg hover:bg-amber-100"
+                          className="p-2 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-lg hover:bg-amber-500/200/20"
                           title="Edit"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>
                         <button 
                           onClick={() => deleteRegistration(r.id)}
-                          className="p-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100"
+                          className="p-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20"
                           title="Delete"
                         >
                           <Trash2 size={16} />
@@ -447,7 +447,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                  placeholder="ID, Roll No, or Index (e.g. 1, 2, 5)" 
                  value={printIds}
                  onChange={(e) => setPrintIds(e.target.value)}
-                 className="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-sm focus:border-[#6b5cff] outline-none placeholder:text-white/40 flex-1 md:flex-none min-w-[200px]"
+                 className="bg-[#1e293b]/10 border border-white/20 rounded-xl px-4 py-2 text-sm focus:border-[#6b5cff] outline-none placeholder:text-white/40 flex-1 md:flex-none min-w-[200px]"
                />
                <button 
                  onClick={() => window.print()}
@@ -459,13 +459,13 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
           </div>
           
           {registrations.length === 0 ? (
-            <div className="bg-white/5 border border-white/10 rounded-2xl py-12 text-center text-white/40 font-medium no-print">
+            <div className="bg-[#1e293b]/5 border border-white/10 rounded-2xl py-12 text-center text-white/40 font-medium no-print">
               No registrations yet.
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:hidden">
               {currentRegistrations.map(r => (
-                <div key={r.id} className="bg-white/5 border border-white/20 p-6 rounded-[24px] relative group overflow-hidden">
+                <div key={r.id} className="bg-[#1e293b]/5 border border-white/20 p-6 rounded-[24px] relative group overflow-hidden">
                   {editingId === r.id ? (
                     <div className="space-y-3 relative z-10 no-print">
                       <input type="text" value={editName} onChange={e => setEditName(e.target.value)} className="w-full bg-black/40 border border-[#6b5cff]/30 rounded-lg px-3 py-2 text-sm text-white" placeholder="Name" />
@@ -479,7 +479,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                       </div>
                       <div className="flex gap-2 mt-4">
                         <button onClick={handleSaveEdit} className="flex-1 bg-[#10b981] hover:bg-[#0da06f] text-white py-2 rounded-lg font-bold text-sm">Save</button>
-                        <button onClick={() => setEditingId(null)} className="flex-1 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white py-2 rounded-lg font-bold text-sm">Cancel</button>
+                        <button onClick={() => setEditingId(null)} className="flex-1 bg-red-500/100/20 hover:bg-red-500/100 text-red-400 hover:text-white py-2 rounded-lg font-bold text-sm">Cancel</button>
                       </div>
                     </div>
                   ) : (
@@ -496,10 +496,10 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                           <h4 className="font-bold text-lg mb-1 text-white">{r.name}</h4>
                           <p className="text-xs font-bold text-[#fca311] mb-2">{r.event}</p>
                           <div className="flex flex-wrap gap-2 text-[10px] text-white/50">
-                            <span className="bg-white/5 px-2 py-1 rounded">Roll: {r.rollNo}</span>
-                            <span className="bg-white/5 px-2 py-1 rounded">Phone: {r.mobile}</span>
-                            <span className="bg-white/5 px-2 py-1 rounded">{r.year} Yr / {r.sem} Sem</span>
-                            <span className="bg-white/5 px-2 py-1 rounded">{r.engType}</span>
+                            <span className="bg-[#1e293b]/5 px-2 py-1 rounded">Roll: {r.rollNo}</span>
+                            <span className="bg-[#1e293b]/5 px-2 py-1 rounded">Phone: {r.mobile}</span>
+                            <span className="bg-[#1e293b]/5 px-2 py-1 rounded">{r.year} Yr / {r.sem} Sem</span>
+                            <span className="bg-[#1e293b]/5 px-2 py-1 rounded">{r.engType}</span>
                           </div>
                         </div>
                       </div>
@@ -510,7 +510,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                             setPrintIds(r.id);
                             setTimeout(() => window.print(), 100);
                           }}
-                          className="p-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500 hover:text-white"
+                          className="p-2 bg-blue-500/100/20 text-blue-400 rounded-lg hover:bg-blue-500/100 hover:text-white"
                           title="Download PDF"
                         >
                           <Download size={16} />
@@ -524,7 +524,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
                         </button>
                         <button 
                           onClick={() => deleteRegistration(r.id)}
-                          className="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500 hover:text-white"
+                          className="p-2 bg-red-500/100/20 text-red-400 rounded-lg hover:bg-red-500/100 hover:text-white"
                           title="Delete"
                         >
                           <Trash2 size={16} />
@@ -537,9 +537,9 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
             </div>
           )}
 
-           <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 flex flex-col md:flex-row items-start md:items-center justify-between backdrop-blur-md no-print mt-6">
+           <div className="bg-[#1e293b]/5 border border-white/10 rounded-[28px] p-6 flex flex-col md:flex-row items-start md:items-center justify-between backdrop-blur-md no-print mt-6">
             <div className="flex items-center gap-4 mb-4 md:mb-0">
-               <div className="p-3 bg-red-500/10 rounded-2xl text-red-400">
+               <div className="p-3 bg-red-500/100/10 rounded-2xl text-red-400">
                   <FileSpreadsheet size={24} />
                </div>
                <div>
@@ -551,7 +551,7 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
               href="https://onedrive.live.com/view.aspx?resid=9876543210!123" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 shadow-lg shadow-red-500/20"
+              className="flex items-center gap-2 bg-red-500/100 hover:bg-red-600 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 shadow-lg shadow-red-500/20"
             >
               Open Live PDF <ExternalLink size={14} />
             </a>
@@ -596,13 +596,13 @@ function BudgetView({ expenses, addExpense, deleteExpense, canEdit, excelLink }:
       </div>
 
       {canEdit && (
-        <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 backdrop-blur-md no-print">
+        <div className="bg-[#1e293b]/5 border border-white/10 rounded-[32px] p-8 backdrop-blur-md no-print">
           <h4 className="font-bold mb-6 text-white/70 uppercase tracking-widest text-sm">Add Entry</h4>
           <div className="grid grid-cols-2 gap-4">
             <button onClick={() => handleAdd('allotted')} className="flex items-center justify-center gap-2 bg-[#10b981]/10 text-[#10b981] py-4 rounded-2xl font-bold border border-[#10b981]/20 hover:bg-[#10b981]/20 transition-all active:scale-95">
               <Plus size={20} /> Add Allotted
             </button>
-            <button onClick={() => handleAdd('expense')} className="flex items-center justify-center gap-2 bg-red-500/10 text-red-400 py-4 rounded-2xl font-bold border border-red-500/20 hover:bg-red-500/20 transition-all active:scale-95">
+            <button onClick={() => handleAdd('expense')} className="flex items-center justify-center gap-2 bg-red-500/100/10 text-red-400 py-4 rounded-2xl font-bold border border-red-500/20 hover:bg-red-500/100/20 transition-all active:scale-95">
               <Plus size={20} /> Add Expense
             </button>
           </div>
@@ -613,7 +613,7 @@ function BudgetView({ expenses, addExpense, deleteExpense, canEdit, excelLink }:
         <h4 className="font-bold text-white/50 tracking-widest uppercase text-sm">Recent Entries</h4>
         <button 
           onClick={() => window.print()}
-          className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-white/20 transition-colors"
+          className="flex items-center gap-2 bg-[#1e293b]/10 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1e293b]/20 transition-colors"
         >
           <Download size={14} /> PDF
         </button>
@@ -621,12 +621,12 @@ function BudgetView({ expenses, addExpense, deleteExpense, canEdit, excelLink }:
 
       <div className="space-y-3 no-print">
         {expenses.length === 0 ? (
-          <div className="bg-white/5 border border-white/10 rounded-2xl py-8 text-center text-white/20 font-medium backdrop-blur-sm">No entries yet.</div>
+          <div className="bg-[#1e293b]/5 border border-white/10 rounded-2xl py-8 text-center text-white/20 font-medium backdrop-blur-sm">No entries yet.</div>
         ) : (
           expenses.map(e => (
             <div key={e.id} className="bg-black/40 border border-white/5 p-5 rounded-2xl flex items-center justify-between group hover:border-[#6b5cff]/30 transition-all">
               <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-xl ${e.type === 'allotted' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                <div className={`p-3 rounded-xl ${e.type === 'allotted' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/100/10 text-red-400'}`}>
                   {e.type === 'allotted' ? <Wallet size={20} /> : <TrendingDown size={20} />}
                 </div>
                 <div>
@@ -721,7 +721,7 @@ function EquipmentView({ equipment, addEquipment, deleteEquipment, canEdit, exce
           <h2 className="text-2xl font-bold tracking-tight">Equipment List</h2>
           <button 
             onClick={() => window.print()}
-            className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-white/20 transition-colors ml-4"
+            className="flex items-center gap-2 bg-[#1e293b]/10 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1e293b]/20 transition-colors ml-4"
           >
             <Download size={14} /> PDF
           </button>
@@ -840,7 +840,7 @@ function EquipmentSection({ title, items, onAdd, onDelete, canEdit, dotColor }: 
             {canEdit && (
               <button 
                 onClick={() => onDelete(item.id)} 
-                className="p-2.5 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white rounded-xl transition-all active:scale-90 opacity-0 group-hover:opacity-100 border border-red-500/20"
+                className="p-2.5 bg-red-500/100/10 hover:bg-red-500/100 text-red-400 hover:text-white rounded-xl transition-all active:scale-90 opacity-0 group-hover:opacity-100 border border-red-500/20"
               >
                 <Trash2 size={16} />
               </button>
@@ -854,7 +854,7 @@ function EquipmentSection({ title, items, onAdd, onDelete, canEdit, dotColor }: 
 
 function BudgetStat({ label, amount, color }: any) {
   return (
-    <div className="bg-white/5 border border-white/10 p-8 rounded-[32px] backdrop-blur-xl shadow-xl">
+    <div className="bg-[#1e293b]/5 border border-white/10 p-8 rounded-[32px] backdrop-blur-xl shadow-xl">
       <p className="text-xs text-white/40 font-bold uppercase tracking-widest mb-3">{label}</p>
       <h3 className={`text-4xl font-extrabold ${color} tracking-tighter`}>₹{amount.toLocaleString()}</h3>
     </div>

@@ -29,7 +29,7 @@ export function DynamicIsland() {
               damping: 30,
               mass: 0.8
             }}
-            className="bg-white/90 backdrop-blur-2xl text-slate-900 px-8 py-4 rounded-[32px] shadow-[0_25px_60px_rgba(0,0,0,0.1),0_0_25px_rgba(37,99,235,0.2)] flex items-center gap-4 border border-slate-200 pointer-events-auto ring-1 ring-slate-100"
+            className="bg-[#1e293b]/90 backdrop-blur-2xl text-white px-8 py-4 rounded-[32px] shadow-[0_25px_60px_rgba(0,0,0,0.1),0_0_25px_rgba(37,99,235,0.2)] flex items-center gap-4 border border-slate-700 pointer-events-auto ring-1 ring-slate-100"
           >
             <div className="relative">
               <div className="w-3 h-3 rounded-full bg-green-400 shadow-[0_0_12px_#4ade80]" />

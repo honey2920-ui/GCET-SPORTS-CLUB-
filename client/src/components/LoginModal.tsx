@@ -43,7 +43,7 @@ export function LoginModal() {
         </div>
         <h1 className="text-[#6b5cff] text-2xl font-bold mb-8 tracking-wider">GCET SPORTS CLUB</h1>
         
-        <div className="flex gap-2 mb-8 bg-white/5 p-1 rounded-2xl border border-white/10 relative z-10">
+        <div className="flex gap-2 mb-8 bg-[#1e293b]/5 p-1 rounded-2xl border border-white/10 relative z-10">
           {(['student', 'core', 'admin'] as Role[]).map(r => (
             <button
               key={r}
@@ -66,7 +66,7 @@ export function LoginModal() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleLogin();
             }}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white mb-4 outline-none focus:border-[#6b5cff] transition-colors placeholder:text-white/30"
+            className="w-full bg-[#1e293b]/5 border border-white/10 rounded-xl px-5 py-4 text-white mb-4 outline-none focus:border-[#6b5cff] transition-colors placeholder:text-white/30"
           />
         )}
         
@@ -79,7 +79,7 @@ export function LoginModal() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleLogin();
             }}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white mb-8 outline-none focus:border-[#6b5cff] transition-colors placeholder:text-white/30"
+            className="w-full bg-[#1e293b]/5 border border-white/10 rounded-xl px-5 py-4 text-white mb-8 outline-none focus:border-[#6b5cff] transition-colors placeholder:text-white/30"
           />
         )}
 

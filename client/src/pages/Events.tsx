@@ -73,9 +73,9 @@ export default function Events() {
 
       <div className="space-y-4">
         <div className="flex justify-between items-center px-1">
-          <h3 className="text-xl font-bold tracking-wide text-slate-900">Portals</h3>
+          <h3 className="text-xl font-bold tracking-wide text-white">Portals</h3>
           {role === 'admin' && (
-            <button onClick={handleAddPortal} className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-1.5 rounded-xl text-xs font-bold transition-colors">
+            <button onClick={handleAddPortal} className="bg-slate-700 hover:bg-slate-200 text-slate-200 px-4 py-1.5 rounded-xl text-xs font-bold transition-colors">
               + Add Portal
             </button>
           )}
@@ -89,7 +89,7 @@ export default function Events() {
 
       <div className="space-y-6">
         <div className="flex justify-between items-center px-1">
-          <h3 className="text-xl font-bold tracking-wide text-slate-900">Events</h3>
+          <h3 className="text-xl font-bold tracking-wide text-white">Events</h3>
           {canEdit && (
             <button onClick={handleAddEvent} className="bg-[#2563eb] text-white px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-[#1d4ed8] transition-all shadow-sm active:scale-95">
               <Plus size={18} /> Add Event
@@ -98,9 +98,9 @@ export default function Events() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {events.length === 0 && <p className="text-slate-500 italic px-2">No events currently.</p>}
+          {events.length === 0 && <p className="text-slate-400 italic px-2">No events currently.</p>}
           {events.map(e => (
-            <div key={e.id} className="bg-white border border-slate-200 rounded-[32px] overflow-hidden group hover:border-[#2563eb]/30 transition-all shadow-sm">
+            <div key={e.id} className="bg-[#1e293b] border border-slate-700 rounded-[32px] overflow-hidden group hover:border-[#2563eb]/30 transition-all shadow-sm">
               <div className="relative h-48 overflow-hidden">
                 <img src={e.img} alt={e.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -108,17 +108,17 @@ export default function Events() {
               <div className="p-4 md:p-6 relative">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-[#2563eb]" />
-                  <h4 className="font-bold text-lg md:text-xl text-slate-900">{e.name}</h4>
+                  <h4 className="font-bold text-lg md:text-xl text-white">{e.name}</h4>
                 </div>
-                <p className="text-xs md:text-sm text-slate-600 leading-relaxed mb-4 md:mb-6">{e.description}</p>
-                <div className="flex items-center justify-between text-slate-500 font-mono text-xs uppercase tracking-widest">
+                <p className="text-xs md:text-sm text-slate-300 leading-relaxed mb-4 md:mb-6">{e.description}</p>
+                <div className="flex items-center justify-between text-slate-400 font-mono text-xs uppercase tracking-widest">
                   <div className="flex items-center gap-2 font-bold">
                     <Trophy size={14} className="text-[#2563eb]" /> {e.date}
                   </div>
                   {canEdit && (
                     <div className="flex gap-2">
-                      <button onClick={() => handleEditEvent(e)} className="p-2 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-[#2563eb] transition-all border border-slate-200"><Edit2 size={16} /></button>
-                      <button onClick={() => { if(confirm("Delete event?")) deleteEvent(e.id) }} className="p-2 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-200"><Trash2 size={16} /></button>
+                      <button onClick={() => handleEditEvent(e)} className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-[#2563eb] transition-all border border-slate-700"><Edit2 size={16} /></button>
+                      <button onClick={() => { if(confirm("Delete event?")) deleteEvent(e.id) }} className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-700"><Trash2 size={16} /></button>
                     </div>
                   )}
                 </div>
@@ -133,18 +133,18 @@ export default function Events() {
 
 function PortalCard({ portal, canEdit, onEdit, onDelete }: any) {
   return (
-    <div className="bg-white border border-slate-200 p-4 md:p-8 rounded-2xl md:rounded-[32px] text-center shadow-sm hover:border-[#2563eb]/30 transition-all relative group">
+    <div className="bg-[#1e293b] border border-slate-700 p-4 md:p-8 rounded-2xl md:rounded-[32px] text-center shadow-sm hover:border-[#2563eb]/30 transition-all relative group">
       {canEdit && (
         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-           <button onClick={onEdit} className="p-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-[#2563eb] transition-colors border border-slate-200"><Edit2 size={12}/></button>
-           <button onClick={onDelete} className="p-1.5 bg-slate-50 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-red-500 transition-colors border border-slate-200"><Trash2 size={12}/></button>
+           <button onClick={onEdit} className="p-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-[#2563eb] transition-colors border border-slate-700"><Edit2 size={12}/></button>
+           <button onClick={onDelete} className="p-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-red-500 transition-colors border border-slate-700"><Trash2 size={12}/></button>
         </div>
       )}
       <a href={portal.link} target="_blank" rel="noopener noreferrer" className="block cursor-pointer flex md:block items-center gap-4 text-left md:text-center">
         <div className="text-3xl md:mb-4 group-hover:scale-125 transition-transform duration-300">{portal.icon}</div>
         <div className="flex-1">
-          <h4 className="font-bold text-base md:text-lg mb-0.5 md:mb-1 text-slate-900">{portal.title}</h4>
-          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold flex items-center md:justify-center gap-2">
+          <h4 className="font-bold text-base md:text-lg mb-0.5 md:mb-1 text-white">{portal.title}</h4>
+          <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold flex items-center md:justify-center gap-2">
             Open portal <ExternalLink size={10} />
           </p>
         </div>
