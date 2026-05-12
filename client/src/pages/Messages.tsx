@@ -17,12 +17,12 @@ export default function Messages() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, activeTab]);
 
-  if (!role) {
+  if (!role || (role === 'admin' && adminLevel !== 'super')) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <User size={48} className="text-slate-300 mb-4" />
-        <h2 className="text-xl font-bold text-slate-200 mb-2">Login Required</h2>
-        <p className="text-slate-400 max-w-sm">You need to log in to access the messaging system.</p>
+        <ShieldAlert size={48} className="text-red-400 mb-4" />
+        <h2 className="text-xl font-bold text-white mb-2">Access Denied</h2>
+        <p className="text-slate-400 max-w-sm">Only Super Admins, Core Members, and Students can access the messaging system.</p>
       </div>
     );
   }

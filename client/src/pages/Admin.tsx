@@ -6,12 +6,11 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
 export default function Admin() {
-  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, tabShape, setTabShape, tabStyles, setTabStyle, bannerMsg, bannerType, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, maintenanceGif, setMaintenanceGif, defaultCorePass, setDefaultCorePass, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
+  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, tabShape, setTabShape, tabStyles, setTabStyle, bannerMsg, bannerType, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, maintenanceGif, setMaintenanceGif, defaultCorePass, setDefaultCorePass, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage, featureStates, setFeature } = useAppStore();
   const [, setLoc] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newName, setNewName] = useState('');
   const [tab, setTab] = useState<'settings' | 'users' | 'logs'>('users');
-  const [featureStates, setFeatureStates] = useState<Record<string, boolean>>({});
 
   if (role !== 'admin' && role !== 'core') {
     setLoc('/');
@@ -400,13 +399,13 @@ export default function Admin() {
                         <span className="text-white font-bold">{feature}</span>
                         <div className="flex gap-2">
                           <button 
-                            onClick={() => setFeatureStates(prev => ({ ...prev, [feature]: true }))}
+                            onClick={() => setFeature(feature, true)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${isEnabled ? 'bg-green-500 text-white shadow-md' : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'}`}
                           >
                             {isEnabled ? 'Enabled' : 'Enable'}
                           </button>
                           <button 
-                            onClick={() => setFeatureStates(prev => ({ ...prev, [feature]: false }))}
+                            onClick={() => setFeature(feature, false)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${!isEnabled ? 'bg-red-500 text-white shadow-md' : 'bg-red-500/20 text-red-400 hover:bg-red-500/30'}`}
                           >
                             {!isEnabled ? 'Disabled' : 'Disable'}

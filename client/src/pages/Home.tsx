@@ -43,7 +43,7 @@ function TabButton({ icon, label, active, onClick }: any) {
 }
 
 function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void, onGoToDept: (dept: string) => void }) {
-  const { role, coreId, coreCreds, holidays, addHoliday, updateHoliday, deleteHoliday, holidayPdf, setHolidayPdf, bannerMsg, bannerVisible, events, coreMembers, coreDepts, addCoreDept, updateCoreDept, deleteCoreDept, permissionsGranted, setPermissionsGranted, addUserImage } = useAppStore();
+  const { role, coreId, coreCreds, holidays, addHoliday, updateHoliday, deleteHoliday, holidayPdf, setHolidayPdf, bannerMsg, bannerVisible, events, coreMembers, coreDepts, addCoreDept, updateCoreDept, deleteCoreDept, permissionsGranted, setPermissionsGranted, addUserImage, featureStates } = useAppStore();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const galleryInputRef = React.useRef<HTMLInputElement>(null);
   
@@ -239,6 +239,22 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
            </div>
         )}
       </div>
+
+      {Object.keys(featureStates).some(f => featureStates[f]) && (
+        <div className="bg-[#1e293b] p-6 rounded-[28px] border border-emerald-500/20 shadow-sm mt-6">
+          <h3 className="text-lg font-bold flex items-center gap-2 text-white mb-4">
+            <span className="text-emerald-400">✨</span> New Features Available
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {Object.entries(featureStates).filter(([_, enabled]) => enabled).map(([feature]) => (
+              <div key={feature} className="bg-slate-800/50 border border-slate-700 p-4 rounded-2xl flex items-center justify-between">
+                <span className="text-white font-bold">{feature}</span>
+                <span className="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] uppercase font-bold tracking-widest rounded-md border border-emerald-500/20">Live</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div>
         <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-white">

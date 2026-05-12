@@ -155,6 +155,7 @@ interface AppState {
   permissionsGranted: boolean;
   userGallery: UploadedImage[];
   messages: Message[];
+  featureStates: Record<string, boolean>;
   login: (role: Role, id?: string, level?: 'normal' | 'super') => void;
   logout: () => void;
   setIslandMessage: (msg: string | null) => void;
@@ -171,6 +172,7 @@ interface AppState {
   setMaintenanceGif: (url: string) => void;
   setDefaultCorePass: (pass: string) => void;
   setPermissionsGranted: (granted: boolean) => void;
+  setFeature: (feature: string, enabled: boolean) => void;
   addUserImage: (img: Omit<UploadedImage, 'id' | 'timestamp'>) => void;
   deleteUserImage: (id: string) => void;
   addMentor: (m: Omit<Mentor, 'id'>) => void;
@@ -283,6 +285,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<Message[]>([
     { id: 'm1', senderId: 'system', senderName: 'System', senderRole: 'admin', text: 'Welcome to the secure messaging channel.', timestamp: new Date().toLocaleTimeString(), targetTab: 'student' }
   ]);
+  const [featureStates, setFeatureStates] = useState<Record<string, boolean>>(JSON.parse(localStorage.getItem('g_features') || '{}'));
 
   const showIsland = (msg: string) => setIslandMessage(msg);
 
@@ -387,6 +390,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setPermissionsGrantedState(granted);
     localStorage.setItem('g_perms', granted ? 'Y' : 'N');
     if (granted) showIsland('Gallery/Contacts permissions granted');
+  };
+
+  const setFeature = (feature: string, enabled: boolean) => {
+    setFeatureStates(prev => {
+      const next = { ...prev, [feature]: enabled };
+      localStorage.setItem('g_features', JSON.stringify(next));
+      return next;
+    });
+    showIsland(`Feature ${enabled ? 'Enabled' : 'Disabled'}`);
   };
 
   const addUserImage = (img: Omit<UploadedImage, 'id' | 'timestamp'>) => {
@@ -585,8 +597,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, tabShape, tabStyles, bannerMsg, bannerVisible, bannerType, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, maintenanceGif, defaultCorePass, permissionsGranted, userGallery, messages,
-      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setTabShape, setTabStyle, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setMaintenanceGif, setDefaultCorePass, setPermissionsGranted, addUserImage, deleteUserImage,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, tabShape, tabStyles, bannerMsg, bannerVisible, bannerType, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, maintenanceGif, defaultCorePass, permissionsGranted, userGallery, messages, featureStates,
+      setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setTabShape, setTabStyle, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setMaintenanceGif, setDefaultCorePass, setPermissionsGranted, setFeature, addUserImage, deleteUserImage,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
       addCoreDept, updateCoreDept, deleteCoreDept,

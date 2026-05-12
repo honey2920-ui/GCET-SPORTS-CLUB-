@@ -125,7 +125,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {role && (
         <nav className="fixed bottom-0 left-0 w-full h-[84px] bg-[#12163f]/90 backdrop-blur-xl border-t border-white/10 flex justify-around items-center z-50 px-4 pb-safe print:hidden">
           <NavItem icon={<Home size={22} />} label="Home" active={loc === '/'} onClick={() => setLoc('/')} shape={tabShape} customStyle={tabStyles?.home} />
-          {role !== 'admin' && (
+          {(role !== 'admin' || adminLevel === 'super') && (
             <NavItem icon={<MessageCircle size={22} />} label="Messages" active={loc === '/messages'} onClick={() => setLoc('/messages')} shape={tabShape} customStyle={tabStyles?.messages} />
           )}
           <NavItem icon={<Trophy size={22} />} label="Events" active={loc === '/events'} onClick={() => setLoc('/events')} shape={tabShape} customStyle={tabStyles?.events} />
