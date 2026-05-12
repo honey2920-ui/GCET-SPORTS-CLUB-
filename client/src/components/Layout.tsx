@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { useAppStore } from '@/lib/store';
 import { DynamicIsland } from './DynamicIsland';
 import { LoginModal } from './LoginModal';
-import { LogOut, Home, Trophy, UserPlus, ShieldAlert } from 'lucide-react';
+import { LogOut, Home, Trophy, UserPlus, ShieldAlert, MessageCircle } from 'lucide-react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
@@ -80,7 +80,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <div className="print:hidden"><DynamicIsland /></div>
       <div className="print:hidden"><LoginModal /></div>
 
-      <div className="p-4 md:p-5 flex justify-between items-center relative z-10 w-full max-w-4xl mx-auto print:hidden">
+      {bannerVisible && bannerMsg && (
+        <div className="fixed top-0 left-0 w-full z-50 animate-in slide-in-from-top-4 duration-500">
+          <div className="bg-[#12163f]/95 backdrop-blur-md border-b border-[#2563eb]/30 p-3 shadow-[0_4px_20px_rgba(37,99,235,0.15)] flex justify-center items-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shrink-0 shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+            <span className="text-white text-sm font-bold tracking-wide flex-1 text-center truncate max-w-4xl">{bannerMsg}</span>
+          </div>
+        </div>
+      )}
+
+      <div className={`p-4 md:p-5 flex justify-between items-center relative z-10 w-full max-w-4xl mx-auto print:hidden ${bannerVisible && bannerMsg ? 'mt-12' : ''}`}>
         <div className="flex items-center gap-3 md:gap-4">
           <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-tr from-[#6b5cff] to-[#9f7aea] rounded-full flex items-center justify-center font-bold text-base md:text-lg shadow-[0_0_20px_rgba(107,92,255,0.4)] border-2 border-white/10 shrink-0">
             {role ? role.charAt(0).toUpperCase() : '?'}
@@ -106,6 +115,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {role && (
         <nav className="fixed bottom-0 left-0 w-full h-[84px] bg-[#12163f]/90 backdrop-blur-xl border-t border-white/10 flex justify-around items-center z-50 px-4 pb-safe print:hidden">
           <NavItem icon={<Home size={22} />} label="Home" active={loc === '/'} onClick={() => setLoc('/')} shape={tabShape} customStyle={tabStyles?.home} />
+          <NavItem icon={<MessageCircle size={22} />} label="Messages" active={loc === '/messages'} onClick={() => setLoc('/messages')} shape={tabShape} customStyle={tabStyles?.messages} />
           <NavItem icon={<Trophy size={22} />} label="Events" active={loc === '/events'} onClick={() => setLoc('/events')} shape={tabShape} customStyle={tabStyles?.events} />
           <NavItem icon={<UserPlus size={22} />} label="Join" active={loc === '/join'} onClick={() => setLoc('/join')} shape={tabShape} customStyle={tabStyles?.join} />
           {isStaff && (

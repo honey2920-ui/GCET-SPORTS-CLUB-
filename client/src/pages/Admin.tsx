@@ -267,7 +267,7 @@ export default function Admin() {
               <div>
                 <label className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2 block">Individual Tab Styles</label>
                 <div className="space-y-3">
-                  {['home', 'events', 'join', 'admin'].map(t => (
+                  {['home', 'messages', 'events', 'join', 'admin'].map(t => (
                     <div key={t} className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
                       <span className="text-xs font-bold uppercase w-14 text-slate-700">{t}</span>
                       <input 
@@ -339,29 +339,66 @@ export default function Admin() {
             </div>
             
             <div className="relative z-10">
-              <h3 className="text-2xl font-extrabold flex items-center gap-3 mb-2 text-white tracking-wide">
-                Announcement Banner
-              </h3>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+                <h3 className="text-2xl font-extrabold text-white tracking-wide">
+                  Floating Banner
+                </h3>
+              </div>
               <p className="text-[#2563eb] text-sm font-bold tracking-wider uppercase mb-8">Broadcast message to all users</p>
               
               <div className="space-y-6">
                 <div>
-                  <textarea 
+                  <label className="text-xs font-bold text-[#2563eb] uppercase mb-1 block">Task Name</label>
+                  <input 
+                    type="text"
                     value={bannerMsg}
                     onChange={e => setBanner(e.target.value, true)}
-                    placeholder="Enter announcement message..." 
-                    rows={3}
-                    className="w-full bg-[#12163f] border border-[#2563eb]/20 rounded-2xl px-5 py-4 text-white focus:border-[#2563eb] outline-none transition-all placeholder:text-white/30 shadow-sm resize-none font-medium"
+                    placeholder="E.g. Football Selection" 
+                    className="w-full bg-[#12163f] border border-[#2563eb]/20 rounded-xl px-4 py-3 text-white focus:border-[#2563eb] outline-none transition-all placeholder:text-white/30 shadow-sm font-medium mb-3"
+                  />
+                  <label className="text-xs font-bold text-[#2563eb] uppercase mb-1 block">Upcoming Date / Status</label>
+                  <input 
+                    type="text"
+                    onChange={e => setBanner(`${bannerMsg} | ${e.target.value}`, true)}
+                    placeholder="E.g. Coming Soon or 15th May" 
+                    className="w-full bg-[#12163f] border border-[#2563eb]/20 rounded-xl px-4 py-3 text-white focus:border-[#2563eb] outline-none transition-all placeholder:text-white/30 shadow-sm font-medium"
                   />
                 </div>
                 <div className="flex gap-4">
                   <button onClick={() => setBanner(bannerMsg, true)} className="flex-[2] py-4 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-xl font-bold transition-all shadow-sm active:scale-95 text-lg">
-                    Update & Show Banner
+                    Update & Publish Banner
                   </button>
                   <button onClick={() => setBanner(bannerMsg, false)} className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white/70 rounded-xl font-bold transition-all border border-white/10 active:scale-95">
                     Hide Banner
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isSuperAdmin && (
+          <div className="bg-slate-900 border border-slate-700 rounded-[28px] p-8 relative overflow-hidden group shadow-sm mt-6">
+            <div className="absolute top-0 right-0 p-6 opacity-10">
+              <Shield size={120} className="text-white" />
+            </div>
+            <div className="relative z-10">
+              <h3 className="text-2xl font-extrabold flex items-center gap-3 mb-2 text-white tracking-wide">
+                Upcoming Features Vault
+              </h3>
+              <p className="text-slate-400 text-sm font-bold tracking-wider uppercase mb-6">Hidden System - Super Admin Only</p>
+              
+              <div className="space-y-3">
+                {['Voice Chat', 'Video Calls', 'AI Moderation', 'Auto Translation', 'Advanced Analytics', 'Smart Attendance AI', 'Temporary Disappearing Messages'].map((feature) => (
+                  <div key={feature} className="flex items-center justify-between bg-white/5 border border-white/10 p-4 rounded-xl">
+                    <span className="text-white font-bold">{feature}</span>
+                    <div className="flex gap-2">
+                      <button className="px-3 py-1.5 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg text-xs font-bold transition-colors">Enable</button>
+                      <button className="px-3 py-1.5 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg text-xs font-bold transition-colors">Disable</button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

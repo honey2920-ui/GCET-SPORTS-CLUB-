@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Events from "./pages/Events";
 import Join from "./pages/Join";
+import Messages from "./pages/Messages";
 
 function Router() {
   return (
@@ -17,6 +18,7 @@ function Router() {
         <Route path="/admin" component={Admin} />
         <Route path="/events" component={Events} />
         <Route path="/join" component={Join} />
+        <Route path="/messages" component={Messages} />
         <Route component={() => <div className="text-center p-10 mt-20 text-red-500 font-bold">404 - Area Not Found</div>} />
       </Switch>
     </Layout>

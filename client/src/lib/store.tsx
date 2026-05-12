@@ -248,10 +248,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       home: { color: '#6b5cff', size: 1 },
       events: { color: '#6b5cff', size: 1 },
       join: { color: '#6b5cff', size: 1 },
+      messages: { color: '#6b5cff', size: 1 },
       admin: { color: '#6b5cff', size: 1 }
     }
   );
-  const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || '');
+  const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || 'Football Selection | Coming Soon');
   const [bannerVisible, setBannerVisible] = useState(localStorage.getItem('g_msg_s') === 'Y');
   const [formPublished, setFormPublishedState] = useState(localStorage.getItem('g_form_pub') !== 'N');
   const [attendanceFormPublished, setAttendanceFormPublishedState] = useState(localStorage.getItem('g_att_form_pub') !== 'N');
