@@ -563,8 +563,8 @@ function FormView({ title, actionLabel, canEdit, showUpload, isRegistration }: a
 }
 
 function BudgetView({ expenses, addExpense, deleteExpense, canEdit, excelLink }: any) {
-  const totalAllotted = expenses.filter(e => e.type === 'allotted').reduce((acc, curr) => acc + curr.amount, 0);
-  const totalExpense = expenses.filter(e => e.type === 'expense').reduce((acc, curr) => acc + curr.amount, 0);
+  const totalAllotted = expenses.filter((e: any) => e.type === 'allotted').reduce((acc: number, curr: any) => acc + curr.amount, 0);
+  const totalExpense = expenses.filter((e: any) => e.type === 'expense').reduce((acc: number, curr: any) => acc + curr.amount, 0);
 
   const handleAdd = (type: 'allotted' | 'expense') => {
     const item = prompt(`Enter ${type} item name:`);
@@ -623,7 +623,7 @@ function BudgetView({ expenses, addExpense, deleteExpense, canEdit, excelLink }:
         {expenses.length === 0 ? (
           <div className="bg-[#1e293b]/5 border border-white/10 rounded-2xl py-8 text-center text-white/20 font-medium backdrop-blur-sm">No entries yet.</div>
         ) : (
-          expenses.map(e => (
+          expenses.map((e: any) => (
             <div key={e.id} className="bg-black/40 border border-white/5 p-5 rounded-2xl flex items-center justify-between group hover:border-[#6b5cff]/30 transition-all">
               <div className="flex items-center gap-4">
                 <div className={`p-3 rounded-xl ${e.type === 'allotted' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/100/10 text-red-400'}`}>
@@ -685,7 +685,7 @@ function BudgetView({ expenses, addExpense, deleteExpense, canEdit, excelLink }:
             </tr>
           </thead>
           <tbody>
-            {expenses.map(e => (
+            {expenses.map((e: any) => (
               <tr key={e.id}>
                 <td>{e.date}</td>
                 <td>{e.item}</td>
