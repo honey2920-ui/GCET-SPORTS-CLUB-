@@ -7,7 +7,7 @@ import { LogOut, Home, Trophy, UserPlus, ShieldAlert, MessageCircle } from 'luci
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
-  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, tabStyles, maintenanceMode, maintenanceMsg, maintenanceGif } = useAppStore();
+  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, tabStyles, maintenanceMode, maintenanceMsg, maintenanceGif, bannerVisible, bannerMsg } = useAppStore();
 
   useEffect(() => {
     const container = document.getElementById('falling-container');
