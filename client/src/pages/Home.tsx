@@ -241,17 +241,55 @@ function OverviewTab({ onGoToMentors, onGoToDept }: { onGoToMentors: () => void,
       </div>
 
       {Object.keys(featureStates).some(f => featureStates[f]) && (
-        <div className="bg-[#1e293b] p-6 rounded-[28px] border border-emerald-500/20 shadow-sm mt-6">
-          <h3 className="text-lg font-bold flex items-center gap-2 text-white mb-4">
-            <span className="text-emerald-400">✨</span> New Features Available
+        <div className="bg-[#1e293b] p-6 rounded-[28px] border border-emerald-500/20 shadow-sm mt-6 relative overflow-hidden">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <h3 className="text-lg font-bold flex items-center gap-2 text-white mb-4 relative z-10">
+            <span className="text-emerald-400">✨</span> New Features Activated
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <p className="text-xs text-slate-400 mb-4 relative z-10">These features have been enabled by the Super Admin and are now active across the portal.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 relative z-10">
             {Object.entries(featureStates).filter(([_, enabled]) => enabled).map(([feature]) => (
-              <div key={feature} className="bg-slate-800/50 border border-slate-700 p-4 rounded-2xl flex items-center justify-between">
-                <span className="text-white font-bold">{feature}</span>
-                <span className="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] uppercase font-bold tracking-widest rounded-md border border-emerald-500/20">Live</span>
+              <div key={feature} className="bg-slate-800/50 border border-slate-700 p-4 rounded-2xl flex items-center justify-between shadow-sm hover:border-emerald-500/30 transition-colors group">
+                <div className="flex items-center gap-3">
+                  <span className="text-emerald-400 opacity-70 group-hover:opacity-100 transition-opacity">⚡</span>
+                  <span className="text-white font-bold text-sm">{feature}</span>
+                </div>
+                <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] uppercase font-bold tracking-widest rounded-lg border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]">Live</span>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {featureStates['Advanced Analytics'] && isMaster && (
+        <div className="bg-[#1e293b] p-6 rounded-[28px] border border-[#2563eb]/20 shadow-sm mt-6">
+          <h3 className="text-lg font-bold flex items-center gap-2 text-white mb-4">
+            📊 Advanced Analytics
+          </h3>
+          <div className="h-32 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center flex-col gap-2">
+            <div className="flex gap-1 items-end h-16 w-48 mx-auto justify-between px-4">
+              <div className="w-4 bg-[#2563eb] rounded-t-sm animate-[pulse_2s_infinite] h-8"></div>
+              <div className="w-4 bg-emerald-500 rounded-t-sm animate-[pulse_2.5s_infinite] h-12"></div>
+              <div className="w-4 bg-purple-500 rounded-t-sm animate-[pulse_3s_infinite] h-16"></div>
+              <div className="w-4 bg-amber-500 rounded-t-sm animate-[pulse_2.2s_infinite] h-10"></div>
+              <div className="w-4 bg-red-500 rounded-t-sm animate-[pulse_2.8s_infinite] h-14"></div>
+            </div>
+            <p className="text-[10px] text-slate-400 font-mono tracking-widest uppercase mt-2">Live Portal Traffic</p>
+          </div>
+        </div>
+      )}
+
+      {featureStates['Smart Attendance AI'] && (
+        <div className="bg-[#1e293b] p-6 rounded-[28px] border border-[#d946ef]/20 shadow-sm mt-6 flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-bold flex items-center gap-2 text-white mb-1">
+              🤖 Smart Attendance AI
+            </h3>
+            <p className="text-xs text-slate-400">Facial recognition attendance is currently active for all events.</p>
+          </div>
+          <div className="w-12 h-12 rounded-full bg-[#d946ef]/20 border border-[#d946ef]/40 flex items-center justify-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#d946ef]/50 to-transparent h-1/2 animate-[scan_2s_ease-in-out_infinite]"></div>
+            <span className="text-xl relative z-10">👤</span>
           </div>
         </div>
       )}

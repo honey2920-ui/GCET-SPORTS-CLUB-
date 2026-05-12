@@ -1,271 +1,130 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@custom-variant dark (&:is(.dark *));
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-@theme inline {
-  --color-background: var(--bg-dark);
-  --color-foreground: var(--text-main);
-  --color-primary: var(--primary);
-  --color-card: var(--card-bg);
-  --color-border: var(--border);
-  
-  --font-sans: 'Outfit', sans-serif;
-}
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-:root {
-  --primary: #6b5cff; 
-  --secondary: #9f7aea; 
-  --accent: #fca311;
-  --bg-dark: #0b102a; 
-  --card-bg: rgba(255, 255, 255, 0.08);
-  --text-main: #ffffff; 
-  --text-dim: #b0b0cc;
-  --success: #10b981; 
-  --danger: #ef4444; 
-  --nav-bg: #12163f;
-  --border: rgba(255,255,255,0.15);
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 214.3 31.8% 91.4%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
   body {
-    background: linear-gradient(180deg, var(--bg-dark), #12163f);
-    background-size: cover; 
-    background-position: center; 
-    background-attachment: fixed;
-    color: var(--text-main);
-    min-height: 100vh;
-    font-family: 'Outfit', sans-serif;
+    @apply bg-background text-foreground;
   }
 }
 
-.falling-item { 
-  position: absolute; 
-  color: rgba(255,255,255,0.1); 
-  animation: fall linear infinite; 
-  font-size: 24px;
-}
-
-@keyframes fall { 
-  0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; } 
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } 
-}
-
-/* Hide scrollbar for horizontal scroll */
+/* Custom Scrollbar for hidden horizontal scrolling */
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-/* Dynamic Island */
-.dynamic-island {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Make print formatting apply to the whole page properly */
-@page {
-  margin: 1cm;
-}
-
-@media print {
-  body, html, #root {
-    background: white !important;
-    background-image: none !important;
-    background-color: white !important;
-    color: black !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
-  /* Force all elements to have white background and black text */
-  * {
-    color: black !important;
-    background-color: white !important;
-    background-image: none !important;
-    text-shadow: none !important;
-    box-shadow: none !important;
-    border-color: #ccc !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-  
-  /* Remove Tailwind dark mode gradients and background colors */
-  [class*="bg-gradient"], 
-  [class*="from-"], 
-  [class*="to-"], 
-  [class*="via-"], 
-  [class*="bg-black"], 
-  [class*="bg-white"], 
-  [class*="bg-[#"], 
-  .bg-black, 
-  .bg-[#1e1e3f], 
-  .bg-[#0b102a] {
-    background: white !important;
-    background-color: white !important;
-    background-image: none !important;
-  }
-
-  /* Ensure text is clearly visible */
-  .text-white, .text-white\/50, .text-white\/70, .text-white\/40, .text-white\/30, .text-white\/20, .text-gray-400, span, div, h1, h2, h3, h4, h5, h6, p, td, th, strong {
-    color: black !important;
-  }
-  
-  /* Hide the root div layout constraints that might clip content */
-  #root, .min-h-screen, .w-full {
-    display: block !important;
-    height: auto !important;
-    min-height: auto !important;
-    overflow: visible !important;
-  }
-  
-  /* Make sure flex and other layout containers don't break page flow */
-  .pb-20, .pt-20, .space-y-8, .space-y-6 {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  
-  .no-print, .no-print *, .print\:hidden, .print\:hidden * {
-    display: none !important;
-  }
-  
-  /* ID Cards Grid Print layout */
-  .print\:grid-cols-2 {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 16px !important;
-    page-break-inside: auto !important;
-  }
-  
-  .print\:block {
-    display: block !important;
-  }
-  
-  .id-card-print {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    background: white !important;
-    border: 2px solid #000 !important;
-    color: black !important;
-    box-shadow: none !important;
-    padding: 16px !important;
-    margin-bottom: 16px !important;
-    display: inline-block !important;
-    position: relative;
-    box-sizing: border-box;
-  }
-
-  /* Single ID Card: School Size (approx 3.375" x 2.125" or scaled up for readability) */
-  .id-card-single {
-    width: 8.5cm !important;
-    height: 5.4cm !important;
-    padding: 10px !important;
-  }
-  .id-card-single .text-xl { font-size: 14px !important; }
-  .id-card-single .text-xs { font-size: 8px !important; }
-  .id-card-single .w-24 { width: 45px !important; height: 60px !important; }
-
-  /* Standard Size (few IDs) */
-  .id-card-standard {
-    width: 8.5cm !important;
-    height: 5.4cm !important;
-    padding: 10px !important;
-  }
-  .id-card-standard .text-xl { font-size: 14px !important; }
-  .id-card-standard .text-xs { font-size: 8px !important; }
-  .id-card-standard .w-24 { width: 45px !important; height: 60px !important; }
-  
-  /* Driving License Size (many IDs) */
-  .id-card-license {
-    width: 8.5cm !important;
-    height: 5.4cm !important;
-    padding: 8px !important;
-  }
-  .id-card-license .text-xl { font-size: 12px !important; }
-  .id-card-license .text-xs { font-size: 7px !important; }
-  .id-card-license .text-\[9px\] { font-size: 6px !important; }
-  .id-card-license .text-\[10px\] { font-size: 6px !important; }
-  .id-card-license .w-24 { width: 40px !important; height: 50px !important; }
-  
-  /* Tables for print (budget, attendance, equipment) */
-  .print-table-container {
-    display: block !important;
-    width: 100% !important;
-  }
-  
-  .print-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    margin-bottom: 20px !important;
-    color: black !important;
-    page-break-inside: auto !important;
-  }
-  
-  .print-table tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
-  }
-  
-  .print-table th, .print-table td {
-    border: 1px solid #000 !important;
-    padding: 8px !important;
-    text-align: left !important;
-  }
-  
-  .print-table th {
-    background-color: #eee !important;
-    font-weight: bold !important;
-    color: black !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  
-  .print-header {
-    display: block !important;
-    font-size: 24px !important;
-    font-weight: bold !important;
-    margin-bottom: 20px !important;
-    color: black !important;
-    text-align: center !important;
-  }
-  
-  /* For elements hidden normally but shown in print */
-  .print-only {
-    display: block !important;
-  }
-  
-  .hidden {
-    display: none !important;
-  }
-  
-  .id-card-text {
-    color: black !important;
-  }
-  
-  .id-card-label {
-    color: #666 !important;
-  }
-  
-  /* Force background colors to print for id cards if needed */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-}
-
-.print-only {
   display: none;
 }
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
+/* Custom smooth scrollbar for vertical lists */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.5);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
+
+/* Animations */
 @keyframes shimmer {
-  0% {
-    background-position: 200% center;
-  }
-  100% {
-    background-position: -200% center;
+  0% { background-position: -250% 0; }
+  100% { background-position: 250% 0; }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  50% { transform: translateY(100%); }
+  100% { transform: translateY(-100%); }
+}
+
+/* Falling Emojis CSS */
+.falling-item {
+  position: absolute;
+  top: -50px;
+  color: white;
+  user-select: none;
+  z-index: 0;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
   }
 }

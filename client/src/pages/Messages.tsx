@@ -4,12 +4,13 @@ import { useAppStore } from '@/lib/store';
 import { Search, Send, ShieldAlert, User, Image as ImageIcon, Film, FileCode2, Paperclip, X, MessageSquare } from 'lucide-react';
 
 export default function Messages() {
-  const { role, coreId, adminLevel, messages, sendMessage, coreCreds, mentors, coreMembers } = useAppStore();
+  const { role, coreId, adminLevel, messages, sendMessage, coreCreds, mentors, coreMembers, featureStates } = useAppStore();
   const [activeTab, setActiveTab] = useState<'student' | 'core'>('student');
   const [searchQuery, setSearchQuery] = useState('');
   const [inputText, setInputText] = useState('');
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [mediaPreview, setMediaPreview] = useState<{ url: string, type: 'image' | 'video' | 'gif' } | null>(null);
+  const [disappearingMode, setDisappearingMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -20,9 +21,13 @@ export default function Messages() {
   if (!role || (role === 'admin' && adminLevel !== 'super')) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <ShieldAlert size={48} className="text-red-400 mb-4" />
-        <h2 className="text-xl font-bold text-white mb-2">Access Denied</h2>
-        <p className="text-slate-400 max-w-sm">Only Super Admins, Core Members, and Students can access the messaging system.</p>
+        <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6 border border-red-500/20">
+          <ShieldAlert size={40} className="text-red-500" />
+        </div>
+        <h2 className="text-2xl font-black text-white mb-3 tracking-wide">Access Denied</h2>
+        <p className="text-slate-400 max-w-sm text-sm leading-relaxed">
+          The messaging system is restricted. Only <strong className="text-slate-200">Super Admins</strong>, <strong className="text-slate-200">Core Members</strong>, and <strong className="text-slate-200">Students</strong> can access this secure channel. Normal Admins do not have clearance.
+        </p>
       </div>
     );
   }
@@ -77,6 +82,11 @@ export default function Messages() {
             ) : null}
           </div>
         )}
+        {featureStates['Auto Translation'] && !msg.senderId.includes(coreId || '') && (
+          <button className="text-[9px] text-[#2563eb] self-start mt-1 hover:underline font-bold uppercase tracking-wider">
+            Translate Message
+          </button>
+        )}
       </div>
     );
   };
@@ -88,14 +98,37 @@ export default function Messages() {
         <div className="absolute top-0 right-0 p-8 opacity-[0.05]">
           <Send size={100} className="text-white" />
         </div>
-        <h2 className="text-2xl font-extrabold tracking-wide text-white mb-2 relative z-10 flex items-center gap-3">
-          <Send size={24} className="text-[#2563eb]" />
-          Private Messages
-        </h2>
-        <p className="text-[#b0b0cc] text-sm relative z-10">
-          Secure communication channel.
-          {isSuperAdmin && <span className="ml-2 px-2 py-0.5 bg-red-500/100/20 text-red-400 rounded text-[10px] uppercase font-bold tracking-widest border border-red-500/30">Super Admin Access</span>}
-        </p>
+        <div className="flex justify-between items-start relative z-10">
+          <div>
+            <h2 className="text-2xl font-extrabold tracking-wide text-white mb-2 flex items-center gap-3">
+              <Send size={24} className="text-[#2563eb]" />
+              Private Messages
+            </h2>
+            <p className="text-[#b0b0cc] text-sm">
+              Secure communication channel.
+              {isSuperAdmin && <span className="ml-2 px-2 py-0.5 bg-red-500/100/20 text-red-400 rounded text-[10px] uppercase font-bold tracking-widest border border-red-500/30">Super Admin Access</span>}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            {featureStates['Voice Chat'] && (
+              <button className="p-2.5 bg-[#2563eb]/20 text-[#2563eb] hover:bg-[#2563eb]/30 rounded-xl transition-colors border border-[#2563eb]/30 shadow-sm" title="Voice Chat">
+                <span className="text-lg">🎙️</span>
+              </button>
+            )}
+            {featureStates['Video Calls'] && (
+              <button className="p-2.5 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 rounded-xl transition-colors border border-emerald-500/30 shadow-sm" title="Video Call">
+                <span className="text-lg">📹</span>
+              </button>
+            )}
+          </div>
+        </div>
+        
+        {featureStates['AI Moderation'] && (
+          <div className="mt-4 relative z-10 flex items-center gap-2 bg-[#2563eb]/10 border border-[#2563eb]/20 p-2 rounded-lg w-max">
+            <ShieldAlert size={14} className="text-[#2563eb]" />
+            <span className="text-[10px] font-bold text-[#2563eb] uppercase tracking-widest">AI Moderation Active</span>
+          </div>
+        )}
       </div>
 
       <div className="bg-[#1e293b] border border-slate-700 rounded-[28px] overflow-hidden shadow-sm flex flex-col h-[70vh] min-h-[550px]">
@@ -191,6 +224,21 @@ export default function Messages() {
             const file = e.target.files?.[0];
             if (file) handleFileUpload(e, file.type.includes('gif') ? 'gif' : 'image');
           }} />
+
+          {featureStates['Temporary Disappearing Messages'] && (
+            <div className="flex justify-end mb-2 relative z-10">
+              <button 
+                onClick={() => setDisappearingMode(!disappearingMode)}
+                className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border transition-colors ${
+                  disappearingMode 
+                  ? 'bg-amber-500/20 text-amber-400 border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]' 
+                  : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-slate-300'
+                }`}
+              >
+                {disappearingMode ? '🔥 Disappearing Mode: ON' : 'Disappearing Mode: OFF'}
+              </button>
+            </div>
+          )}
 
           <div className="flex items-end gap-2 relative z-10">
             <button 
