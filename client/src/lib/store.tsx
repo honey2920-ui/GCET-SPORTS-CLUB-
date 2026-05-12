@@ -100,6 +100,18 @@ export interface SystemLog {
   date: string;
 }
 
+export interface Message {
+  id: string;
+  senderId: string;
+  senderName: string;
+  senderRole: string;
+  text: string;
+  mediaUrl?: string;
+  mediaType?: 'image' | 'video' | 'gif';
+  timestamp: string;
+  targetTab: 'student' | 'core';
+}
+
 export type UploadedImage = {
   id: string;
   uploaderRole: string;
@@ -129,6 +141,7 @@ interface AppState {
   fontFamily: string;
   bannerMsg: string;
   bannerVisible: boolean;
+  bannerType: 'info' | 'warning' | 'success' | 'error';
   tabShape: 'rounded' | 'pill' | 'square';
   tabStyles: Record<string, { color: string, size: number }>;
   formPublished: boolean;
@@ -141,6 +154,7 @@ interface AppState {
   defaultCorePass: string;
   permissionsGranted: boolean;
   userGallery: UploadedImage[];
+  messages: Message[];
   login: (role: Role, id?: string, level?: 'normal' | 'super') => void;
   logout: () => void;
   setIslandMessage: (msg: string | null) => void;
@@ -149,7 +163,7 @@ interface AppState {
   setFontFamily: (font: string) => void;
   setTabShape: (shape: 'rounded' | 'pill' | 'square') => void;
   setTabStyle: (tab: string, style: { color?: string, size?: number }) => void;
-  setBanner: (msg: string, visible: boolean) => void;
+  setBanner: (msg: string, visible: boolean, type?: 'info' | 'warning' | 'success' | 'error') => void;
   setFormPublished: (pub: boolean) => void;
   setAttendanceFormPublished: (pub: boolean) => void;
   setAdminPass: (pass: string) => void;
@@ -189,6 +203,7 @@ interface AppState {
   addRegistration: (r: Omit<Registration, 'id' | 'date'>) => void;
   updateRegistration: (id: string, r: Partial<Registration>) => void;
   deleteRegistration: (id: string) => void;
+  sendMessage: (msg: Omit<Message, 'id' | 'timestamp'>) => void;
 }
 
 const defaultCreds: Record<string, CoreCreds> = {
@@ -254,6 +269,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   );
   const [bannerMsg, setBannerMsg] = useState(localStorage.getItem('g_msg') || 'Football Selection | Coming Soon');
   const [bannerVisible, setBannerVisible] = useState(localStorage.getItem('g_msg_s') === 'Y');
+  const [bannerType, setBannerType] = useState<'info' | 'warning' | 'success' | 'error'>((localStorage.getItem('g_msg_t') as any) || 'info');
   const [formPublished, setFormPublishedState] = useState(localStorage.getItem('g_form_pub') !== 'N');
   const [attendanceFormPublished, setAttendanceFormPublishedState] = useState(localStorage.getItem('g_att_form_pub') !== 'N');
   const [adminPass, setAdminPassState] = useState(localStorage.getItem('g_admin_pass') || 'GCET2351');
@@ -264,6 +280,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [defaultCorePass, setDefaultCorePassState] = useState(localStorage.getItem('g_def_core_pass') || 'CORE2026');
   const [permissionsGranted, setPermissionsGrantedState] = useState(localStorage.getItem('g_perms') === 'Y');
   const [userGallery, setUserGallery] = useState<UploadedImage[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    { id: 'm1', senderId: 'system', senderName: 'System', senderRole: 'admin', text: 'Welcome to the secure messaging channel.', timestamp: new Date().toLocaleTimeString(), targetTab: 'student' }
+  ]);
 
   const showIsland = (msg: string) => setIslandMessage(msg);
 
@@ -317,11 +336,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const setBanner = (msg: string, visible: boolean) => {
+  const setBanner = (msg: string, visible: boolean, type: 'info' | 'warning' | 'success' | 'error' = 'info') => {
     setBannerMsg(msg);
     setBannerVisible(visible);
+    setBannerType(type);
     localStorage.setItem('g_msg', msg);
     localStorage.setItem('g_msg_s', visible ? 'Y' : 'N');
+    localStorage.setItem('g_msg_t', type);
   };
 
   const setFormPublished = (pub: boolean) => {
@@ -558,9 +579,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     showIsland('Registration removed');
   };
 
+  const sendMessage = (msg: Omit<Message, 'id' | 'timestamp'>) => {
+    setMessages(prev => [...prev, { ...msg, id: Math.random().toString(36).substr(2, 9), timestamp: new Date().toLocaleTimeString() }]);
+  };
+
   return (
     <MockContext.Provider value={{
-      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, tabShape, tabStyles, bannerMsg, bannerVisible, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, maintenanceGif, defaultCorePass, permissionsGranted, userGallery,
+      role, coreId, coreCreds, mentors, coreMembers, coreDepts, holidays, holidayPdf, expenses, equipment, portals, events, registrations, logs, islandMessage, bgUrl, themeColor, fontFamily, tabShape, tabStyles, bannerMsg, bannerVisible, bannerType, formPublished, attendanceFormPublished, adminPass, adminLevel, maintenanceMode, maintenanceMsg, maintenanceGif, defaultCorePass, permissionsGranted, userGallery, messages,
       setIslandMessage, login, logout, setBgUrl, setThemeColor, setFontFamily, setTabShape, setTabStyle, setBanner, setFormPublished, setAttendanceFormPublished, setAdminPass, setMaintenance, setMaintenanceGif, setDefaultCorePass, setPermissionsGranted, addUserImage, deleteUserImage,
       addMentor, updateMentor, deleteMentor,
       addCoreMember, updateCoreMember, deleteCoreMember,
@@ -570,7 +595,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       addHoliday, updateHoliday, deleteHoliday, setHolidayPdf,
       addPortal, updatePortal, deletePortal,
       addEvent, updateEvent, deleteEvent,
-      addRegistration, updateRegistration, deleteRegistration
+      addRegistration, updateRegistration, deleteRegistration,
+      sendMessage
     }}>
       {children}
     </MockContext.Provider>

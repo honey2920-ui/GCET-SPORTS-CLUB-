@@ -6,11 +6,12 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
 export default function Admin() {
-  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, tabShape, setTabShape, tabStyles, setTabStyle, bannerMsg, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, maintenanceGif, setMaintenanceGif, defaultCorePass, setDefaultCorePass, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
+  const { role, coreId, coreCreds, updateCoreCred, addCoreCred, deleteCoreCred, setIslandMessage, bgUrl, setBgUrl, themeColor, setThemeColor, fontFamily, setFontFamily, tabShape, setTabShape, tabStyles, setTabStyle, bannerMsg, bannerType, setBanner, setAdminPass, logs, maintenanceMode, maintenanceMsg, setMaintenance, maintenanceGif, setMaintenanceGif, defaultCorePass, setDefaultCorePass, permissionsGranted, setPermissionsGranted, adminLevel, userGallery, deleteUserImage } = useAppStore();
   const [, setLoc] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newName, setNewName] = useState('');
   const [tab, setTab] = useState<'settings' | 'users' | 'logs'>('users');
+  const [featureStates, setFeatureStates] = useState<Record<string, boolean>>({});
 
   if (role !== 'admin' && role !== 'core') {
     setLoc('/');
@@ -349,27 +350,28 @@ export default function Admin() {
               
               <div className="space-y-6">
                 <div>
-                  <label className="text-xs font-bold text-[#2563eb] uppercase mb-1 block">Task Name</label>
+                  <label className="text-xs font-bold text-[#2563eb] uppercase mb-1 block">Banner Message</label>
                   <input 
                     type="text"
                     value={bannerMsg}
-                    onChange={e => setBanner(e.target.value, true)}
-                    placeholder="E.g. Football Selection" 
+                    onChange={e => setBanner(e.target.value, true, bannerType)}
+                    placeholder="E.g. Football Selection | Coming Soon" 
                     className="w-full bg-[#12163f] border border-[#2563eb]/20 rounded-xl px-4 py-3 text-white focus:border-[#2563eb] outline-none transition-all placeholder:text-white/30 shadow-sm font-medium mb-3"
                   />
-                  <label className="text-xs font-bold text-[#2563eb] uppercase mb-1 block">Upcoming Date / Status</label>
-                  <input 
-                    type="text"
-                    onChange={e => setBanner(`${bannerMsg} | ${e.target.value}`, true)}
-                    placeholder="E.g. Coming Soon or 15th May" 
-                    className="w-full bg-[#12163f] border border-[#2563eb]/20 rounded-xl px-4 py-3 text-white focus:border-[#2563eb] outline-none transition-all placeholder:text-white/30 shadow-sm font-medium"
-                  />
+                  
+                  <label className="text-xs font-bold text-[#2563eb] uppercase mb-1 block mt-4">Banner Type</label>
+                  <div className="flex gap-2 mb-4">
+                    <button onClick={() => setBanner(bannerMsg, true, 'info')} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${bannerType === 'info' ? 'bg-[#2563eb] text-white shadow-md' : 'bg-slate-800 text-slate-400 border border-slate-700'}`}>Info</button>
+                    <button onClick={() => setBanner(bannerMsg, true, 'success')} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${bannerType === 'success' ? 'bg-emerald-500 text-white shadow-md' : 'bg-slate-800 text-slate-400 border border-slate-700'}`}>Success</button>
+                    <button onClick={() => setBanner(bannerMsg, true, 'warning')} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${bannerType === 'warning' ? 'bg-amber-500 text-white shadow-md' : 'bg-slate-800 text-slate-400 border border-slate-700'}`}>Warning</button>
+                    <button onClick={() => setBanner(bannerMsg, true, 'error')} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${bannerType === 'error' ? 'bg-red-500 text-white shadow-md' : 'bg-slate-800 text-slate-400 border border-slate-700'}`}>Alert</button>
+                  </div>
                 </div>
                 <div className="flex gap-4">
-                  <button onClick={() => setBanner(bannerMsg, true)} className="flex-[2] py-4 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-xl font-bold transition-all shadow-sm active:scale-95 text-lg">
+                  <button onClick={() => setBanner(bannerMsg, true, bannerType)} className="flex-[2] py-4 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-xl font-bold transition-all shadow-sm active:scale-95 text-lg">
                     Update & Publish Banner
                   </button>
-                  <button onClick={() => setBanner(bannerMsg, false)} className="flex-1 py-4 bg-[#1e293b]/5 hover:bg-[#1e293b]/10 text-white/70 rounded-xl font-bold transition-all border border-white/10 active:scale-95">
+                  <button onClick={() => setBanner(bannerMsg, false, bannerType)} className="flex-1 py-4 bg-[#1e293b]/5 hover:bg-[#1e293b]/10 text-white/70 rounded-xl font-bold transition-all border border-white/10 active:scale-95">
                     Hide Banner
                   </button>
                 </div>
@@ -390,15 +392,39 @@ export default function Admin() {
               <p className="text-slate-400 text-sm font-bold tracking-wider uppercase mb-6">Hidden System - Super Admin Only</p>
               
               <div className="space-y-3">
-                {['Voice Chat', 'Video Calls', 'AI Moderation', 'Auto Translation', 'Advanced Analytics', 'Smart Attendance AI', 'Temporary Disappearing Messages'].map((feature) => (
-                  <div key={feature} className="flex items-center justify-between bg-[#1e293b]/5 border border-white/10 p-4 rounded-xl">
-                    <span className="text-white font-bold">{feature}</span>
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1.5 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-lg text-xs font-bold transition-colors">Enable</button>
-                      <button className="px-3 py-1.5 bg-red-500/100/20 text-red-400 hover:bg-red-500/100/30 rounded-lg text-xs font-bold transition-colors">Disable</button>
+                {['Voice Chat', 'Video Calls', 'AI Moderation', 'Auto Translation', 'Advanced Analytics', 'Smart Attendance AI', 'Temporary Disappearing Messages'].map((feature) => {
+                  const isEnabled = featureStates[feature];
+                  return (
+                    <div key={feature} className="bg-[#1e293b]/5 border border-white/10 p-4 rounded-xl overflow-hidden transition-all">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-white font-bold">{feature}</span>
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => setFeatureStates(prev => ({ ...prev, [feature]: true }))}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${isEnabled ? 'bg-green-500 text-white shadow-md' : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'}`}
+                          >
+                            {isEnabled ? 'Enabled' : 'Enable'}
+                          </button>
+                          <button 
+                            onClick={() => setFeatureStates(prev => ({ ...prev, [feature]: false }))}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${!isEnabled ? 'bg-red-500 text-white shadow-md' : 'bg-red-500/20 text-red-400 hover:bg-red-500/30'}`}
+                          >
+                            {!isEnabled ? 'Disabled' : 'Disable'}
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {!isEnabled && (
+                        <div className="mt-3 bg-black/50 border border-slate-700/50 rounded-lg p-3 font-mono text-[10px] text-green-400/70">
+                          <div><span className="text-blue-400">function</span> <span className="text-yellow-200">init{feature.replace(/\s+/g, '')}</span>() {'{'}</div>
+                          <div className="pl-4 text-slate-500">// Feature logic hidden and disabled by Super Admin</div>
+                          <div className="pl-4 text-red-400">throw new Error("Feature is currently disabled");</div>
+                          <div>{'}'}</div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

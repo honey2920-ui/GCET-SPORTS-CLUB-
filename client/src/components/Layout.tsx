@@ -7,7 +7,7 @@ import { LogOut, Home, Trophy, UserPlus, ShieldAlert, MessageCircle } from 'luci
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [loc, setLoc] = useLocation();
-  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, tabStyles, maintenanceMode, maintenanceMsg, maintenanceGif, bannerVisible, bannerMsg, adminLevel } = useAppStore();
+  const { role, coreId, logout, bgUrl, themeColor, fontFamily, tabShape, tabStyles, maintenanceMode, maintenanceMsg, maintenanceGif, bannerVisible, bannerMsg, bannerType, adminLevel } = useAppStore();
 
   useEffect(() => {
     const container = document.getElementById('falling-container');
@@ -82,9 +82,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       {bannerVisible && bannerMsg && (
         <div className="fixed top-0 left-0 w-full z-50 animate-in slide-in-from-top-4 duration-500">
-          <div className="bg-[#12163f]/95 backdrop-blur-md border-b border-[#2563eb]/30 p-3 shadow-[0_4px_20px_rgba(37,99,235,0.15)] flex justify-center items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shrink-0 shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
-            <span className="text-white text-sm font-bold tracking-wide flex-1 text-center truncate max-w-4xl">{bannerMsg}</span>
+          <div className={`backdrop-blur-md border-b p-3 shadow-lg flex justify-center items-center gap-3 ${
+            bannerType === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' :
+            bannerType === 'error' ? 'bg-red-500/90 border-red-400/50 text-white' :
+            bannerType === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' :
+            'bg-[#12163f]/95 border-[#2563eb]/30 text-white'
+          }`}>
+            <div className={`w-2 h-2 rounded-full animate-pulse shrink-0 ${
+              bannerType === 'warning' ? 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]' :
+              bannerType === 'error' ? 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]' :
+              bannerType === 'success' ? 'bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]' :
+              'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]'
+            }`} />
+            <span className="text-sm font-bold tracking-wide flex-1 text-center truncate max-w-4xl">{bannerMsg}</span>
           </div>
         </div>
       )}
